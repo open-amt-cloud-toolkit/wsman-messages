@@ -1,0 +1,36 @@
+{
+  "name": "@open-amt-cloud-toolkit/wsman-messages",
+  "version": "1.0.0",
+  "description": "A reusable package for AMT libraries",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "lint": "eslint . --ext .ts",
+    "test": "jest --detectOpenHandles --forceExit --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-amt-cloud-toolkit/wsman-messages.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/open-amt-cloud-toolkit/wsman-messages/issues"
+  },
+  "homepage": "https://github.com/open-amt-cloud-toolkit/wsman-messages#readme",
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.13",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "jest": "^27.4.5",
+    "jest-junit": "^13.0.0",
+    "ts-jest": "^27.1.1",
+    "typescript": "^4.5.2"
+  }
+}
