@@ -35,11 +35,6 @@ export interface Pull<T> {
   }
 }
 
-export interface AuditLogResult {
-  totalCnt: number
-  records: AuditLogRecord[]
-}
-
 export interface AuditLogRecord {
   AuditAppID: number
   EventID: number
@@ -52,6 +47,10 @@ export interface AuditLogRecord {
   NetAddress: string
   Ex: string
   ExStr?: string
+}
+export interface AuditLogResult {
+  totalCnt: number
+  records: AuditLogRecord[]
 }
 
 export interface AuditLogReadRecordsOutput {

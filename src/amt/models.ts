@@ -3,9 +3,9 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { CIM_ManagedElement, CIM_SettingData, CIM_EthernetPort, CIM_BootSettingData, CIM_CredentialManagementService, CIM_MessageLog } from './cim_models'
+import * as CIM from '../cim'
 
-export interface amtAuthenticateObject {
+export interface AMTAuthenticateObject {
   nonce?: number[]
   uuid?: string[]
   fqdn?: string
@@ -17,7 +17,7 @@ export interface amtAuthenticateObject {
   certificates?: number[]
 }
 
-export interface AMT_GeneralSettings extends CIM_SettingData {
+export interface GeneralSettings extends CIM.Models.SettingData {
   NetworkInterfaceEnabled?: boolean
   DigestRealm?: string
   IdleWakeTimeout?: number
@@ -38,14 +38,14 @@ export interface AMT_GeneralSettings extends CIM_SettingData {
   PrivacyLevel?: number
   PowerSource?: number
   ThunderboltDockEnabled?: number
-  AMTAuthenticate?: (mcNonce: number) => amtAuthenticateObject
+  AMTAuthenticate?: (mcNonce: number) => AMTAuthenticateObject
 }
 
-export interface AMT_GeneralSettingsResponse {
-  AMT_GeneralSettings: AMT_GeneralSettings
+export interface GeneralSettingsResponse {
+  AMT_GeneralSettings: GeneralSettings
 }
 
-export interface AMT_EthernetPortSettings extends CIM_SettingData {
+export interface EthernetPortSettings extends CIM.Models.SettingData {
   VLANTag?: number
   SharedMAC?: boolean
   MACAddress?: string
@@ -87,7 +87,7 @@ export interface RemoteAccessPolicyRule {
   ExtendedData?: string
 }
 
-export interface AMT_SystemDefensePolicy extends CIM_ManagedElement {
+export interface SystemDefensePolicy extends CIM.Models.ManagedElement {
   PolicyName?: string
   PolicyPrecedence?: number
   AntiSpoofingSupport?: number
@@ -98,19 +98,17 @@ export interface AMT_SystemDefensePolicy extends CIM_ManagedElement {
   RxDefaultDrop?: boolean
   RxDefaultMatchEvent?: boolean
   RxDefaultCount?: boolean
-  GetTimeout?: () => number
-  SetTimeout?: (number) => number
-  UpdateStatistics?: (networkInterface: CIM_EthernetPort, resetOnRead: boolean) => number
 }
-export interface AMT_EnvironmentDetectionSettingData extends CIM_SettingData {
+
+export interface EnvironmentDetectionSettingData extends CIM.Models.SettingData {
   DetectionAlgorithm?: number
   DetectionStrings?: string[]
   DetectionIPv6LocalPrefixes?: string[]
-  SetSystemDefensePolicy?: (policy: AMT_SystemDefensePolicy) => number
+  SetSystemDefensePolicy?: (policy: SystemDefensePolicy) => number
   EnableVpnRouting?: (enable: boolean) => number
 }
 
-export interface AMT_BootCapabilities extends CIM_ManagedElement{
+export interface BootCapabilities extends CIM.Models.ManagedElement{
   AMT_BootCapabilities: {
   // The user friendly name for this instance of Capabilities . . .
     ElementName: string
@@ -174,8 +172,7 @@ export interface AMT_BootCapabilities extends CIM_ManagedElement{
     PlatformErase: number
   }
 }
-
-export interface AMT_BootSettingData extends CIM_BootSettingData {
+export interface BootSettingData extends CIM.Models.BootSettingData {
   UseSOL?: boolean
   UseSafeMode?: boolean
   ReflashBIOS?: boolean
@@ -205,11 +202,11 @@ export interface AMT_BootSettingData extends CIM_BootSettingData {
   UEFIBootParametersArray?: number[]
   UEFIBootNumberOfParams?: number[]
 }
-export interface AMT_BootSettingDataResponse {
-  AMT_BootSettingData: AMT_BootSettingData
+export interface BootSettingDataResponse {
+  AMT_BootSettingData: BootSettingData
 }
 
-export interface AMT_SetupAndConfigurationService extends CIM_CredentialManagementService {
+export interface SetupAndConfigurationService extends CIM.Models.CredentialManagementService {
   AMT_SetupAndConfigurationService: {
     CreationClassName: string
     ElementName: string
@@ -226,7 +223,7 @@ export interface AMT_SetupAndConfigurationService extends CIM_CredentialManageme
   }
 }
 
-export interface AMT_MessageLog extends CIM_MessageLog {}
+export interface MessageLog extends CIM.Models.MessageLog {}
 
 // Event Log Records have no header and the record data is combined of 21 binary bytes which could be read as EVENT_DATA
 export interface EVENT_DATA {
@@ -242,7 +239,7 @@ export interface EVENT_DATA {
   EventData?: number[]
   TimeStamp?: Date
 }
-export interface AMT_AuditLog_ReadRecords {
+export interface AuditLog_ReadRecords {
   ReadRecords_OUTPUT: {
     TotalRecordCount: string
     RecordsReturned: string
@@ -250,7 +247,8 @@ export interface AMT_AuditLog_ReadRecords {
     ReturnValue: string
   }
 }
-export interface AMT_RedirectionService{
+
+export interface RedirectionService{
   // The Name property uniquely identifies the Service and provides an indication of the functionality that is managed . . .
   Name: string
   // CreationClassName indicates the name of the class or the subclass that is used in the creation of an instance . . .
@@ -268,6 +266,7 @@ export interface AMT_RedirectionService{
   // EnabledState is an integer enumeration that indicates the enabled and disabled states of an element . . .
   EnabledState: number
 }
-export interface AMT_RedirectionResponse{
-  AMT_RedirectionService: AMT_RedirectionService
+
+export interface RedirectionResponse{
+  AMT_RedirectionService: RedirectionService
 }

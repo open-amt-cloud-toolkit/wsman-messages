@@ -7,7 +7,7 @@ import { WSManErrors, WSManMessageCreator } from '../WSMan'
 import { Actions } from './actions'
 import { Methods } from './methods'
 import { Classes } from './classes'
-import { IPS_OptInServiceResponse } from '../models/ips_models'
+import { OptInServiceResponse } from './models'
 
 type AllActions = Actions
 
@@ -21,14 +21,14 @@ export class IPS {
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly put = (action: AllActions, ipsClass: Classes, messageId: string, data: IPS_OptInServiceResponse): string => {
+  private readonly put = (action: AllActions, ipsClass: Classes, messageId: string, data: OptInServiceResponse): string => {
     const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`, messageId)
     let body: string = this.wsmanMessageCreator.createPutBody(data)
     body = body.replace(`<r:${Classes.IPS_OPT_IN_SERVICE}>`, `<r:IPS_OptInService xmlns:r="${this.resourceUriBase}${Classes.IPS_OPT_IN_SERVICE}">`)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  OptInService = (method: Methods.GET | Methods.PUT | Methods.START_OPT_IN | Methods.CANCEL_OPT_IN |Methods.SEND_OPT_IN_CODE, messageId: string, code?: Number, data?: IPS_OptInServiceResponse): string => {
+  OptInService = (method: Methods.GET | Methods.PUT | Methods.START_OPT_IN | Methods.CANCEL_OPT_IN |Methods.SEND_OPT_IN_CODE, messageId: string, code?: Number, data?: OptInServiceResponse): string => {
     let header: string, body: string
     switch (method) {
       case Methods.GET:

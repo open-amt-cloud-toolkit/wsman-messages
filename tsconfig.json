@@ -8,11 +8,12 @@
         "module": "commonjs",
         "allowJs": true,
         "target": "es2019",
+        "strict": false,
         "typeRoots": [
             "node_modules/@types",
-            "src/custom.d.ts",
         ]
     },
+    
     "include": [
         "./src/**/*"
     ]

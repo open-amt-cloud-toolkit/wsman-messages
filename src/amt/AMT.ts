@@ -4,7 +4,7 @@
 **********************************************************************/
 
 import { Selector, WSManMessageCreator, WSManErrors } from '../WSMan'
-import { AMT_EthernetPortSettings, MPServer, RemoteAccessPolicyRule, AMT_EnvironmentDetectionSettingData, AMT_BootSettingData, AMT_RedirectionResponse } from '../models/amt_models'
+import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDetectionSettingData, BootSettingData, RedirectionResponse } from './models'
 import { Methods } from './methods'
 import { Actions, REQUEST_STATE_CHANGE } from './actions'
 import { Classes } from './classes'
@@ -18,7 +18,7 @@ interface AMTCall {
   enumerationContext?: string
   selector?: Selector
   requestedState?: number
-  data?: AMT_RedirectionResponse
+  data?: RedirectionResponse
 }
 
 export class AMT {
@@ -43,7 +43,7 @@ export class AMT {
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly put = (action: AllActions, amtClass: Classes, messageId: string, data: AMT_RedirectionResponse): string => {
+  private readonly put = (action: AllActions, amtClass: Classes, messageId: string, data: RedirectionResponse): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
     let body = this.wsmanMessageCreator.createPutBody(data)
     body = body.replace(`<r:${Classes.AMT_REDIRECTION_SERVICE}>`, `<r:${Classes.AMT_REDIRECTION_SERVICE} xmlns:r="${this.resourceUriBase}${Classes.AMT_REDIRECTION_SERVICE}">`)
@@ -118,7 +118,7 @@ export class AMT {
     return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_BOOT_CAPABILITIES })
   }
 
-  RedirectionService = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE | Methods.PUT, messageId: string, requestedState?: number, data?: AMT_RedirectionResponse): string => {
+  RedirectionService = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE | Methods.PUT, messageId: string, requestedState?: number, data?: RedirectionResponse): string => {
     return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_REDIRECTION_SERVICE, requestedState, data })
   }
 
@@ -130,7 +130,7 @@ export class AMT {
     return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_GENERAL_SETTINGS })
   }
 
-  EthernetPortSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, messageId: string, enumerationContext?: string, ethernetPortObject?: AMT_EthernetPortSettings): string => {
+  EthernetPortSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, messageId: string, enumerationContext?: string, ethernetPortObject?: EthernetPortSettings): string => {
     switch (method) {
       case Methods.PULL:
       case Methods.ENUMERATE:
@@ -163,7 +163,7 @@ export class AMT {
     return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, enumerationContext: enumerationContext })
   }
 
-  EnvironmentDetectionSettingData = (method: Methods.GET | Methods.PUT, messageId: string, environmentDetectionSettingData?: AMT_EnvironmentDetectionSettingData): string => {
+  EnvironmentDetectionSettingData = (method: Methods.GET | Methods.PUT, messageId: string, environmentDetectionSettingData?: EnvironmentDetectionSettingData): string => {
     switch (method) {
       case Methods.GET:
         return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA })
@@ -220,7 +220,7 @@ export class AMT {
     return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_USER_INITIATED_CONNECTION_SERVICE, requestedState: requestedState })
   }
 
-  BootSettingData = (method: Methods.GET | Methods.PUT, messageId: string, bootSettingData?: AMT_BootSettingData): string => {
+  BootSettingData = (method: Methods.GET | Methods.PUT, messageId: string, bootSettingData?: BootSettingData): string => {
     switch (method) {
       case Methods.GET:
         return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_BOOT_SETTING_DATA })

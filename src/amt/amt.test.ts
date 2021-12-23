@@ -6,7 +6,7 @@
 import { AMT } from './AMT'
 import { Methods } from './index'
 
-import { AMT_BootSettingData, AMT_EnvironmentDetectionSettingData, AMT_EthernetPortSettings, MPServer, RemoteAccessPolicyRule } from '../models/amt_models'
+import { BootSettingData, EnvironmentDetectionSettingData, EthernetPortSettings, MPServer, RemoteAccessPolicyRule } from './models'
 import { Selector, WSManErrors } from '../WSMan'
 import { Classes } from './classes'
 
@@ -16,7 +16,7 @@ describe('AMT Tests', () => {
   const messageId = '1'
   const enumerationContext = 'AC070000-0000-0000-0000-000000000000'
   const operationTimeout = 'PT60S'
-  const ethernetPortObject: AMT_EthernetPortSettings = {
+  const ethernetPortObject: EthernetPortSettings = {
     InstanceId: 'Intel(r) AMT Ethernet Port Settings 0',
     ElementName: 'Intel(r) AMT Ethernet Port Settings',
     SharedMAC: true,
@@ -43,7 +43,7 @@ describe('AMT Tests', () => {
     TunnelLifeTime: 0,
     ExtendedData: 'AAAAAAAAABk='
   }
-  const bootSettingData: AMT_BootSettingData = {
+  const bootSettingData: BootSettingData = {
     BIOSLastStatus: [2, 0],
     BIOSPause: false,
     BIOSSetup: false,
@@ -197,7 +197,7 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should create a valid amt_EnvironmentDetectionSettingData Put wsman message', () => {
-      const environmentDetectionSettingData: AMT_EnvironmentDetectionSettingData = {
+      const environmentDetectionSettingData: EnvironmentDetectionSettingData = {
         InstanceId: 'Intel(r) AMT Environment Detection Settings',
         DetectionAlgorithm: 0,
         ElementName: 'Intel(r) AMT Environment Detection Settings',

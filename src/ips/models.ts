@@ -3,26 +3,24 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { CIM_SecurityService, CIM_Service } from './cim_models'
-import { ReturnValue } from './common'
+import { SecurityService, Service } from '../cim/models'
+import { ReturnValue } from '../models/common'
 
-export interface IPS_HostBasedSetupService extends CIM_SecurityService {
+export interface HostBasedSetupService extends SecurityService {
   CurrentControlMode?: number
   AllowedControlModes?: number[]
   ConfigurationNonce?: number[]
   CertChainStatus?: number
 }
-
-export interface IPS_OptInService extends CIM_Service {
+export interface OptInService extends Service {
   OptInCodeTimeout?: number
   OptInRequired?: number
   OptInState?: number
   CanModifyOptInPolicy?: number
   OptInDisplayTimeout?: number
 }
-
-export interface IPS_OptInServiceResponse{
-  IPS_OptInService: IPS_OptInService
+export interface OptInServiceResponse{
+  IPS_OptInService: OptInService
 }
 
 export interface StartOptIn_OUTPUT {
