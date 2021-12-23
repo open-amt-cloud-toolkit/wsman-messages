@@ -1,5 +1,5 @@
-function sayWord (word: string) {
-  console.log(word)
-}
+import { AMT } from './amt'
+import { IPS } from './ips'
+import { CIM } from './cim'
 
-sayWord('Hello')
+export { AMT, IPS, CIM }
