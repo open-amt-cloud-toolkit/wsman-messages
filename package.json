@@ -24,7 +24,7 @@
   "homepage": "https://github.com/open-amt-cloud-toolkit/wsman-messages#readme",
   "devDependencies": {
     "@types/jest": "^27.0.3",
-    "@types/node": "^16.11.13",
+    "@types/node": "^16.11.17",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.7.0",
     "eslint": "^7.32.0",
