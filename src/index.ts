@@ -1,5 +1,5 @@
-import { AMT } from './amt'
-import { IPS } from './ips'
-import { CIM } from './cim'
-
-export { AMT, IPS, CIM }
+import * as AMT from './amt'
+import * as IPS from './ips'
+import * as CIM from './cim'
+import * as Common from './models'
+export { AMT, IPS, CIM, Common }

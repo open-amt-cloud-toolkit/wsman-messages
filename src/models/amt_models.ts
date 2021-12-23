@@ -87,14 +87,6 @@ export interface RemoteAccessPolicyRule {
   ExtendedData?: string
 }
 
-export interface AMT_EnvironmentDetectionSettingData extends CIM_SettingData {
-  DetectionAlgorithm?: number
-  DetectionStrings?: string[]
-  DetectionIPv6LocalPrefixes?: string[]
-  SetSystemDefensePolicy?: (policy: AMT_SystemDefensePolicy) => number
-  EnableVpnRouting?: (enable: boolean) => number
-}
-
 export interface AMT_SystemDefensePolicy extends CIM_ManagedElement {
   PolicyName?: string
   PolicyPrecedence?: number
@@ -110,6 +102,14 @@ export interface AMT_SystemDefensePolicy extends CIM_ManagedElement {
   SetTimeout?: (number) => number
   UpdateStatistics?: (networkInterface: CIM_EthernetPort, resetOnRead: boolean) => number
 }
+export interface AMT_EnvironmentDetectionSettingData extends CIM_SettingData {
+  DetectionAlgorithm?: number
+  DetectionStrings?: string[]
+  DetectionIPv6LocalPrefixes?: string[]
+  SetSystemDefensePolicy?: (policy: AMT_SystemDefensePolicy) => number
+  EnableVpnRouting?: (enable: boolean) => number
+}
+
 export interface AMT_BootCapabilities extends CIM_ManagedElement{
   AMT_BootCapabilities: {
   // The user friendly name for this instance of Capabilities . . .
@@ -174,9 +174,7 @@ export interface AMT_BootCapabilities extends CIM_ManagedElement{
     PlatformErase: number
   }
 }
-export interface AMT_BootSettingDataResponse {
-  AMT_BootSettingData: AMT_BootSettingData
-}
+
 export interface AMT_BootSettingData extends CIM_BootSettingData {
   UseSOL?: boolean
   UseSafeMode?: boolean
@@ -206,6 +204,9 @@ export interface AMT_BootSettingData extends CIM_BootSettingData {
   BIOSLastStatus?: number[]
   UEFIBootParametersArray?: number[]
   UEFIBootNumberOfParams?: number[]
+}
+export interface AMT_BootSettingDataResponse {
+  AMT_BootSettingData: AMT_BootSettingData
 }
 
 export interface AMT_SetupAndConfigurationService extends CIM_CredentialManagementService {
@@ -249,10 +250,6 @@ export interface AMT_AuditLog_ReadRecords {
     ReturnValue: string
   }
 }
-
-export interface AMT_RedirectionResponse{
-  AMT_RedirectionService: AMT_RedirectionService
-}
 export interface AMT_RedirectionService{
   // The Name property uniquely identifies the Service and provides an indication of the functionality that is managed . . .
   Name: string
@@ -270,4 +267,7 @@ export interface AMT_RedirectionService{
   AccessLog: string
   // EnabledState is an integer enumeration that indicates the enabled and disabled states of an element . . .
   EnabledState: number
+}
+export interface AMT_RedirectionResponse{
+  AMT_RedirectionService: AMT_RedirectionService
 }

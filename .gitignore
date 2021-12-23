@@ -8,7 +8,7 @@ src/test/private/*.crt
 src/test/private/*.key
 
 # build output folder
-dist/
+# dist/
 
 junit.xml
 

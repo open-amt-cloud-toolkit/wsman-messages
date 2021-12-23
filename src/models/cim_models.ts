@@ -118,18 +118,6 @@ export interface CIM_BIOSElement extends CIM_SoftwareElement {
   ReleaseDate?: Date
 }
 
-export interface CIM_EnabledLogicalElement extends CIM_LogicalElement {
-  EnabledState?: number
-  OtherEnabledState?: string
-  RequestedState?: number
-  EnabledDefault?: number
-  TimeOfLastStateChange?: Date
-  RequestStateChange?: (
-    RequestedState: number,
-    TimeoutPeriod?: Date
-  ) => CIM_ConcreteJob
-}
-
 export interface CIM_Job extends CIM_LogicalElement {
   InstanceId?: string
   CommunicationStatus?: number
@@ -157,12 +145,23 @@ export interface CIM_Job extends CIM_LogicalElement {
   RecoveryAction?: number
   OtherRecoveryAction?: string
 }
-
 export interface CIM_ConcreteJob extends CIM_Job {
   UntilTime?: Date
   JobState?: number
   TimeOfLastStateChange?: Date
   TimeBeforeRemoval?: Date
+}
+
+export interface CIM_EnabledLogicalElement extends CIM_LogicalElement {
+  EnabledState?: number
+  OtherEnabledState?: string
+  RequestedState?: number
+  EnabledDefault?: number
+  TimeOfLastStateChange?: Date
+  RequestStateChange?: (
+    RequestedState: number,
+    TimeoutPeriod?: Date
+  ) => CIM_ConcreteJob
 }
 
 export interface CIM_LogicalDevice extends CIM_EnabledLogicalElement {
@@ -342,9 +341,6 @@ export interface CIM_MessageLog extends CIM_Log {
   IsFrozen: boolean
   CharacterSet: number
 }
-export interface CIM_KVMRedirectionSAPResponse {
-  CIM_KVMRedirectionSAP: CIM_KVMRedirectionSAP
-}
 export interface CIM_KVMRedirectionSAP {
   Name: string
   CreationClassName: string
@@ -355,6 +351,10 @@ export interface CIM_KVMRedirectionSAP {
   RequestedState: number
   KVMProtocol: number
 }
+export interface CIM_KVMRedirectionSAPResponse {
+  CIM_KVMRedirectionSAP: CIM_KVMRedirectionSAP
+}
+
 export interface PowerActionResponse{
   RequestPowerStateChange_OUTPUT: ReturnValue
 }
