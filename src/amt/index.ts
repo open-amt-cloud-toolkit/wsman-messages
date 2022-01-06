@@ -1,6 +1,6 @@
 import { Actions } from './actions'
-import { AMT } from './AMT'
+import { Messages } from './messages'
 import { Classes } from './classes'
 import { Methods } from './methods'
 import * as Models from './models'
-export { Methods, Actions, Classes, AMT, Models }
+export { Methods, Actions, Classes, Messages as AMT, Models }

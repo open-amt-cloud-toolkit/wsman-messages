@@ -13,7 +13,7 @@ interface CIMCall {
   enumerationContext?: string
   requestedState?: number
 }
-export class CIM {
+export class Messages {
   wsmanMessageCreator: WSManMessageCreator = new WSManMessageCreator()
   readonly resourceUriBase: string = 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
   private readonly enumerate = (action: Actions, cimClass: Classes, messageId: string): string => {

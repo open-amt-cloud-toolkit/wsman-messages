@@ -1,7 +1,7 @@
 import { Actions } from './actions'
-import { CIM } from './CIM'
+import { Messages } from './messages'
 import { Classes } from './classes'
 import { Methods } from './methods'
 import * as Models from './models'
 
-export { Methods, Actions, Classes, CIM, Models }
+export { Methods, Actions, Classes, Messages as CIM, Models }

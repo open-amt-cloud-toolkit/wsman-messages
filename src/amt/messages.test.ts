@@ -3,7 +3,7 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { AMT } from './AMT'
+import { Messages } from './messages'
 import { Methods } from './index'
 
 import { BootSettingData, EnvironmentDetectionSettingData, EthernetPortSettings, MPServer, RemoteAccessPolicyRule } from './models'
@@ -11,8 +11,8 @@ import { Selector, WSManErrors } from '../WSMan'
 import { Classes } from './classes'
 
 describe('AMT Tests', () => {
-  const amtClass = new AMT()
-  const castedAMTClass = new AMT() as any
+  const amtClass = new Messages()
+  const castedAMTClass = new Messages() as any
   const messageId = '1'
   const enumerationContext = 'AC070000-0000-0000-0000-000000000000'
   const operationTimeout = 'PT60S'

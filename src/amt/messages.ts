@@ -21,7 +21,7 @@ interface AMTCall {
   data?: RedirectionResponse
 }
 
-export class AMT {
+export class Messages {
   wsmanMessageCreator: WSManMessageCreator = new WSManMessageCreator()
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/amt-schema/1/'
 
