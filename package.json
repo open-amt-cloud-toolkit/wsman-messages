@@ -8,7 +8,7 @@
     "/dist"
   ],
   "scripts": {
-    "postbuild": "cp package.json dist",
+    "prepare": "cp package.json dist",
     "compile": "tsc",
     "lint": "eslint . --ext .ts",
     "test": "jest --detectOpenHandles --forceExit --coverage"
