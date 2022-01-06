@@ -2,13 +2,10 @@
   "name": "@open-amt-cloud-toolkit/wsman-messages",
   "version": "1.0.0",
   "description": "A reusable package for AMT libraries",
-  "main": "dist/index.js",
-  "types": " dist/index.d.ts",
-  "files": [
-    "/dist"
-  ],
+  "main": "index.js",
+  "types": " index.d.ts",
   "scripts": {
-    "prepare": "cp package.json dist",
+    "prepublishOnly": "cp package.json dist",
     "compile": "tsc",
     "lint": "eslint . --ext .ts",
     "test": "jest --detectOpenHandles --forceExit --coverage"
