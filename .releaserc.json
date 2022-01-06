@@ -1,3 +1,4 @@
 {
+    "pkgRoot": "dist",
     "branches": ["main", "next"]
 }
