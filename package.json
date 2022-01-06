@@ -12,6 +12,7 @@
     "lint": "eslint . --ext .ts",
     "test": "jest --detectOpenHandles --forceExit --coverage"
   },
+  "private": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/open-amt-cloud-toolkit/wsman-messages.git"
