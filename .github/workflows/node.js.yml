@@ -35,6 +35,7 @@ jobs:
     - run: npm test
     - name: Test Report
       uses: dorny/test-reporter@v1
+      continue-on-error: true
       if: success() || failure()    # run this step even if previous step failed
       with:
         name: JEST Tests      # Name of the check run which will be created
@@ -44,5 +45,3 @@ jobs:
     - uses: codecov/codecov-action@v1.0.14
       name: Upload Coverage Results
       if: ${{ matrix.node-version == '16.x' }}
-    
-        
