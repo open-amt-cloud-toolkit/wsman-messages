@@ -22,6 +22,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: "16.x"
+    - run: npm ci
+    - run: npm run compile --if-present
     - name: Semantic Release
       uses: cycjimmy/semantic-release-action@v2
       with:
