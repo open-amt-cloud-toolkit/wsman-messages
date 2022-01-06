@@ -1,7 +1,7 @@
 import { Actions } from './actions'
-import { IPS } from './IPS'
+import { Messages } from './messages'
 import { Classes } from './classes'
 import { Methods } from './methods'
 import * as Models from './models'
 
-export { Methods, Actions, Classes, IPS, Models }
+export { Methods, Actions, Classes, Messages as IPS, Models }

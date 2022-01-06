@@ -11,7 +11,7 @@ import { OptInServiceResponse } from './models'
 
 type AllActions = Actions
 
-export class IPS {
+export class Messages {
   wsmanMessageCreator: WSManMessageCreator = new WSManMessageCreator()
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/ips-schema/1/'
 

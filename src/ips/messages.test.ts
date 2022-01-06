@@ -3,12 +3,12 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { IPS } from './IPS'
+import { Messages } from './messages'
 import { Methods } from './methods'
 import { WSManErrors } from '../WSMan'
 
-const ipsClass = new IPS()
-const castedIPSClass = new IPS() as any
+const ipsClass = new Messages()
+const castedIPSClass = new Messages() as any
 
 describe('IPS Tests', () => {
   const messageId = '1'

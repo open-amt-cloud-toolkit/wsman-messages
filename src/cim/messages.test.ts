@@ -3,12 +3,12 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { CIM } from './CIM'
+import { Messages } from './messages'
 import { WSManErrors } from '../WSMan'
 import { Classes, Methods } from '.'
 
 describe('CIM Tests', () => {
-  const cimClass = new CIM()
+  const cimClass = new Messages()
   const messageId = '1'
   const enumerationContext = 'AC070000-0000-0000-0000-000000000000'
   const operationTimeout = 'PT60S'
