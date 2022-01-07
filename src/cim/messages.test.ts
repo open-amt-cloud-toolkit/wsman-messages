@@ -80,6 +80,14 @@ describe('CIM Tests', () => {
       const response = cimClass.KVMRedirectionSAP(Methods.GET, messageId)
       expect(response).toEqual(correctResponse)
     })
+    it('should create a valid cim_KVMRedirectionSAP Request_State_Change wsman message', () => {
+      const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_KVMRedirectionSAP/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_KVMRedirectionSAP</w:ResourceURI><a:MessageID>${messageId}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_KVMRedirectionSAP"><r:RequestedState>2</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>`
+      const response = cimClass.KVMRedirectionSAP(Methods.REQUEST_STATE_CHANGE, messageId, 2)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if requested state is null', () => {
+      expect(() => { cimClass.KVMRedirectionSAP(Methods.REQUEST_STATE_CHANGE, messageId) }).toThrow(WSManErrors.REQUESTED_STATE)
+    })
   })
   describe('cim_Chassis Tests', () => {
     it('should create a valid cim_Chassis Get wsman message', () => {
