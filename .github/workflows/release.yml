@@ -24,7 +24,7 @@ jobs:
         node-version: "16.x"
     - run: npm ci
     - run: npm run compile --if-present
-    - run: rsync -a package.json readme.md ./dist/
+    - run: rsync -a package.json README.md ./dist/
     - name: Semantic Release
       uses: cycjimmy/semantic-release-action@v2
       with:
