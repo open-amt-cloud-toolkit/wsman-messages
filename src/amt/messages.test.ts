@@ -5,8 +5,7 @@
 
 import { Messages } from './messages'
 import { Methods } from './index'
-
-import { BootSettingData, EnvironmentDetectionSettingData, EthernetPortSettings, MPServer, RemoteAccessPolicyRule } from './models'
+import { BootSettingData, EnvironmentDetectionSettingData, EthernetPortSettings, MPServer, RemoteAccessPolicyRule, RedirectionResponse } from './models'
 import { Selector, WSManErrors } from '../WSMan'
 import { Classes } from './classes'
 
@@ -75,6 +74,26 @@ describe('AMT Tests', () => {
     it('should throw error if an unsupported method is called', () => {
       expect(() => { castedAMTClass.amtSwitch({ method: Methods.READ_RECORDS, class: Classes.AMT_AUDIT_LOG, messageId: messageId }) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
+    it('should return a valid Put wsman message', () => {
+      const data: RedirectionResponse = {
+        AMT_RedirectionService: {
+          Name: 'myservice',
+          CreationClassName: 'redirection_service',
+          SystemName: 'mysystem',
+          SystemCreationClassName: 'test',
+          ElementName: 'test',
+          ListenerEnabled: true,
+          AccessLog: 'hello',
+          EnabledState: 0
+        }
+      }
+      const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EthernetPortSettings</w:ResourceURI><a:MessageID>${messageId}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:AMT_RedirectionService xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService"><r:Name>${data.AMT_RedirectionService.Name}</r:Name><r:CreationClassName>${data.AMT_RedirectionService.CreationClassName}</r:CreationClassName><r:SystemName>${data.AMT_RedirectionService.SystemName}</r:SystemName><r:SystemCreationClassName>${data.AMT_RedirectionService.SystemCreationClassName}</r:SystemCreationClassName><r:ElementName>${data.AMT_RedirectionService.ElementName}</r:ElementName><r:ListenerEnabled>${data.AMT_RedirectionService.ListenerEnabled}</r:ListenerEnabled><r:AccessLog>${data.AMT_RedirectionService.AccessLog}</r:AccessLog><r:EnabledState>${data.AMT_RedirectionService.EnabledState}</r:EnabledState></r:AMT_RedirectionService></Body></Envelope>`
+      const response = castedAMTClass.amtSwitch({ method: Methods.PUT, class: Classes.AMT_ETHERNET_PORT_SETTINGS, messageId: messageId, data })
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if amt.data is null', () => {
+      expect(() => { castedAMTClass.amtSwitch({ method: Methods.PUT, class: Classes.AMT_ETHERNET_PORT_SETTINGS, messageId: messageId, data: null }) }).toThrow(WSManErrors.BODY)
+    })
   })
   describe('amt_AuditLog Tests', () => {
     it('should return a valid amt_AuditLog ReadRecords wsman message', () => {
@@ -99,6 +118,13 @@ describe('AMT Tests', () => {
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { castedAMTClass.MessageLog(Methods.GET, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('amt_BootCapabilities Tests', () => {
+    it('should return a valid amt_BootCapabilities Get wsman message', () => {
+      const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootCapabilities</w:ResourceURI><a:MessageID>${messageId}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.BootCapabilities(Methods.GET, messageId)
+      expect(response).toEqual(correctResponse)
     })
   })
   describe('amt_RedirectionService Tests', () => {
@@ -239,6 +265,20 @@ describe('AMT Tests', () => {
     })
     it('should throw error if selector is missing from amt_RemoteAccessService AddRemoteAccessPolicyRule methods', () => {
       expect(() => { amtClass.RemoteAccessService(Methods.ADD_REMOTE_ACCESS_POLICY_RULE, messageId, null, remoteAccessPolicyRule) }).toThrow(WSManErrors.SELECTOR)
+    })
+    it('should return a valid amt_RemoteAccessPolicyRule wsman message', () => {
+      const remoteAccessPolicyRule: RemoteAccessPolicyRule = {
+        Trigger: 2,
+        TunnelLifeTime: 0,
+        ExtendedData: '0300'
+      }
+      const selector: Selector = {
+        name: 'myselector',
+        value: 'true'
+      }
+      const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService/AddRemoteAccessPolicyRule</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService</w:ResourceURI><a:MessageID>${messageId}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:AddRemoteAccessPolicyRule_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService"><r:Trigger>${remoteAccessPolicyRule.Trigger}</r:Trigger><r:TunnelLifeTime>${remoteAccessPolicyRule.TunnelLifeTime}</r:TunnelLifeTime><r:ExtendedData>${remoteAccessPolicyRule.ExtendedData}</r:ExtendedData><r:MpServer><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="${selector.name}">${selector.value}</Selector></SelectorSet></ReferenceParameters></r:MpServer></r:AddRemoteAccessPolicyRule_INPUT></Body></Envelope>`
+      const response = amtClass.RemoteAccessService(Methods.ADD_REMOTE_ACCESS_POLICY_RULE, messageId, null, remoteAccessPolicyRule, selector)
+      expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { castedAMTClass.RemoteAccessService(Methods.SET_BOOT_CONFIG_ROLE, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
