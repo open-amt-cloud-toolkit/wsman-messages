@@ -122,8 +122,22 @@ export class Messages {
     return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_REDIRECTION_SERVICE, requestedState, data })
   }
 
-  SetupAndConfigurationService = (method: Methods.GET, messageId: string): string => {
-    return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE })
+  SetupAndConfigurationService = (method: Methods.GET | Methods.UNPROVISION | Methods.SET_MEBX_PASSWORD | Methods.COMMIT_CHANGES, messageId: string, password?: string, provisioningMode?: number): string => {
+    let header: string, body: string
+    switch (method) {
+      case Methods.GET:
+        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE })
+      case Methods.UNPROVISION:
+        header = this.wsmanMessageCreator.createHeader(Actions.UNPROVISION, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`, messageId)
+        body = `<Body><r:Unprovision_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}"><r:ProvisioningMode>${provisioningMode}</r:ProvisioningMode></r:Unprovision_INPUT></Body>`
+        return this.wsmanMessageCreator.createXml(header, body)
+      case Methods.SET_MEBX_PASSWORD:
+        header = this.wsmanMessageCreator.createHeader(Actions.SET_MEBX_PASSWORD, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`, messageId)
+        body = `<Body><r:SetMEBxPassword_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}"><r:Password>${password}</r:Password></r:SetMEBxPassword_INPUT></Body>`
+        return this.wsmanMessageCreator.createXml(header, body)
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
   }
 
   GeneralSettings = (method: Methods.GET, messageId: string): string => {
