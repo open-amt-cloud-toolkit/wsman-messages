@@ -16,5 +16,8 @@ export enum Methods {
   REQUEST_STATE_CHANGE = 'RequestStateChange',
   SET_BOOT_CONFIG_ROLE = 'SetBootConfigRole',
   GET_RECORDS = 'GetRecords',
-  POSITION_TO_FIRSTRECORD = 'PositionToFirstRecord'
+  POSITION_TO_FIRSTRECORD = 'PositionToFirstRecord',
+  COMMIT_CHANGES = 'commitChanges',
+  UNPROVISION = 'Unprovision',
+  SET_MEBX_PASSWORD = 'SetMEBxPassword'
 }

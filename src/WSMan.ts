@@ -57,7 +57,10 @@ export class WSManMessageCreator {
     return header
   }
 
-  createBody = (method: string, enumerationContext?: string, input?: string, requestedState?: Number): string => {
+  /**
+   * @param method Valid methods are Pull, Enumerate, Get, Delete and RequestStateChange. For other methods use createBody()
+   */
+  createCommonBody = (method: string, enumerationContext?: string, input?: string, requestedState?: Number): string => {
     let str = '<Body>'
     switch (method) {
       case 'Pull':
@@ -83,9 +86,15 @@ export class WSManMessageCreator {
     return str
   }
 
-  createPutBody (data: any): string {
+  createBody = (method: string, resourceUriBase: string, xmlns: string, data?: any): string => {
     let str = '<Body>'
-    str += this.OBJtoXML(data)
+    if (data) {
+      str += `<r:${method} xmlns:r="${resourceUriBase}${xmlns}">`
+      str += this.OBJtoXML(data)
+      str += `</r:${method}>`
+    } else {
+      str += `<r:${method} xmlns:r="${resourceUriBase}${xmlns}" />`
+    }
     str += '</Body>'
     return str
   }

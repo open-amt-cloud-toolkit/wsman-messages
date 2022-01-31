@@ -60,11 +60,27 @@ describe('IPS Tests', () => {
       const response = ipsClass.HostBasedSetupService(Methods.SETUP, messageId, adminPassEncryptionType, adminPassword)
       expect(response).toEqual(correctResponse)
     })
-    it('should return null if adminPassEncryptionType in ips_HostBasedSetupService is missing', () => {
+    it('should return a valid ips_HostBasedSetupService Admin Setup wsman message', () => {
+      const correctResponse = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService/AdminSetupResponse</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>1</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><r:AdminSetup_INPUT xmlns:r="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService"><r:NetAdminPassEncryptionType>2</r:NetAdminPassEncryptionType><r:NetworkAdminPassword>ba74395270afd494f8658201162adfd0</r:NetworkAdminPassword></r:AdminSetup_INPUT></Body></Envelope>'
+      const response = ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, messageId, adminPassEncryptionType, adminPassword)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid ips_HostBasedSetupService Add Next Cert in Chain wsman message', () => {
+      const correctResponse = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService/AddNextCertInChainResponse</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>1</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><r:AddNextCertInChain_INPUT xmlns:r="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService"><r:NextCertificate>ExampleCertificate</r:NextCertificate></r:AddNextCertInChain_INPUT></Body></Envelope>'
+      const response = ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, messageId, null, null, 'ExampleCertificate')
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return null if adminPassEncryptionType in ips_HostBasedSetupService Setup is missing', () => {
       expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, messageId, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService is missing', () => {
+    it('should return null if adminPassword in ips_HostBasedSetupService Setup is missing', () => {
       expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, messageId, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
+    })
+    it('should return null if adminPassEncryptionType in ips_HostBasedSetupService Admin Setup is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, messageId, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
+    })
+    it('should return null if adminPassword in ips_HostBasedSetupService Admin Setup is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, messageId, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { castedIPSClass.HostBasedSetupService(Methods.REQUEST_POWER_STATE_CHANGE, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
