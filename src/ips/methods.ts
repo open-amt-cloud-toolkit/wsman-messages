@@ -10,8 +10,10 @@ export enum Methods {
   PUT = 'Put',
   DELETE = 'Delete',
   SETUP = 'Setup',
+  ADMIN_SETUP = 'AdminSetup',
   START_OPT_IN = 'StartOptIn',
   CANCEL_OPT_IN = 'CancelOptIn',
   SEND_OPT_IN_CODE = 'SendOptInCode',
-  REQUEST_POWER_STATE_CHANGE = 'RequestPowerStateChange'
+  REQUEST_POWER_STATE_CHANGE = 'RequestPowerStateChange',
+  ADD_NEXT_CERT_IN_CHAIN = 'AddNextCertInChain'
 }

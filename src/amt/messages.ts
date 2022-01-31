@@ -27,38 +27,38 @@ export class Messages {
 
   private readonly get = (action: AllActions, amtClass: Classes, messageId: string): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
-    const body = this.wsmanMessageCreator.createBody(Methods.GET)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.GET)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly enumerate = (action: AllActions, amtClass: Classes, messageId: string): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
-    const body = this.wsmanMessageCreator.createBody(Methods.ENUMERATE)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.ENUMERATE)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly pull = (action: AllActions, amtClass: Classes, messageId: string, enumerationContext: string): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
-    const body = this.wsmanMessageCreator.createBody(Methods.PULL, enumerationContext)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.PULL, enumerationContext)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly put = (action: AllActions, amtClass: Classes, messageId: string, data: RedirectionResponse): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
-    let body = this.wsmanMessageCreator.createPutBody(data)
-    body = body.replace(`<r:${Classes.AMT_REDIRECTION_SERVICE}>`, `<r:${Classes.AMT_REDIRECTION_SERVICE} xmlns:r="${this.resourceUriBase}${Classes.AMT_REDIRECTION_SERVICE}">`)
+    const key = Object.keys(data)[0]
+    const body = this.wsmanMessageCreator.createBody(Classes.AMT_REDIRECTION_SERVICE, this.resourceUriBase, key, data[key])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly delete = (action: AllActions, amtClass: Classes, messageId: string, selector: Selector): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId, null, null, selector)
-    const body = this.wsmanMessageCreator.createBody(Methods.DELETE)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.DELETE)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly requestStateChange = (action: string, amtClass: Classes, messageId: string, requestedState: number): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
-    const body = this.wsmanMessageCreator.createBody(Methods.REQUEST_STATE_CHANGE, null, `${this.resourceUriBase}${amtClass}`, requestedState)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.REQUEST_STATE_CHANGE, null, `${this.resourceUriBase}${amtClass}`, requestedState)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -91,7 +91,7 @@ export class Messages {
     switch (method) {
       case Methods.READ_RECORDS:
         header = this.wsmanMessageCreator.createHeader(Actions.READ_RECORDS, `${this.resourceUriBase}${Classes.AMT_AUDIT_LOG}`, messageId)
-        body = `<Body><r:ReadRecords_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_AUDIT_LOG}"><r:StartIndex>${startIndex}</r:StartIndex></r:ReadRecords_INPUT></Body>`
+        body = this.wsmanMessageCreator.createBody('ReadRecords_INPUT', this.resourceUriBase, Classes.AMT_AUDIT_LOG, { StartIndex: startIndex })
         return this.wsmanMessageCreator.createXml(header, body)
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
@@ -107,7 +107,7 @@ export class Messages {
         return this.wsmanMessageCreator.createXml(header, body)
       case Methods.GET_RECORDS:
         header = this.wsmanMessageCreator.createHeader(Actions.GET_RECORDS, `${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}`, messageId)
-        body = `<Body><r:GetRecords_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}"><r:IterationIdentifier>${identifier}</r:IterationIdentifier><r:MaxReadRecords>390</r:MaxReadRecords></r:GetRecords_INPUT></Body>`
+        body = this.wsmanMessageCreator.createBody('GetRecords_INPUT', this.resourceUriBase, Classes.AMT_MESSAGE_LOG, { IterationIdentifier: identifier, MaxReadRecords: 390 })
         return this.wsmanMessageCreator.createXml(header, body)
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)

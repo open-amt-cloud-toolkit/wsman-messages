@@ -18,25 +18,25 @@ export class Messages {
   readonly resourceUriBase: string = 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
   private readonly enumerate = (action: Actions, cimClass: Classes, messageId: string): string => {
     const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${cimClass}`, messageId)
-    const body: string = this.wsmanMessageCreator.createBody(Methods.ENUMERATE)
+    const body: string = this.wsmanMessageCreator.createCommonBody(Methods.ENUMERATE)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly pull = (action: Actions, cimClass: Classes, messageId: string, enumerationContext: string): string => {
     const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${cimClass}`, messageId)
-    const body: string = this.wsmanMessageCreator.createBody(Methods.PULL, enumerationContext)
+    const body: string = this.wsmanMessageCreator.createCommonBody(Methods.PULL, enumerationContext)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly get = (action: Actions, cimClass: Classes, messageId: string): string => {
     const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${cimClass}`, messageId)
-    const body: string = this.wsmanMessageCreator.createBody(Methods.GET)
+    const body: string = this.wsmanMessageCreator.createCommonBody(Methods.GET)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly requestStateChange = (action: Actions, amtClass: Classes, messageId: string, requestedState: number): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
-    const body = this.wsmanMessageCreator.createBody(Methods.REQUEST_STATE_CHANGE, null, `${this.resourceUriBase}${amtClass}`, requestedState)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.REQUEST_STATE_CHANGE, null, `${this.resourceUriBase}${amtClass}`, requestedState)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
