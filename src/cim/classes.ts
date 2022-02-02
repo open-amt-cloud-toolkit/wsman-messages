@@ -13,6 +13,7 @@ export enum Classes {
   CIM_MEDIA_ACCESS_DEVICE = 'CIM_MediaAccessDevice',
   CIM_PHYSICAL_PACKAGE = 'CIM_PhysicalPackage',
   CIM_WIFI_ENDPOINT_SETTINGS = 'CIM_WiFiEndpointSettings',
+  CIM_WIFI_PORT = 'CIM_WiFiPort',
   CIM_BOOT_SERVICE = 'CIM_BootService',
   CIM_BOOT_CONFIG_SETTING = 'CIM_BootConfigSetting',
   CIM_POWER_MANAGEMENT_SERVICE = 'CIM_PowerManagementService'
