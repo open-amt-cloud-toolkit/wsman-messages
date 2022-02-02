@@ -23,8 +23,11 @@ export class Messages {
 
   private readonly put = (action: AllActions, ipsClass: Classes, messageId: string, data: OptInServiceResponse): string => {
     const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`, messageId)
-    const key = Object.keys(data)[0]
-    const body = this.wsmanMessageCreator.createBody('IPS_OptInService', this.resourceUriBase, key, data[key])
+    let body = 'NULL'
+    if (data) {
+      const key = Object.keys(data)[0]
+      body = this.wsmanMessageCreator.createBody('IPS_OptInService', this.resourceUriBase, key, data[key])
+    }
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
