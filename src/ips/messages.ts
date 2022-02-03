@@ -59,8 +59,11 @@ export class Messages {
   }
 
   // Consider breaking add_next_cert_in_chain out into its own method
-  HostBasedSetupService = (method: Methods.SETUP | Methods.ADMIN_SETUP | Methods.ADD_NEXT_CERT_IN_CHAIN, messageId: string, adminPassEncryptionType?: Number, adminPassword?: string, cert?: string): string => {
+  HostBasedSetupService = (method: Methods.GET | Methods.SETUP | Methods.ADMIN_SETUP | Methods.ADD_NEXT_CERT_IN_CHAIN, messageId: string, adminPassEncryptionType?: Number, adminPassword?: string, mcNonce?: string, signingAlgorithm?: number, digitalSignature?:string, cert?: string, isLeaf?: boolean, isRoot?: boolean): string => {
     switch (method) {
+      case Methods.GET: {
+        return this.get(Actions.GET, Classes.IPS_HOST_BASED_SETUP_SERVICE, messageId)
+      }
       case Methods.SETUP: {
         if (adminPassEncryptionType == null) { throw new Error(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE) }
         if (adminPassword == null) { throw new Error(WSManErrors.ADMIN_PASSWORD) }
@@ -76,14 +79,21 @@ export class Messages {
         if (adminPassword == null) { throw new Error(WSManErrors.ADMIN_PASSWORD) }
         const header: string = this.wsmanMessageCreator.createHeader(Actions.ADMIN_SETUP, `${this.resourceUriBase}${Classes.IPS_HOST_BASED_SETUP_SERVICE}`, messageId)
         const body: string = this.wsmanMessageCreator.createBody('AdminSetup_INPUT', this.resourceUriBase, Classes.IPS_HOST_BASED_SETUP_SERVICE, {
-          NetAdminPassEncryptionType: adminPassEncryptionType.toString(),
-          NetworkAdminPassword: adminPassword
+          NetAdminPassEncryptionType: adminPassEncryptionType,
+          NetworkAdminPassword: adminPassword,
+          McNonce: mcNonce,
+          SigningAlgorithm: signingAlgorithm,
+          DigitalSignature: digitalSignature
         })
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.ADD_NEXT_CERT_IN_CHAIN: {
         const header: string = this.wsmanMessageCreator.createHeader(Actions.ADD_NEXT_CERT_IN_CHAIN, `${this.resourceUriBase}${Classes.IPS_HOST_BASED_SETUP_SERVICE}`, messageId)
-        const body: string = this.wsmanMessageCreator.createBody('AddNextCertInChain_INPUT', this.resourceUriBase, Classes.IPS_HOST_BASED_SETUP_SERVICE, { NextCertificate: cert })
+        const body: string = this.wsmanMessageCreator.createBody('AddNextCertInChain_INPUT', this.resourceUriBase, Classes.IPS_HOST_BASED_SETUP_SERVICE, {
+          NextCertificate: cert,
+          IsLeafCertificate: isLeaf,
+          IsRootCertificate: isRoot
+        })
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
