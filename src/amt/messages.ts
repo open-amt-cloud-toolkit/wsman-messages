@@ -158,6 +158,15 @@ export class Messages {
           body += `<r:LinkPolicy>${item}</r:LinkPolicy>`
         })
         body += `<r:MACAddress>${ethernetPortObject.MACAddress}</r:MACAddress><r:PhysicalConnectionType>${ethernetPortObject.PhysicalConnectionType}</r:PhysicalConnectionType><r:SharedDynamicIP>${String(ethernetPortObject.SharedDynamicIp)}</r:SharedDynamicIP><r:SharedMAC>${String(ethernetPortObject.SharedMAC)}</r:SharedMAC><r:SharedStaticIp>${String(ethernetPortObject.SharedStaticIp)}</r:SharedStaticIp></r:AMT_EthernetPortSettings></Body>`
+        // this.wsmanMessageCreator.createOtherBody('AMT_EthernetPortSettings', this.resourceUriBase, Classes.AMT_ETHERNET_PORT_SETTINGS, {
+        //   'DHCPEnabled': String(ethernetPortObject.DHCPEnabled),
+        //   'ElementName': ethernetPortObject.ElementName,
+        //   'InstanceID': ethernetPortObject.InstanceId,
+        //   'IpSyncEnabled': String(ethernetPortObject.IpSyncEnabled),
+        //   'LinkIsUp': String(ethernetPortObject.LinkIsUp),
+        //   'LinkIsUp': 7,
+
+        // })
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:

@@ -113,6 +113,10 @@ export class Messages {
     return this.switch({ method: method, messageId: messageId, enumerationContext: enumerationContext, class: Classes.CIM_WIFI_ENDPOINT_SETTINGS })
   }
 
+  WiFiPort = (method: Methods.REQUEST_STATE_CHANGE, messageId: string, requestedState: number): string => {
+    return this.switch({ method: method, messageId: messageId, class: Classes.CIM_WIFI_PORT, requestedState: requestedState })
+  }
+
   BootService = (method: Methods.SET_BOOT_CONFIG_ROLE, messageId: string, bootSource: string, role: number): string => {
     switch (method) {
       case 'SetBootConfigRole': {
@@ -131,7 +135,7 @@ export class Messages {
     switch (method) {
       case 'ChangeBootOrder': { // TODO: Example used was incomplete, per AMT SDK there is more work on body required for robust support
         const header = this.wsmanMessageCreator.createHeader(Actions.CHANGE_BOOT_ORDER, `${this.resourceUriBase}${Classes.CIM_BOOT_CONFIG_SETTING}`, messageId)
-        const body = `<Body><r:ChangeBootOrder_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting"><r:Source>${source}</r:Source></r:ChangeBootOrder_INPUT></Body>`
+        const body = this.wsmanMessageCreator.createBody('ChangeBootOrder_INPUT', this.resourceUriBase, 'CIM_BootConfigSetting', { Source: source })
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:

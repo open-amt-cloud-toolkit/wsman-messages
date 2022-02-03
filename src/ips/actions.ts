@@ -14,5 +14,5 @@ export enum Actions {
   ADD_NEXT_CERT_IN_CHAIN = 'http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService/AddNextCertInChain',
   START_OPT_IN = 'http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/StartOptIn',
   CANCEL_OPT_IN = 'http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/CancelOptIn',
-  SEND_OPT_IN_CODE = 'http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/SendOptInCode'
+  SEND_OPT_IN_CODE = 'http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/SendOptInCode',
 }
