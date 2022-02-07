@@ -19,5 +19,8 @@ export enum Methods {
   POSITION_TO_FIRSTRECORD = 'PositionToFirstRecord',
   COMMIT_CHANGES = 'commitChanges',
   UNPROVISION = 'Unprovision',
-  SET_MEBX_PASSWORD = 'SetMEBxPassword'
+  SET_MEBX_PASSWORD = 'SetMEBxPassword',
+  SET_ADMIN_ACL_ENTRY_EX = 'SetAdminAclEntryEx',
+  GET_LOW_ACCURACY_TIME_SYNCH = 'GetLowAccuracyTimeSynch',
+  SET_HIGH_ACCURACY_TIME_SYNCH = 'SetHighAccuracyTimeSynch'
 }
