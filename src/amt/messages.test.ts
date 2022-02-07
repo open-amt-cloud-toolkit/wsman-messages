@@ -326,4 +326,29 @@ describe('AMT Tests', () => {
       expect(() => { castedAMTClass.BootSettingData(Methods.SET_BOOT_CONFIG_ROLE, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
+  describe('amt_AuthorizationService Tests', () => {
+    it('should return a valid amt_AuthorizationService SET_ADMIN_ACL_ENTRY_EX wsman message', () => {
+      const correctResponse = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/SetAdminAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>1</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><r:SetAdminAclEntryEx_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><r:Username>admin</r:Username><r:DigestPassword>P@ssw0rd</r:DigestPassword></r:SetAdminAclEntryEx_INPUT></Body></Envelope>'
+      const response = amtClass.AuthorizationService(Methods.SET_ADMIN_ACL_ENTRY_EX, messageId, 'admin', 'P@ssw0rd')
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { castedAMTClass.AuthorizationService(Methods.GET, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('amt_TimeSynchronizationService Tests', () => {
+    it('should return a valid amt_TimeSynchronizationService GET_LOW_ACCURACY_TIME_SYNCH wsman message', () => {
+      const correctResponse = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/GetLowAccuracyTimeSynch</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService</w:ResourceURI><a:MessageID>1</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><r:GetLowAccuracyTimeSynch_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService" /></Body></Envelope>'
+      const response = amtClass.TimeSynchronizationService(Methods.GET_LOW_ACCURACY_TIME_SYNCH, messageId)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_TimeSynchronizationService SET_HIGH_ACCURACY_TIME_SYNCH wsman message', () => {
+      const correctResponse = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/SetHighAccuracyTimeSynch</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService</w:ResourceURI><a:MessageID>1</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><r:SetHighAccuracyTimeSynch_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService"><r:Ta0>1644240911</r:Ta0><r:Tm1>1644240943</r:Tm1><r:Tm2>1644240943</r:Tm2></r:SetHighAccuracyTimeSynch_INPUT></Body></Envelope>'
+      const response = amtClass.TimeSynchronizationService(Methods.SET_HIGH_ACCURACY_TIME_SYNCH, messageId, 1644240911, 1644240943, 1644240943)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { castedAMTClass.TimeSynchronizationService(Methods.GET, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
 })

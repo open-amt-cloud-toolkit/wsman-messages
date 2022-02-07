@@ -267,4 +267,40 @@ export class Messages {
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
   }
+
+  AuthorizationService = (method: Methods.SET_ADMIN_ACL_ENTRY_EX, messageId: string, username: string, digestPassword: string): string => {
+    switch (method) {
+      case Methods.SET_ADMIN_ACL_ENTRY_EX: {
+        const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_ADMIN_ACL_ENTRY_EX, `${this.resourceUriBase}${Classes.AMT_AUTHORIZATION_SERVICE}`, messageId)
+        const body: string = this.wsmanMessageCreator.createBody('SetAdminAclEntryEx_INPUT', this.resourceUriBase, Classes.AMT_AUTHORIZATION_SERVICE, {
+          Username: username,
+          DigestPassword: digestPassword
+        })
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  TimeSynchronizationService = (method: Methods.GET_LOW_ACCURACY_TIME_SYNCH | Methods.SET_HIGH_ACCURACY_TIME_SYNCH, messageId: string, ta0?: number, tm1?: number, tm2?: number): string => {
+    switch (method) {
+      case Methods.GET_LOW_ACCURACY_TIME_SYNCH: {
+        const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_LOW_ACCURACY_TIME_SYNCH, `${this.resourceUriBase}${Classes.AMT_TIME_SYNCHRONIZATION_SERVICE}`, messageId)
+        const body: string = this.wsmanMessageCreator.createBody('GetLowAccuracyTimeSynch_INPUT', this.resourceUriBase, Classes.AMT_TIME_SYNCHRONIZATION_SERVICE)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      case Methods.SET_HIGH_ACCURACY_TIME_SYNCH: {
+        const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_HIGH_ACCURACY_TIME_SYNCH, `${this.resourceUriBase}${Classes.AMT_TIME_SYNCHRONIZATION_SERVICE}`, messageId)
+        const body: string = this.wsmanMessageCreator.createBody('SetHighAccuracyTimeSynch_INPUT', this.resourceUriBase, Classes.AMT_TIME_SYNCHRONIZATION_SERVICE, {
+          Ta0: ta0,
+          Tm1: tm1,
+          Tm2: tm2
+        })
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
 }

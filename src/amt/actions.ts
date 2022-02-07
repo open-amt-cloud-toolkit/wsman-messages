@@ -18,7 +18,10 @@ export enum Actions {
   POSITION_TO_FIRSTRECORD = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog/PositionToFirstRecord',
   COMMIT_CHANGES = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/commitChanges',
   UNPROVISION = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/Unprovision',
-  SET_MEBX_PASSWORD = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/SetMEBxPassword'
+  SET_MEBX_PASSWORD = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/SetMEBxPassword',
+  SET_ADMIN_ACL_ENTRY_EX = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/SetAdminAclEntryEx',
+  GET_LOW_ACCURACY_TIME_SYNCH = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/GetLowAccuracyTimeSynch',
+  SET_HIGH_ACCURACY_TIME_SYNCH = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/SetHighAccuracyTimeSynch'
 }
 const REQUEST_STATE_CHANGE = (className: string): string => { return `http://intel.com/wbem/wscim/1/amt-schema/1/${className}/RequestStateChange` }
 

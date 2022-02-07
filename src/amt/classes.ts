@@ -18,5 +18,7 @@ export enum Classes {
   AMT_USER_INITIATED_CONNECTION_SERVICE = 'AMT_UserInitiatedConnectionService',
   AMT_BOOT_SETTING_DATA = 'AMT_BootSettingData',
   AMT_BOOT_CAPABILITIES = 'AMT_BootCapabilities',
-  AMT_MESSAGE_LOG = 'AMT_MessageLog'
+  AMT_MESSAGE_LOG = 'AMT_MessageLog',
+  AMT_AUTHORIZATION_SERVICE = 'AMT_AuthorizationService',
+  AMT_TIME_SYNCHRONIZATION_SERVICE = 'AMT_TimeSynchronizationService'
 }
