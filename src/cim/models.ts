@@ -218,7 +218,7 @@ export interface Service extends EnabledLogicalElement {
 export interface SecurityService extends Service {}
 
 export interface SettingData extends ManagedElement {
-  InstanceId?: string
+  InstanceID?: string
 }
 
 // To do: Fix the typing on Dependent and Antecedent
