@@ -151,9 +151,9 @@ export class Messages {
         return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_ETHERNET_PORT_SETTINGS, enumerationContext })
       case Methods.PUT: {
         if (ethernetPortObject == null) { throw new Error(WSManErrors.ETHERNET_PORT_OBJECT) }
-        const selector: Selector = { name: 'InstanceID', value: ethernetPortObject.InstanceId }
+        const selector: Selector = { name: 'InstanceID', value: ethernetPortObject.InstanceID }
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}`, messageId, null, null, selector)
-        let body = `<Body><r:AMT_EthernetPortSettings xmlns:r="${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}"><r:DHCPEnabled>${String(ethernetPortObject.DHCPEnabled)}</r:DHCPEnabled><r:ElementName>${ethernetPortObject.ElementName}</r:ElementName><r:InstanceID>${ethernetPortObject.InstanceId}</r:InstanceID><r:IpSyncEnabled>${String(ethernetPortObject.IpSyncEnabled)}</r:IpSyncEnabled><r:LinkIsUp>${String(ethernetPortObject.LinkIsUp)}</r:LinkIsUp>`
+        let body = `<Body><r:AMT_EthernetPortSettings xmlns:r="${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}"><r:DHCPEnabled>${String(ethernetPortObject.DHCPEnabled)}</r:DHCPEnabled><r:ElementName>${ethernetPortObject.ElementName}</r:ElementName><r:InstanceID>${ethernetPortObject.InstanceID}</r:InstanceID><r:IpSyncEnabled>${String(ethernetPortObject.IpSyncEnabled)}</r:IpSyncEnabled><r:LinkIsUp>${String(ethernetPortObject.LinkIsUp)}</r:LinkIsUp>`
         ethernetPortObject.LinkPolicy.forEach(function (item) {
           body += `<r:LinkPolicy>${item}</r:LinkPolicy>`
         })
@@ -178,12 +178,32 @@ export class Messages {
     return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_REMOTE_ACCESS_POLICY_RULE, selector: selector })
   }
 
-  ManagementPresenceRemoteSAP = (method: Methods.PULL | Methods.ENUMERATE, messageId: string, enumerationContext?: string): string => {
-    return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, enumerationContext: enumerationContext })
+  ManagementPresenceRemoteSAP = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, messageId: string, enumerationContext?: string, selector?: Selector): string => {
+    switch (method) {
+      case Methods.ENUMERATE:
+      case Methods.PULL: {
+        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, enumerationContext: enumerationContext })
+      }
+      case Methods.DELETE: {
+        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, selector: selector })
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
   }
 
-  PublicKeyCertificate = (method: Methods.PULL | Methods.ENUMERATE, messageId: string, enumerationContext?: string): string => {
-    return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, enumerationContext: enumerationContext })
+  PublicKeyCertificate = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, messageId: string, enumerationContext?: string, selector?: Selector): string => {
+    switch (method) {
+      case Methods.ENUMERATE:
+      case Methods.PULL: {
+        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, enumerationContext: enumerationContext })
+      }
+      case Methods.DELETE: {
+        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, selector: selector })
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
   }
 
   EnvironmentDetectionSettingData = (method: Methods.GET | Methods.PUT, messageId: string, environmentDetectionSettingData?: EnvironmentDetectionSettingData): string => {
@@ -192,9 +212,9 @@ export class Messages {
         return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA })
       case Methods.PUT: {
         if (environmentDetectionSettingData == null) { throw new Error(WSManErrors.ENVIRONMENT_DETECTION_SETTING_DATA) }
-        const selector: Selector = { name: 'InstanceID', value: environmentDetectionSettingData.InstanceId }
+        const selector: Selector = { name: 'InstanceID', value: environmentDetectionSettingData.InstanceID }
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}`, messageId, null, null, selector)
-        let body = `<Body><r:AMT_EnvironmentDetectionSettingData xmlns:r="${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}"><r:DetectionAlgorithm>${environmentDetectionSettingData.DetectionAlgorithm}</r:DetectionAlgorithm><r:ElementName>${environmentDetectionSettingData.ElementName}</r:ElementName><r:InstanceID>${environmentDetectionSettingData.InstanceId}</r:InstanceID>`
+        let body = `<Body><r:AMT_EnvironmentDetectionSettingData xmlns:r="${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}"><r:DetectionAlgorithm>${environmentDetectionSettingData.DetectionAlgorithm}</r:DetectionAlgorithm><r:ElementName>${environmentDetectionSettingData.ElementName}</r:ElementName><r:InstanceID>${environmentDetectionSettingData.InstanceID}</r:InstanceID>`
         environmentDetectionSettingData.DetectionStrings.forEach(function (item) {
           body += `<r:DetectionStrings>${item}</r:DetectionStrings>`
         })
@@ -260,7 +280,7 @@ export class Messages {
         bootSettingData.UEFIBootParametersArray?.forEach(function (item) {
           body += `<r:UEFIBootParametersArray>${item}</r:UEFIBootParametersArray>`
         })
-        body += `<r:BIOSPause>${String(bootSettingData.BIOSPause)}</r:BIOSPause><r:BIOSSetup>${String(bootSettingData.BIOSSetup)}</r:BIOSSetup><r:BootMediaIndex>${bootSettingData.BootMediaIndex}</r:BootMediaIndex><r:ConfigurationDataReset>${String(bootSettingData.ConfigurationDataReset)}</r:ConfigurationDataReset><r:ElementName>${bootSettingData.ElementName}</r:ElementName><r:EnforceSecureBoot>${String(bootSettingData.EnforceSecureBoot)}</r:EnforceSecureBoot><r:FirmwareVerbosity>${String(bootSettingData.FirmwareVerbosity)}</r:FirmwareVerbosity><r:ForcedProgressEvents>${String(bootSettingData.ForcedProgressEvents)}</r:ForcedProgressEvents><r:IDERBootDevice>${bootSettingData.IDERBootDevice}</r:IDERBootDevice><r:InstanceID>${bootSettingData.InstanceId}</r:InstanceID><r:LockKeyboard>${String(bootSettingData.LockKeyboard)}</r:LockKeyboard><r:LockPowerButton>${String(bootSettingData.LockPowerButton)}</r:LockPowerButton><r:LockResetButton>${String(bootSettingData.LockResetButton)}</r:LockResetButton><r:LockSleepButton>${String(bootSettingData.LockSleepButton)}</r:LockSleepButton><r:OptionsCleared>${String(bootSettingData.OptionsCleared)}</r:OptionsCleared><r:OwningEntity>${bootSettingData.OwningEntity}</r:OwningEntity><r:ReflashBIOS>${String(bootSettingData.ReflashBIOS)}</r:ReflashBIOS><r:SecureErase>${String(bootSettingData.SecureErase)}</r:SecureErase><r:UseIDER>${String(bootSettingData.UseIDER)}</r:UseIDER><r:UseSOL>${String(bootSettingData.UseSOL)}</r:UseSOL><r:UseSafeMode>${String(bootSettingData.UseSafeMode)}</r:UseSafeMode><r:UserPasswordBypass>${String(bootSettingData.UserPasswordBypass)}</r:UserPasswordBypass></r:AMT_BootSettingData></Body>`
+        body += `<r:BIOSPause>${String(bootSettingData.BIOSPause)}</r:BIOSPause><r:BIOSSetup>${String(bootSettingData.BIOSSetup)}</r:BIOSSetup><r:BootMediaIndex>${bootSettingData.BootMediaIndex}</r:BootMediaIndex><r:ConfigurationDataReset>${String(bootSettingData.ConfigurationDataReset)}</r:ConfigurationDataReset><r:ElementName>${bootSettingData.ElementName}</r:ElementName><r:EnforceSecureBoot>${String(bootSettingData.EnforceSecureBoot)}</r:EnforceSecureBoot><r:FirmwareVerbosity>${String(bootSettingData.FirmwareVerbosity)}</r:FirmwareVerbosity><r:ForcedProgressEvents>${String(bootSettingData.ForcedProgressEvents)}</r:ForcedProgressEvents><r:IDERBootDevice>${bootSettingData.IDERBootDevice}</r:IDERBootDevice><r:InstanceID>${bootSettingData.InstanceID}</r:InstanceID><r:LockKeyboard>${String(bootSettingData.LockKeyboard)}</r:LockKeyboard><r:LockPowerButton>${String(bootSettingData.LockPowerButton)}</r:LockPowerButton><r:LockResetButton>${String(bootSettingData.LockResetButton)}</r:LockResetButton><r:LockSleepButton>${String(bootSettingData.LockSleepButton)}</r:LockSleepButton><r:OptionsCleared>${String(bootSettingData.OptionsCleared)}</r:OptionsCleared><r:OwningEntity>${bootSettingData.OwningEntity}</r:OwningEntity><r:ReflashBIOS>${String(bootSettingData.ReflashBIOS)}</r:ReflashBIOS><r:SecureErase>${String(bootSettingData.SecureErase)}</r:SecureErase><r:UseIDER>${String(bootSettingData.UseIDER)}</r:UseIDER><r:UseSOL>${String(bootSettingData.UseSOL)}</r:UseSOL><r:UseSafeMode>${String(bootSettingData.UseSafeMode)}</r:UseSafeMode><r:UserPasswordBypass>${String(bootSettingData.UserPasswordBypass)}</r:UserPasswordBypass></r:AMT_BootSettingData></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
