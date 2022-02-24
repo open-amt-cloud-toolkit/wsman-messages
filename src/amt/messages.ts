@@ -4,7 +4,7 @@
 **********************************************************************/
 
 import { Selector, WSManMessageCreator, WSManErrors } from '../WSMan'
-import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDetectionSettingData, BootSettingData, RedirectionResponse } from './models'
+import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDetectionSettingData, BootSettingData, RedirectionResponse, GeneralSettings } from './models'
 import { Methods } from './methods'
 import { Actions, REQUEST_STATE_CHANGE } from './actions'
 import { Classes } from './classes'
@@ -141,8 +141,19 @@ export class Messages {
     }
   }
 
-  GeneralSettings = (method: Methods.GET, messageId: string): string => {
-    return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_GENERAL_SETTINGS })
+  GeneralSettings = (method: Methods.GET | Methods.PUT, messageId:string, data?: GeneralSettings): string => {
+    switch (method) {
+      case Methods.GET:
+        return this.amtSwitch({ method: method, messageId, class: Classes.AMT_GENERAL_SETTINGS })
+      case Methods.PUT: {
+        if (data == null) throw new Error(WSManErrors.BODY)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_GENERAL_SETTINGS}`, messageId)
+        const body = this.wsmanMessageCreator.createBody('AMT_GeneralSettings', this.resourceUriBase, Classes.AMT_GENERAL_SETTINGS, data)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
   }
 
   EthernetPortSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, messageId: string, enumerationContext?: string, ethernetPortObject?: EthernetPortSettings): string => {
