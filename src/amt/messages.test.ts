@@ -23,7 +23,7 @@ describe('AMT Tests', () => {
     LinkIsUp: true,
     LinkPolicy: [1, 14, 16],
     SharedStaticIp: false,
-    SharedDynamicIp: true,
+    SharedDynamicIP: true,
     IpSyncEnabled: true,
     DHCPEnabled: true,
     PhysicalConnectionType: 0
@@ -373,6 +373,29 @@ describe('AMT Tests', () => {
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { castedAMTClass.TimeSynchronizationService(Methods.GET, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('amt_WiFiPortConfigurationService Tests', () => {
+    it('should return a valid amt_WiFiPortConfigurationService ADD_WIFI_SETTINGS wsman message', () => {
+      const selector: Selector = {
+        name: 'Name',
+        value: 'WiFi Endpoint 0'
+      }
+      const wifiEndpointSettings = {
+        ElementName: 'home',
+        InstanceID: 'Intel(r) AMT:WiFi Endpoint Settings home',
+        AuthenticationMethod: 6,
+        EncryptionMethod: 4,
+        SSID: 'admin',
+        Priority: 1,
+        PSKPassPhrase: 'passcode'
+      }
+      const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService/AddWiFiSettings</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>1</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><r:AddWiFiSettings_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><r:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name=${selector.name}>${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></r:WiFiEndpoint><r:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><q:ElementName>${wifiEndpointSettings.ElementName}</q:ElementName><q:InstanceID>${wifiEndpointSettings.InstanceID}</q:InstanceID><q:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</q:AuthenticationMethod><q:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</q:EncryptionMethod><q:SSID>${wifiEndpointSettings.SSID}</q:SSID><q:Priority>${wifiEndpointSettings.Priority}</q:Priority><q:PSKPassPhrase>${wifiEndpointSettings.PSKPassPhrase}</q:PSKPassPhrase></r:WiFiEndpointSettingsInput></r:AddWiFiSettings_INPUT></Body></Envelope>`
+      const response = amtClass.WiFiPortConfigurationService(Methods.ADD_WIFI_SETTINGS, messageId, wifiEndpointSettings, selector)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { castedAMTClass.WiFiPortConfigurationService(Methods.GET, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
 })
