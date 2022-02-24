@@ -8,6 +8,7 @@ import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDete
 import { Methods } from './methods'
 import { Actions, REQUEST_STATE_CHANGE } from './actions'
 import { Classes } from './classes'
+import { WiFiEndpointSettings } from '../models/cim_models'
 
 type AllActions = Actions
 
@@ -157,7 +158,7 @@ export class Messages {
         ethernetPortObject.LinkPolicy.forEach(function (item) {
           body += `<r:LinkPolicy>${item}</r:LinkPolicy>`
         })
-        body += `<r:MACAddress>${ethernetPortObject.MACAddress}</r:MACAddress><r:PhysicalConnectionType>${ethernetPortObject.PhysicalConnectionType}</r:PhysicalConnectionType><r:SharedDynamicIP>${String(ethernetPortObject.SharedDynamicIp)}</r:SharedDynamicIP><r:SharedMAC>${String(ethernetPortObject.SharedMAC)}</r:SharedMAC><r:SharedStaticIp>${String(ethernetPortObject.SharedStaticIp)}</r:SharedStaticIp></r:AMT_EthernetPortSettings></Body>`
+        body += `<r:MACAddress>${ethernetPortObject.MACAddress}</r:MACAddress><r:PhysicalConnectionType>${ethernetPortObject.PhysicalConnectionType}</r:PhysicalConnectionType><r:SharedDynamicIP>${String(ethernetPortObject.SharedDynamicIP)}</r:SharedDynamicIP><r:SharedMAC>${String(ethernetPortObject.SharedMAC)}</r:SharedMAC><r:SharedStaticIp>${String(ethernetPortObject.SharedStaticIp)}</r:SharedStaticIp></r:AMT_EthernetPortSettings></Body>`
         // this.wsmanMessageCreator.createOtherBody('AMT_EthernetPortSettings', this.resourceUriBase, Classes.AMT_ETHERNET_PORT_SETTINGS, {
         //   'DHCPEnabled': String(ethernetPortObject.DHCPEnabled),
         //   'ElementName': ethernetPortObject.ElementName,
@@ -317,6 +318,18 @@ export class Messages {
           Tm1: tm1,
           Tm2: tm2
         })
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS, messageId: string, wifiEndpointSettings: WiFiEndpointSettings, selector: Selector): string => {
+    switch (method) {
+      case Methods.ADD_WIFI_SETTINGS: {
+        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_WIFI_SETTINGS, `${this.resourceUriBase}${Classes.AMT_WIFIPORT_CONFIGURATION_SERVICE}`, messageId)
+        const body = `<Body><r:AddWiFiSettings_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><r:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name=${selector.name}>${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></r:WiFiEndpoint><r:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><q:ElementName>${wifiEndpointSettings.ElementName}</q:ElementName><q:InstanceID>${wifiEndpointSettings.InstanceID}</q:InstanceID><q:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</q:AuthenticationMethod><q:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</q:EncryptionMethod><q:SSID>${wifiEndpointSettings.SSID}</q:SSID><q:Priority>${wifiEndpointSettings.Priority}</q:Priority><q:PSKPassPhrase>${wifiEndpointSettings.PSKPassPhrase}</q:PSKPassPhrase></r:WiFiEndpointSettingsInput></r:AddWiFiSettings_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:

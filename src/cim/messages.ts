@@ -3,13 +3,15 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { Actions, Classes, Methods } from '.'
-import { WSManMessageCreator, WSManErrors } from '../WSMan'
+import { REQUEST_STATE_CHANGE } from './actions'
+import { Classes, Methods, Actions } from './'
+import { WSManMessageCreator, WSManErrors, Selector } from '../WSMan'
 
 interface CIMCall {
   method: Methods
   class: Classes
   messageId: string
+  selector?: Selector
   enumerationContext?: string
   requestedState?: number
 }
@@ -34,13 +36,19 @@ export class Messages {
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly requestStateChange = (action: Actions, amtClass: Classes, messageId: string, requestedState: number): string => {
+  private readonly delete = (action: Actions, amtClass: Classes, messageId: string, selector: Selector): string => {
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId, null, null, selector)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.DELETE)
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  private readonly requestStateChange = (action: string, amtClass: Classes, messageId: string, requestedState: number): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.REQUEST_STATE_CHANGE, null, `${this.resourceUriBase}${amtClass}`, requestedState)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly switch = (cim: CIMCall): string => {
+  switch = (cim: CIMCall): string => {
     switch (cim.method) {
       case Methods.GET:
         return this.get(Actions.GET, cim.class, cim.messageId)
@@ -49,9 +57,12 @@ export class Messages {
         return this.pull(Actions.PULL, cim.class, cim.messageId, cim.enumerationContext)
       case Methods.ENUMERATE:
         return this.enumerate(Actions.ENUMERATE, cim.class, cim.messageId)
+      case Methods.DELETE:
+        if (cim.selector == null) { throw new Error(WSManErrors.SELECTOR) }
+        return this.delete(Actions.DELETE, cim.class, cim.messageId, cim.selector)
       case Methods.REQUEST_STATE_CHANGE:
         if (cim.requestedState == null) { throw new Error(WSManErrors.REQUESTED_STATE) }
-        return this.requestStateChange(Actions.REQUEST_STATE_CHANGE, cim.class, cim.messageId, cim.requestedState)
+        return this.requestStateChange(REQUEST_STATE_CHANGE(cim.class), cim.class, cim.messageId, cim.requestedState)
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -109,8 +120,16 @@ export class Messages {
     return this.switch({ method: method, messageId: messageId, enumerationContext: enumerationContext, class: Classes.CIM_PHYSICAL_PACKAGE })
   }
 
-  WiFiEndpointSettings = (method: Methods.PULL | Methods.ENUMERATE, messageId: string, enumerationContext?: string): string => {
-    return this.switch({ method: method, messageId: messageId, enumerationContext: enumerationContext, class: Classes.CIM_WIFI_ENDPOINT_SETTINGS })
+  WiFiEndpointSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, messageId: string, enumerationContext?: string, selector?: Selector): string => {
+    switch (method) {
+      case Methods.PULL:
+      case Methods.ENUMERATE:
+        return this.switch({ method: method, messageId: messageId, enumerationContext: enumerationContext, class: Classes.CIM_WIFI_ENDPOINT_SETTINGS })
+      case Methods.DELETE:
+        return this.switch({ method: method, messageId: messageId, class: Classes.CIM_WIFI_ENDPOINT_SETTINGS, selector: selector })
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
   }
 
   WiFiPort = (method: Methods.REQUEST_STATE_CHANGE, messageId: string, requestedState: number): string => {
