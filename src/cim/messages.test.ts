@@ -3,9 +3,8 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { Messages } from './messages'
 import { WSManErrors } from '../WSMan'
-import { Classes, Methods } from '.'
+import { Classes, Methods, Messages } from '.'
 
 describe('CIM Tests', () => {
   const cimClass = new Messages()
@@ -13,8 +12,11 @@ describe('CIM Tests', () => {
   const enumerationContext = 'AC070000-0000-0000-0000-000000000000'
   const operationTimeout = 'PT60S'
   describe('CIM private function Tests', () => {
+    it('should throw error if missing selector when DELETE method is called', () => {
+      expect(() => { cimClass.switch({ method: Methods.DELETE, class: Classes.SERVICE_AVAILABLE_TO_ELEMENT, messageId: messageId }) }).toThrow(WSManErrors.SELECTOR)
+    })
     it('should throw error if an unsupported method is called on cimSwitch', () => {
-      expect(() => { (cimClass as any).switch({ method: Methods.CHANGE_BOOT_ORDER, class: Classes.SERVICE_AVAILABLE_TO_ELEMENT, messageId: messageId }) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { cimClass.switch({ method: Methods.CHANGE_BOOT_ORDER, class: Classes.SERVICE_AVAILABLE_TO_ELEMENT, messageId: messageId }) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('cim_ServiceAvailableToElement Tests', () => {
@@ -196,13 +198,25 @@ describe('CIM Tests', () => {
       const response = cimClass.WiFiEndpointSettings(Methods.PULL, messageId, enumerationContext)
       expect(response).toEqual(correctResponse)
     })
+    it('should create a valid cim_WiFiEndpointSettings Delete wsman message', () => {
+      const selector = {
+        name: 'InstanceID',
+        value: 'Intel(r) AMT:WiFi Endpoint Settings home'
+      }
+      const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings</w:ResourceURI><a:MessageID>${messageId}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="${selector.name}">${selector.value}</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
+      const response = cimClass.WiFiEndpointSettings(Methods.DELETE, messageId, null, selector)
+      expect(response).toEqual(correctResponse)
+    })
     it('should throw error if enumerationContext is missing from cim_WiFiEndpointSettings Pull request', () => {
       expect(() => { cimClass.WiFiEndpointSettings(Methods.PULL, messageId) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { cimClass.WiFiEndpointSettings(Methods.GET as any, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('cim_WiFiPort Tests', () => {
     it('should create a valid cim_WiFiPrt RequestStateChange wsman message', () => {
-      const correctResponse = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_KVMRedirectionSAP/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort</w:ResourceURI><a:MessageID>1</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort"><r:RequestedState>1</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>'
+      const correctResponse = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort</w:ResourceURI><a:MessageID>1</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort"><r:RequestedState>1</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>'
       const response = cimClass.WiFiPort(Methods.REQUEST_STATE_CHANGE, messageId, 1)
       expect(response).toEqual(correctResponse)
     })

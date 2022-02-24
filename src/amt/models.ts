@@ -4,6 +4,7 @@
 **********************************************************************/
 
 import * as CIM from '../cim'
+import { NetworkPortConfigurationService } from '../cim/models'
 
 export interface AMTAuthenticateObject {
   nonce?: number[]
@@ -54,7 +55,7 @@ export interface EthernetPortSettings extends CIM.Models.SettingData {
   LinkPreference?: number
   LinkControl?: number
   SharedStaticIp?: boolean
-  SharedDynamicIp?: boolean
+  SharedDynamicIP?: boolean
   IpSyncEnabled?: boolean
   DHCPEnabled?: boolean
   IPAddress?: string
@@ -108,9 +109,9 @@ export interface EnvironmentDetectionSettingData extends CIM.Models.SettingData 
   EnableVpnRouting?: (enable: boolean) => number
 }
 
-export interface BootCapabilities extends CIM.Models.ManagedElement{
+export interface BootCapabilities extends CIM.Models.ManagedElement {
   AMT_BootCapabilities: {
-  // The user friendly name for this instance of Capabilities . . .
+    // The user friendly name for this instance of Capabilities . . .
     ElementName: string
     // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class . . .
     InstanceID: string
@@ -223,7 +224,7 @@ export interface SetupAndConfigurationService extends CIM.Models.CredentialManag
   }
 }
 
-export interface MessageLog extends CIM.Models.MessageLog {}
+export interface MessageLog extends CIM.Models.MessageLog { }
 
 // Event Log Records have no header and the record data is combined of 21 binary bytes which could be read as EVENT_DATA
 export interface EVENT_DATA {
@@ -248,7 +249,7 @@ export interface AuditLog_ReadRecords {
   }
 }
 
-export interface RedirectionService{
+export interface RedirectionService {
   // The Name property uniquely identifies the Service and provides an indication of the functionality that is managed . . .
   Name: string
   // CreationClassName indicates the name of the class or the subclass that is used in the creation of an instance . . .
@@ -267,6 +268,33 @@ export interface RedirectionService{
   EnabledState: number
 }
 
-export interface RedirectionResponse{
+export interface RedirectionResponse {
   AMT_RedirectionService: RedirectionService
+}
+
+export interface WiFiPortConfigurationService extends NetworkPortConfigurationService {
+  RequestedState: number
+  // RequestedState is an integer enumeration that indicates the last requested or desired state for the element, irrespective of the mechanism through which it was requested . . .
+  EnabledState: number
+  // EnabledState is an integer enumeration that indicates the enabled and disabled states of an element . . .
+  HealthState: number
+  // Indicates the current health of the element. . .
+  ElementName: string
+  // A user - friendly name for the object. . .
+  SystemCreationClassName: string
+  // The CreationClassName of the scoping System.
+  SystemName: string
+  // The Name of the scoping System.
+  CreationClassName: string
+  // CreationClassName indicates the name of the class or the subclass that is used in the creation of an instance. . .
+  Name: string
+  // The Name property uniquely identifies the Service and provides an indication of the functionality that is managed. . .
+  localProfileSynchronizationEnabled: number
+  // Administrator's policy regarding enablement of local profile synchronization.Remote profile synchronization is always enabled.
+  LastConnectedSsidUnderMeControl: string
+  // The SSID of the Wireless network that was last connected in ME Control state
+  NoHostCsmeSoftwarePolicy: number
+  // Setting Policy regarding no HOST CSME software.
+  UEFIWiFiProfileShareEnabled: number
+  // Enables or disables UEFI / CSME Wi - Fi Profile Sharing.
 }

@@ -69,7 +69,7 @@ export interface CIM_PhysicalPackage extends CIM_PhysicalElement {
   PackageType?: number
 }
 
-export interface CIM_Card extends CIM_PhysicalPackage {}
+export interface CIM_Card extends CIM_PhysicalPackage { }
 
 export interface CIM_PhysicalFrame extends CIM_PhysicalPackage {
   VendorCompatibilityStrings?: string[]
@@ -97,7 +97,7 @@ export interface CIM_Chassis extends CIM_PhysicalFrame {
   ChassisPackageType?: number
 }
 
-export interface CIM_LogicalElement extends CIM_ManagedSystemElement {}
+export interface CIM_LogicalElement extends CIM_ManagedSystemElement { }
 
 export interface CIM_SoftwareElement extends CIM_LogicalElement {
   Version?: string
@@ -217,7 +217,7 @@ export interface CIM_Service extends CIM_EnabledLogicalElement {
   StopService?: () => number
 }
 
-export interface CIM_SecurityService extends CIM_Service {}
+export interface CIM_SecurityService extends CIM_Service { }
 
 export interface CIM_SettingData extends CIM_ManagedElement {
   InstanceId?: string
@@ -229,7 +229,7 @@ export interface CIM_Dependency {
   Dependent: any
 }
 
-export interface CIM_SystemPackaging extends CIM_Dependency {}
+export interface CIM_SystemPackaging extends CIM_Dependency { }
 
 export interface CIM_ComputerSystemPackage extends CIM_SystemPackaging {
   PlatformGuid?: string
@@ -256,13 +256,13 @@ export interface CIM_NetworkPort extends CIM_LogicalPort {
   ActiveMaximumTransmissionUnit?: number
 }
 
-export interface CIM_EthernetPort extends CIM_NetworkPort {}
+export interface CIM_EthernetPort extends CIM_NetworkPort { }
 
 export interface CIM_BootSettingData extends CIM_SettingData {
   OwningEntity?: string
 }
 
-export interface CIM_Collection extends CIM_ManagedElement {}
+export interface CIM_Collection extends CIM_ManagedElement { }
 
 export interface CIM_Role extends CIM_Collection {
   CreationClassName?: string
@@ -308,11 +308,11 @@ export interface CIM_AssociatedPowerManagementService extends CIM_ServiceAvailab
 export interface CIM_SoftwareIdentity
   extends CIM_LogicalElement {
   CIM_SoftwareIdentity: Array<
-  {
-    InstanceID: string
-    VersionString: string
-    IsEntity: boolean
-  } & CIM_LogicalElement
+    {
+      InstanceID: string
+      VersionString: string
+      IsEntity: boolean
+    } & CIM_LogicalElement
   >
 }
 export interface CIM_Log extends CIM_EnabledLogicalElement {
@@ -355,6 +355,30 @@ export interface CIM_KVMRedirectionSAPResponse {
   CIM_KVMRedirectionSAP: CIM_KVMRedirectionSAP
 }
 
-export interface PowerActionResponse{
+export interface PowerActionResponse {
   RequestPowerStateChange_OUTPUT: ReturnValue
+}
+export interface WiFiEndpointSettings extends CIM_SettingData {
+  ElementName: string
+  // The user-friendly name for this instance of SettingData . . .
+  InstanceID: string
+  // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class . . .
+  Priority: number
+  // Priority shall indicate the priority of the instance among all WiFiEndpointSettings instances.
+  SSID?: string
+  // SSID shall indicate the Service Set Identifier (SSID) that shall be used when the settings are applied to a WiFiEndpoint . . .
+  BSSType?: number
+  // BSSType shall indicate the Basic Service Set (BSS) Type that shall be used when the settings are applied . . .
+  EncryptionMethod: number
+  // EncryptionMethod shall specify the 802.11 encryption method used when the settings are applied . . .
+  AuthenticationMethod: number
+  // AuthenticationMethod shall specify the 802.11 authentication method used when the settings are applied . . .
+  Keys?: string[4]
+  // Keys shall contain the default WEP encryption keys . . .
+  KeyIndex?: number
+  // KeyIndex shall contain the index of the active key in the Keys array property . . .
+  PSKValue?: number
+  // The actual binary value of a PSK (pre-shared key) . . .
+  PSKPassPhrase?: string
+  // An ASCII string of 8-63 printable characters used to generate a PSK (pre-shared key) . . .
 }

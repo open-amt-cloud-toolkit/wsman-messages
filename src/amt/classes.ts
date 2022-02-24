@@ -20,5 +20,6 @@ export enum Classes {
   AMT_BOOT_CAPABILITIES = 'AMT_BootCapabilities',
   AMT_MESSAGE_LOG = 'AMT_MessageLog',
   AMT_AUTHORIZATION_SERVICE = 'AMT_AuthorizationService',
-  AMT_TIME_SYNCHRONIZATION_SERVICE = 'AMT_TimeSynchronizationService'
+  AMT_TIME_SYNCHRONIZATION_SERVICE = 'AMT_TimeSynchronizationService',
+  AMT_WIFIPORT_CONFIGURATION_SERVICE = 'AMT_WiFiPortConfigurationService'
 }

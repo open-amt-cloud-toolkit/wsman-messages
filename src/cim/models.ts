@@ -69,7 +69,7 @@ export interface PhysicalPackage extends PhysicalElement {
   PackageType?: number
 }
 
-export interface Card extends PhysicalPackage {}
+export interface Card extends PhysicalPackage { }
 
 export interface PhysicalFrame extends PhysicalPackage {
   VendorCompatibilityStrings?: string[]
@@ -97,7 +97,7 @@ export interface Chassis extends PhysicalFrame {
   ChassisPackageType?: number
 }
 
-export interface LogicalElement extends ManagedSystemElement {}
+export interface LogicalElement extends ManagedSystemElement { }
 
 export interface SoftwareElement extends LogicalElement {
   Version?: string
@@ -215,7 +215,7 @@ export interface Service extends EnabledLogicalElement {
   StopService?: () => number
 }
 
-export interface SecurityService extends Service {}
+export interface SecurityService extends Service { }
 
 export interface SettingData extends ManagedElement {
   InstanceID?: string
@@ -227,7 +227,7 @@ export interface Dependency {
   Dependent: any
 }
 
-export interface SystemPackaging extends Dependency {}
+export interface SystemPackaging extends Dependency { }
 
 export interface ComputerSystemPackage extends SystemPackaging {
   PlatformGuid?: string
@@ -254,13 +254,13 @@ export interface NetworkPort extends LogicalPort {
   ActiveMaximumTransmissionUnit?: number
 }
 
-export interface EthernetPort extends NetworkPort {}
+export interface EthernetPort extends NetworkPort { }
 
 export interface BootSettingData extends SettingData {
   OwningEntity?: string
 }
 
-export interface Collection extends ManagedElement {}
+export interface Collection extends ManagedElement { }
 
 export interface Role extends Collection {
   CreationClassName?: string
@@ -306,11 +306,11 @@ export interface AssociatedPowerManagementService extends ServiceAvailableToElem
 export interface SoftwareIdentity
   extends LogicalElement {
   CIM_SoftwareIdentity: Array<
-  {
-    InstanceID: string
-    VersionString: string
-    IsEntity: boolean
-  } & LogicalElement
+    {
+      InstanceID: string
+      VersionString: string
+      IsEntity: boolean
+    } & LogicalElement
   >
 }
 export interface Log extends EnabledLogicalElement {
@@ -354,6 +354,9 @@ export interface KVMRedirectionSAPResponse {
   CIM_KVMRedirectionSAP: KVMRedirectionSAP
 }
 
-export interface PowerActionResponse{
+export interface PowerActionResponse {
   RequestPowerStateChange_OUTPUT: ReturnValue
+}
+
+export interface NetworkPortConfigurationService extends Service {
 }

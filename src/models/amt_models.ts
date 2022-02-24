@@ -54,7 +54,7 @@ export interface AMT_EthernetPortSettings extends CIM_SettingData {
   LinkPreference?: number
   LinkControl?: number
   SharedStaticIp?: boolean
-  SharedDynamicIp?: boolean
+  SharedDynamicIP?: boolean
   IpSyncEnabled?: boolean
   DHCPEnabled?: boolean
   IPAddress?: string
