@@ -161,6 +161,14 @@ describe('AMT Tests', () => {
       const response = amtClass.GeneralSettings(Methods.GET, messageId)
       expect(response).toEqual(correctResponse)
     })
+    it('should return a valid amt_GeneralSettings PUT wsman message', () => {
+      const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings</w:ResourceURI><a:MessageID>${messageId}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:AMT_GeneralSettings xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings"></r:AMT_GeneralSettings></Body></Envelope>`
+      const response = amtClass.GeneralSettings(Methods.PUT, messageId, {} as any)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.GeneralSettings(Methods.PULL as any, messageId) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
   })
   describe('amt_EthernetPortSettings Tests', () => {
     it('should return a valid amt_EthernetPortSettings Get wsman message', () => {
