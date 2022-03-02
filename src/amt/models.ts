@@ -271,7 +271,56 @@ export interface RedirectionService {
 export interface RedirectionResponse {
   AMT_RedirectionService: RedirectionService
 }
+export interface PublicKeyCertificate{
+  // A user-friendly name for the object . . .
+ ElementName:string
+  // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class.
+ InstanceID :string
+  // The X.509 Certificate blob.
+   X509Certificate: string // uint8[4100]
 
+  // For root certificate [that were added by AMT_PublicKeyManagementService.AddTrustedRootCertificate()]this property will be true.
+  TrustedRootCertficate:boolean
+
+  // The Issuer field of this certificate.
+  Issuer:string
+
+  // The Subject field of this certificate.
+  Subject:string
+
+  // Indicates whether the certificate is an Intel AMT self-signed certificate. If True, the certificate cannot be deleted.
+  ReadOnlyCertificate:boolean
+
+}
+export interface TLSProtocolEndpointCollection extends CIM.Models.Collection {
+
+}
+export interface TLSCredentialContext {//  extends CIM.Models.CredentialContext{
+// A certificate whose context is defined.
+  ElementInContext: string
+// The TLSProtocolEndpointCollection that provides context or scope for the Credential.
+  ElementProvidingContext: string
+}
+
+export interface TLSSettingData extends CIM.Models.SettingData {
+   MutualAuthentication: boolean
+  // Adminstrator-settable property that determines whether or not mutual authentication is used at the TLS layer is used on the associated service access point . . .
+   Enabled: boolean
+  // Administrator-settable property that determines whether or not TLS is used on the associated service access point.
+   TrustedCN: string
+  // An array of strings, used to validate the CN subfield of the subject field in X.509 certificates presented to Intel(R) AMT in the TLS handshake . . .
+   AcceptNonSecureConnections: boolean
+  // This setting defines once TLS is enabled and configured whether non-secure EOI/WSMAN connections are still accepted by FW on ports 16992 and 623 . . .
+   NonSecureConnectionsSupported: boolean
+  // If the value of this read-only field is True, the value of AcceptNonSecureConnections can be changed. Note that this class and field can be accessed locally as well as remotely.
+}
+export interface GenerateKeyPair{
+  KeyAlgorithm: number
+  KeyLength: number
+}
+export interface AddCertificate{
+  CertificateBlob: string
+}
 export interface WiFiPortConfigurationService extends NetworkPortConfigurationService {
   RequestedState: number
   // RequestedState is an integer enumeration that indicates the last requested or desired state for the element, irrespective of the mechanism through which it was requested . . .

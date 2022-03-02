@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  **********************************************************************/
 
+import { CIM_ManagedElement } from '../models/cim_models'
 import { ReturnValue } from '../models/common'
 
 export interface ManagedElement {
@@ -276,6 +277,18 @@ export interface CredentialManagementService extends AuthenticationService {
   InstanceID: string
 }
 
+export interface Credential extends CIM_ManagedElement{
+  // The date and time when the credential was issued
+  Issued: Date
+  // The date and time when the credential expires (and is not appropriate for use for authentication/ authorization)
+  Expires: Date
+}
+export interface CredentialContext {
+  // A Credential whose context is defined.
+  ElementInContext: Credential
+  // The ManagedElement that provides context or scope for the Credential.
+  ElementProvidingContext: CIM_ManagedElement
+}
 export interface ServiceAvailableToElement {
   ServiceProvided: {
     Address: string
