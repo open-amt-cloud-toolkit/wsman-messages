@@ -32,6 +32,7 @@ export enum WSManErrors {
 }
 
 export class WSManMessageCreator {
+  messageId: number = 0
   xmlCommonPrefix: string = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope">'
   xmlCommonEnd: string = '</Envelope>'
   anonymousAddress: string = 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous'
@@ -43,12 +44,11 @@ export class WSManMessageCreator {
     return this.xmlCommonPrefix + header + body + this.xmlCommonEnd
   }
 
-  createHeader = (action: string, resourceUri: string, messageId: string, address?: string, timeout?: string, selector?: Selector): string => {
+  createHeader = (action: string, resourceUri: string, address?: string, timeout?: string, selector?: Selector): string => {
     let header: string = '<Header>'
     if (action == null) { throw new Error(WSManErrors.ACTION) }
     if (resourceUri == null) { throw new Error(WSManErrors.RESOURCE_URI) }
-    if (messageId == null) { throw new Error(WSManErrors.MESSAGE_ID) }
-    header += `<a:Action>${action}</a:Action><a:To>/wsman</a:To><w:ResourceURI>${resourceUri}</w:ResourceURI><a:MessageID>${messageId}</a:MessageID><a:ReplyTo>`
+    header += `<a:Action>${action}</a:Action><a:To>/wsman</a:To><w:ResourceURI>${resourceUri}</w:ResourceURI><a:MessageID>${(this.messageId++).toString()}</a:MessageID><a:ReplyTo>`
     if (address != null) { header += `<a:Address>${address}</a:Address>` } else { header += `<a:Address>${this.anonymousAddress}</a:Address>` }
     header += '</a:ReplyTo>'
     if (timeout != null) { header += `<w:OperationTimeout>${timeout}</w:OperationTimeout>` } else { header += `<w:OperationTimeout>${this.defaultTimeout}</w:OperationTimeout>` }
