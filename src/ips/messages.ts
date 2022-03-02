@@ -15,14 +15,14 @@ export class Messages {
   wsmanMessageCreator: WSManMessageCreator = new WSManMessageCreator()
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/ips-schema/1/'
 
-  private readonly get = (action: AllActions, ipsClass: Classes, messageId: string): string => {
-    const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`, messageId)
+  private readonly get = (action: AllActions, ipsClass: Classes): string => {
+    const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`)
     const body: string = this.wsmanMessageCreator.createCommonBody(Methods.GET)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly put = (action: AllActions, ipsClass: Classes, messageId: string, data: OptInServiceResponse): string => {
-    const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`, messageId)
+  private readonly put = (action: AllActions, ipsClass: Classes, data: OptInServiceResponse): string => {
+    const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`)
     let body = 'NULL'
     if (data) {
       const key = Object.keys(data)[0]
@@ -31,25 +31,25 @@ export class Messages {
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  OptInService = (method: Methods.GET | Methods.PUT | Methods.START_OPT_IN | Methods.CANCEL_OPT_IN | Methods.SEND_OPT_IN_CODE, messageId: string, code?: Number, data?: OptInServiceResponse): string => {
+  OptInService = (method: Methods.GET | Methods.PUT | Methods.START_OPT_IN | Methods.CANCEL_OPT_IN | Methods.SEND_OPT_IN_CODE, code?: Number, data?: OptInServiceResponse): string => {
     let header: string, body: string
     switch (method) {
       case Methods.GET:
-        return this.get(Actions.GET, Classes.IPS_OPT_IN_SERVICE, messageId)
+        return this.get(Actions.GET, Classes.IPS_OPT_IN_SERVICE)
       case Methods.PUT:
-        return this.put(Actions.PUT, Classes.IPS_OPT_IN_SERVICE, messageId, data)
+        return this.put(Actions.PUT, Classes.IPS_OPT_IN_SERVICE, data)
       case Methods.START_OPT_IN: {
-        header = this.wsmanMessageCreator.createHeader(Actions.START_OPT_IN, `${this.resourceUriBase}${Classes.IPS_OPT_IN_SERVICE}`, messageId)
+        header = this.wsmanMessageCreator.createHeader(Actions.START_OPT_IN, `${this.resourceUriBase}${Classes.IPS_OPT_IN_SERVICE}`)
         body = this.wsmanMessageCreator.createBody('StartOptIn_INPUT', this.resourceUriBase, Classes.IPS_OPT_IN_SERVICE)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.SEND_OPT_IN_CODE: {
-        header = this.wsmanMessageCreator.createHeader(Actions.SEND_OPT_IN_CODE, `${this.resourceUriBase}${Classes.IPS_OPT_IN_SERVICE}`, messageId)
+        header = this.wsmanMessageCreator.createHeader(Actions.SEND_OPT_IN_CODE, `${this.resourceUriBase}${Classes.IPS_OPT_IN_SERVICE}`)
         body = this.wsmanMessageCreator.createBody('SendOptInCode_INPUT', this.resourceUriBase, Classes.IPS_OPT_IN_SERVICE, { OptInCode: code })
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.CANCEL_OPT_IN: {
-        header = this.wsmanMessageCreator.createHeader(Actions.CANCEL_OPT_IN, `${this.resourceUriBase}${Classes.IPS_OPT_IN_SERVICE}`, messageId)
+        header = this.wsmanMessageCreator.createHeader(Actions.CANCEL_OPT_IN, `${this.resourceUriBase}${Classes.IPS_OPT_IN_SERVICE}`)
         body = this.wsmanMessageCreator.createBody('CancelOptIn_INPUT', this.resourceUriBase, Classes.IPS_OPT_IN_SERVICE)
         return this.wsmanMessageCreator.createXml(header, body)
       }
@@ -59,15 +59,15 @@ export class Messages {
   }
 
   // Consider breaking add_next_cert_in_chain out into its own method
-  HostBasedSetupService = (method: Methods.GET | Methods.SETUP | Methods.ADMIN_SETUP | Methods.ADD_NEXT_CERT_IN_CHAIN, messageId: string, adminPassEncryptionType?: Number, adminPassword?: string, mcNonce?: string, signingAlgorithm?: number, digitalSignature?:string, cert?: string, isLeaf?: boolean, isRoot?: boolean): string => {
+  HostBasedSetupService = (method: Methods.GET | Methods.SETUP | Methods.ADMIN_SETUP | Methods.ADD_NEXT_CERT_IN_CHAIN, adminPassEncryptionType?: Number, adminPassword?: string, mcNonce?: string, signingAlgorithm?: number, digitalSignature?:string, cert?: string, isLeaf?: boolean, isRoot?: boolean): string => {
     switch (method) {
       case Methods.GET: {
-        return this.get(Actions.GET, Classes.IPS_HOST_BASED_SETUP_SERVICE, messageId)
+        return this.get(Actions.GET, Classes.IPS_HOST_BASED_SETUP_SERVICE)
       }
       case Methods.SETUP: {
         if (adminPassEncryptionType == null) { throw new Error(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE) }
         if (adminPassword == null) { throw new Error(WSManErrors.ADMIN_PASSWORD) }
-        const header: string = this.wsmanMessageCreator.createHeader(Actions.SETUP, `${this.resourceUriBase}${Classes.IPS_HOST_BASED_SETUP_SERVICE}`, messageId)
+        const header: string = this.wsmanMessageCreator.createHeader(Actions.SETUP, `${this.resourceUriBase}${Classes.IPS_HOST_BASED_SETUP_SERVICE}`)
         const body: string = this.wsmanMessageCreator.createBody('Setup_INPUT', this.resourceUriBase, Classes.IPS_HOST_BASED_SETUP_SERVICE, {
           NetAdminPassEncryptionType: adminPassEncryptionType.toString(),
           NetworkAdminPassword: adminPassword
@@ -77,7 +77,7 @@ export class Messages {
       case Methods.ADMIN_SETUP: {
         if (adminPassEncryptionType == null) { throw new Error(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE) }
         if (adminPassword == null) { throw new Error(WSManErrors.ADMIN_PASSWORD) }
-        const header: string = this.wsmanMessageCreator.createHeader(Actions.ADMIN_SETUP, `${this.resourceUriBase}${Classes.IPS_HOST_BASED_SETUP_SERVICE}`, messageId)
+        const header: string = this.wsmanMessageCreator.createHeader(Actions.ADMIN_SETUP, `${this.resourceUriBase}${Classes.IPS_HOST_BASED_SETUP_SERVICE}`)
         const body: string = this.wsmanMessageCreator.createBody('AdminSetup_INPUT', this.resourceUriBase, Classes.IPS_HOST_BASED_SETUP_SERVICE, {
           NetAdminPassEncryptionType: adminPassEncryptionType,
           NetworkAdminPassword: adminPassword,
@@ -88,7 +88,7 @@ export class Messages {
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.ADD_NEXT_CERT_IN_CHAIN: {
-        const header: string = this.wsmanMessageCreator.createHeader(Actions.ADD_NEXT_CERT_IN_CHAIN, `${this.resourceUriBase}${Classes.IPS_HOST_BASED_SETUP_SERVICE}`, messageId)
+        const header: string = this.wsmanMessageCreator.createHeader(Actions.ADD_NEXT_CERT_IN_CHAIN, `${this.resourceUriBase}${Classes.IPS_HOST_BASED_SETUP_SERVICE}`)
         const body: string = this.wsmanMessageCreator.createBody('AddNextCertInChain_INPUT', this.resourceUriBase, Classes.IPS_HOST_BASED_SETUP_SERVICE, {
           NextCertificate: cert,
           IsLeafCertificate: isLeaf,

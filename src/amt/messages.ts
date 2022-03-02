@@ -4,18 +4,16 @@
 **********************************************************************/
 
 import { Selector, WSManMessageCreator, WSManErrors } from '../WSMan'
-import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDetectionSettingData, BootSettingData, RedirectionResponse, GeneralSettings } from './models'
-import { Methods } from './methods'
-import { Actions, REQUEST_STATE_CHANGE } from './actions'
-import { Classes } from './classes'
+import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDetectionSettingData, BootSettingData, RedirectionResponse, TLSSettingData, GenerateKeyPair, AddCertificate, GeneralSettings, TLSCredentialContext } from './models'
+import { REQUEST_STATE_CHANGE } from './actions'
+import { Classes, Methods, Actions } from './'
 import { WiFiEndpointSettings } from '../models/cim_models'
 
 type AllActions = Actions
 
-interface AMTCall {
+export interface AMTCall {
   method: Methods
   class: Classes
-  messageId: string
   enumerationContext?: string
   selector?: Selector
   requestedState?: number
@@ -26,72 +24,72 @@ export class Messages {
   wsmanMessageCreator: WSManMessageCreator = new WSManMessageCreator()
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/amt-schema/1/'
 
-  private readonly get = (action: AllActions, amtClass: Classes, messageId: string): string => {
-    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
+  private readonly get = (action: AllActions, amtClass: Classes): string => {
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.GET)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly enumerate = (action: AllActions, amtClass: Classes, messageId: string): string => {
-    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
+  private readonly enumerate = (action: AllActions, amtClass: Classes): string => {
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.ENUMERATE)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly pull = (action: AllActions, amtClass: Classes, messageId: string, enumerationContext: string): string => {
-    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
+  private readonly pull = (action: AllActions, amtClass: Classes, enumerationContext: string): string => {
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.PULL, enumerationContext)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly put = (action: AllActions, amtClass: Classes, messageId: string, data: RedirectionResponse): string => {
-    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
+  private readonly put = (action: AllActions, amtClass: Classes, data: RedirectionResponse): string => {
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`)
     const key = Object.keys(data)[0]
     const body = this.wsmanMessageCreator.createBody(Classes.AMT_REDIRECTION_SERVICE, this.resourceUriBase, key, data[key])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly delete = (action: AllActions, amtClass: Classes, messageId: string, selector: Selector): string => {
-    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId, null, null, selector)
+  private readonly delete = (action: AllActions, amtClass: Classes, selector: Selector): string => {
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, null, null, selector)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.DELETE)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly requestStateChange = (action: string, amtClass: Classes, messageId: string, requestedState: number): string => {
-    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, messageId)
+  private readonly requestStateChange = (action: string, amtClass: Classes, requestedState: number): string => {
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.REQUEST_STATE_CHANGE, null, `${this.resourceUriBase}${amtClass}`, requestedState)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly amtSwitch = (amt: AMTCall): string => {
+  amtSwitch = (amt: AMTCall): string => {
     switch (amt.method) {
       case Methods.GET:
-        return this.get(Actions.GET, amt.class, amt.messageId)
+        return this.get(Actions.GET, amt.class)
       case Methods.PUT:
         if (amt.data == null) { throw new Error(WSManErrors.BODY) }
-        return this.put(Actions.PUT, amt.class, amt.messageId, amt.data)
+        return this.put(Actions.PUT, amt.class, amt.data)
       case Methods.PULL:
         if (amt.enumerationContext == null) { throw new Error(WSManErrors.ENUMERATION_CONTEXT) }
-        return this.pull(Actions.PULL, amt.class, amt.messageId, amt.enumerationContext)
+        return this.pull(Actions.PULL, amt.class, amt.enumerationContext)
       case Methods.ENUMERATE:
-        return this.enumerate(Actions.ENUMERATE, amt.class, amt.messageId)
+        return this.enumerate(Actions.ENUMERATE, amt.class)
       case Methods.DELETE:
         if (amt.selector == null) { throw new Error(WSManErrors.SELECTOR) }
-        return this.delete(Actions.DELETE, amt.class, amt.messageId, amt.selector)
+        return this.delete(Actions.DELETE, amt.class, amt.selector)
       case Methods.REQUEST_STATE_CHANGE:
         if (amt.requestedState == null) { throw new Error(WSManErrors.REQUESTED_STATE) }
-        return this.requestStateChange(REQUEST_STATE_CHANGE(amt.class), amt.class, amt.messageId, amt.requestedState)
+        return this.requestStateChange(REQUEST_STATE_CHANGE(amt.class), amt.class, amt.requestedState)
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
   }
 
-  AuditLog = (method: Methods.READ_RECORDS, messageId: string, startIndex: number): string => {
+  AuditLog = (method: Methods.READ_RECORDS, startIndex: number): string => {
     let header: string
     let body: string
     switch (method) {
       case Methods.READ_RECORDS:
-        header = this.wsmanMessageCreator.createHeader(Actions.READ_RECORDS, `${this.resourceUriBase}${Classes.AMT_AUDIT_LOG}`, messageId)
+        header = this.wsmanMessageCreator.createHeader(Actions.READ_RECORDS, `${this.resourceUriBase}${Classes.AMT_AUDIT_LOG}`)
         body = this.wsmanMessageCreator.createBody('ReadRecords_INPUT', this.resourceUriBase, Classes.AMT_AUDIT_LOG, { StartIndex: startIndex })
         return this.wsmanMessageCreator.createXml(header, body)
       default:
@@ -99,15 +97,15 @@ export class Messages {
     }
   }
 
-  MessageLog = (method: Methods.GET_RECORDS|Methods.POSITION_TO_FIRSTRECORD, messageId: string, identifier?: number): string => {
+  MessageLog = (method: Methods.GET_RECORDS|Methods.POSITION_TO_FIRST_RECORD, identifier?: number): string => {
     let header: string, body: string
     switch (method) {
-      case Methods.POSITION_TO_FIRSTRECORD:
-        header = this.wsmanMessageCreator.createHeader(Actions.POSITION_TO_FIRSTRECORD, `${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}`, messageId)
+      case Methods.POSITION_TO_FIRST_RECORD:
+        header = this.wsmanMessageCreator.createHeader(Actions.POSITION_TO_FIRSTRECORD, `${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}`)
         body = `<Body><r:PositionToFirstRecord_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}" /></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       case Methods.GET_RECORDS:
-        header = this.wsmanMessageCreator.createHeader(Actions.GET_RECORDS, `${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}`, messageId)
+        header = this.wsmanMessageCreator.createHeader(Actions.GET_RECORDS, `${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}`)
         body = this.wsmanMessageCreator.createBody('GetRecords_INPUT', this.resourceUriBase, Classes.AMT_MESSAGE_LOG, { IterationIdentifier: identifier, MaxReadRecords: 390 })
         return this.wsmanMessageCreator.createXml(header, body)
       default:
@@ -115,39 +113,43 @@ export class Messages {
     }
   }
 
-  BootCapabilities = (method: Methods.GET, messageId: string): string => {
-    return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_BOOT_CAPABILITIES })
+  BootCapabilities = (method: Methods.GET): string => {
+    return this.amtSwitch({ method: method, class: Classes.AMT_BOOT_CAPABILITIES })
   }
 
-  RedirectionService = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE | Methods.PUT, messageId: string, requestedState?: number, data?: RedirectionResponse): string => {
-    return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_REDIRECTION_SERVICE, requestedState, data })
+  RedirectionService = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE | Methods.PUT, requestedState?: number, data?: RedirectionResponse): string => {
+    return this.amtSwitch({ method: method, class: Classes.AMT_REDIRECTION_SERVICE, requestedState, data })
   }
 
-  SetupAndConfigurationService = (method: Methods.GET | Methods.UNPROVISION | Methods.SET_MEBX_PASSWORD | Methods.COMMIT_CHANGES, messageId: string, password?: string, provisioningMode?: number): string => {
+  SetupAndConfigurationService = (method: Methods.GET | Methods.UNPROVISION | Methods.SET_MEBX_PASSWORD | Methods.COMMIT_CHANGES, password?: string, provisioningMode?: number): string => {
     let header: string, body: string
     switch (method) {
       case Methods.GET:
-        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE })
+        return this.amtSwitch({ method: method, class: Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE })
       case Methods.UNPROVISION:
-        header = this.wsmanMessageCreator.createHeader(Actions.UNPROVISION, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`, messageId)
+        header = this.wsmanMessageCreator.createHeader(Actions.UNPROVISION, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`)
         body = `<Body><r:Unprovision_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}"><r:ProvisioningMode>${provisioningMode}</r:ProvisioningMode></r:Unprovision_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       case Methods.SET_MEBX_PASSWORD:
-        header = this.wsmanMessageCreator.createHeader(Actions.SET_MEBX_PASSWORD, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`, messageId)
+        header = this.wsmanMessageCreator.createHeader(Actions.SET_MEBX_PASSWORD, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`)
         body = `<Body><r:SetMEBxPassword_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}"><r:Password>${password}</r:Password></r:SetMEBxPassword_INPUT></Body>`
+        return this.wsmanMessageCreator.createXml(header, body)
+      case Methods.COMMIT_CHANGES:
+        header = this.wsmanMessageCreator.createHeader(Actions.COMMIT_CHANGES, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`)
+        body = this.wsmanMessageCreator.createBody('CommitChanges_INPUT', this.resourceUriBase, Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE, {})
         return this.wsmanMessageCreator.createXml(header, body)
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
   }
 
-  GeneralSettings = (method: Methods.GET | Methods.PUT, messageId:string, data?: GeneralSettings): string => {
+  GeneralSettings = (method: Methods.GET | Methods.PUT, data?: GeneralSettings): string => {
     switch (method) {
       case Methods.GET:
-        return this.amtSwitch({ method: method, messageId, class: Classes.AMT_GENERAL_SETTINGS })
+        return this.amtSwitch({ method: method, class: Classes.AMT_GENERAL_SETTINGS })
       case Methods.PUT: {
         if (data == null) throw new Error(WSManErrors.BODY)
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_GENERAL_SETTINGS}`, messageId)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_GENERAL_SETTINGS}`)
         const body = this.wsmanMessageCreator.createBody('AMT_GeneralSettings', this.resourceUriBase, Classes.AMT_GENERAL_SETTINGS, data)
         return this.wsmanMessageCreator.createXml(header, body)
       }
@@ -156,15 +158,15 @@ export class Messages {
     }
   }
 
-  EthernetPortSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, messageId: string, enumerationContext?: string, ethernetPortObject?: EthernetPortSettings): string => {
+  EthernetPortSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, enumerationContext?: string, ethernetPortObject?: EthernetPortSettings): string => {
     switch (method) {
       case Methods.PULL:
       case Methods.ENUMERATE:
-        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_ETHERNET_PORT_SETTINGS, enumerationContext })
+        return this.amtSwitch({ method: method, class: Classes.AMT_ETHERNET_PORT_SETTINGS, enumerationContext })
       case Methods.PUT: {
         if (ethernetPortObject == null) { throw new Error(WSManErrors.ETHERNET_PORT_OBJECT) }
         const selector: Selector = { name: 'InstanceID', value: ethernetPortObject.InstanceID }
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}`, messageId, null, null, selector)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}`, null, null, selector)
         let body = `<Body><r:AMT_EthernetPortSettings xmlns:r="${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}"><r:DHCPEnabled>${String(ethernetPortObject.DHCPEnabled)}</r:DHCPEnabled><r:ElementName>${ethernetPortObject.ElementName}</r:ElementName><r:InstanceID>${ethernetPortObject.InstanceID}</r:InstanceID><r:IpSyncEnabled>${String(ethernetPortObject.IpSyncEnabled)}</r:IpSyncEnabled><r:LinkIsUp>${String(ethernetPortObject.LinkIsUp)}</r:LinkIsUp>`
         ethernetPortObject.LinkPolicy.forEach(function (item) {
           body += `<r:LinkPolicy>${item}</r:LinkPolicy>`
@@ -186,46 +188,86 @@ export class Messages {
     }
   }
 
-  RemoteAccessPolicyRule = (method: Methods.DELETE, messageId: string, selector?: Selector): string => {
-    return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_REMOTE_ACCESS_POLICY_RULE, selector: selector })
+  RemoteAccessPolicyRule = (method: Methods.DELETE, selector?: Selector): string => {
+    return this.amtSwitch({ method: method, class: Classes.AMT_REMOTE_ACCESS_POLICY_RULE, selector: selector })
   }
 
-  ManagementPresenceRemoteSAP = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, messageId: string, enumerationContext?: string, selector?: Selector): string => {
+  ManagementPresenceRemoteSAP = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => {
     switch (method) {
       case Methods.ENUMERATE:
       case Methods.PULL: {
-        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, enumerationContext: enumerationContext })
+        return this.amtSwitch({ method: method, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, enumerationContext: enumerationContext })
       }
       case Methods.DELETE: {
-        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, selector: selector })
+        return this.amtSwitch({ method: method, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, selector: selector })
       }
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
   }
 
-  PublicKeyCertificate = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, messageId: string, enumerationContext?: string, selector?: Selector): string => {
+  TLSCredentialContext = (method: Methods.ENUMERATE | Methods.PULL | Methods.CREATE, enumerationContext?: string, data?: TLSCredentialContext) => {
     switch (method) {
-      case Methods.ENUMERATE:
-      case Methods.PULL: {
-        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, enumerationContext: enumerationContext })
+      case Methods.CREATE: {
+        const header = this.wsmanMessageCreator.createHeader(Actions.CREATE, `${this.resourceUriBase}${Classes.AMT_TLS_CREDENTIAL_CONTEXT}`)
+        const body = this.wsmanMessageCreator.createBody('AMT_TLSCredentialContext', this.resourceUriBase, Classes.AMT_TLS_CREDENTIAL_CONTEXT, data)
+        return this.wsmanMessageCreator.createXml(header, body)
       }
-      case Methods.DELETE: {
-        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, selector: selector })
+      case Methods.ENUMERATE:
+      case Methods.PULL:
+        return this.amtSwitch({ method: method, class: Classes.AMT_TLS_CREDENTIAL_CONTEXT, enumerationContext: enumerationContext })
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  TLSSettingData = (method: Methods.ENUMERATE | Methods.PULL | Methods.PUT, enumerationContext?: string, data?: TLSSettingData) => {
+    switch (method) {
+      case Methods.PULL:
+      case Methods.ENUMERATE:
+        return this.amtSwitch({ method: method, class: Classes.AMT_TLS_SETTING_DATA, enumerationContext })
+      case Methods.PUT: {
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_TLS_SETTING_DATA}`, null, null, { name: 'InstanceID', value: data.InstanceID })
+        const body = this.wsmanMessageCreator.createBody('AMT_TLSSettingData', this.resourceUriBase, Classes.AMT_TLS_SETTING_DATA, data)
+        return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
   }
 
-  EnvironmentDetectionSettingData = (method: Methods.GET | Methods.PUT, messageId: string, environmentDetectionSettingData?: EnvironmentDetectionSettingData): string => {
+  PublicPrivateKeyPair = (method: Methods.ENUMERATE | Methods.PULL, enumerationContext?: string): string => {
+    switch (method) {
+      case Methods.ENUMERATE:
+      case Methods.PULL:
+        return this.amtSwitch({ method, class: Classes.AMT_PUBLIC_PRIVATE_KEY_PAIR, enumerationContext: enumerationContext })
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  PublicKeyCertificate = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => {
+    switch (method) {
+      case Methods.ENUMERATE:
+      case Methods.PULL: {
+        return this.amtSwitch({ method: method, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, enumerationContext: enumerationContext })
+      }
+      case Methods.DELETE: {
+        return this.amtSwitch({ method: method, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, selector: selector })
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  EnvironmentDetectionSettingData = (method: Methods.GET | Methods.PUT, environmentDetectionSettingData?: EnvironmentDetectionSettingData): string => {
     switch (method) {
       case Methods.GET:
-        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA })
+        return this.amtSwitch({ method: method, class: Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA })
       case Methods.PUT: {
         if (environmentDetectionSettingData == null) { throw new Error(WSManErrors.ENVIRONMENT_DETECTION_SETTING_DATA) }
         const selector: Selector = { name: 'InstanceID', value: environmentDetectionSettingData.InstanceID }
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}`, messageId, null, null, selector)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}`, null, null, selector)
         let body = `<Body><r:AMT_EnvironmentDetectionSettingData xmlns:r="${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}"><r:DetectionAlgorithm>${environmentDetectionSettingData.DetectionAlgorithm}</r:DetectionAlgorithm><r:ElementName>${environmentDetectionSettingData.ElementName}</r:ElementName><r:InstanceID>${environmentDetectionSettingData.InstanceID}</r:InstanceID>`
         environmentDetectionSettingData.DetectionStrings.forEach(function (item) {
           body += `<r:DetectionStrings>${item}</r:DetectionStrings>`
@@ -238,12 +280,23 @@ export class Messages {
     }
   }
 
-  PublicKeyManagementService = (method: Methods.ADD_TRUSTED_ROOT_CERTIFICATE, messageId: string, certificateBlob?: string): string => {
+  PublicKeyManagementService = (method: Methods.ADD_TRUSTED_ROOT_CERTIFICATE | Methods.GENERATE_KEY_PAIR | Methods.ADD_CERTIFICATE, data?: GenerateKeyPair | AddCertificate): string => {
     switch (method) {
+      case Methods.GENERATE_KEY_PAIR: {
+        const header = this.wsmanMessageCreator.createHeader(Actions.GENERATE_KEY_PAIR, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`)
+        const body = this.wsmanMessageCreator.createBody('GenerateKeyPair_INPUT', this.resourceUriBase, Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, data)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      case Methods.ADD_CERTIFICATE: {
+        if ((data as AddCertificate)?.CertificateBlob == null) throw new Error(WSManErrors.CERTIFICATE_BLOB)
+        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_CERTIFICATE, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`)
+        const body = this.wsmanMessageCreator.createBody('AddCertificate_INPUT', this.resourceUriBase, Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, data)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
       case Methods.ADD_TRUSTED_ROOT_CERTIFICATE: {
-        if (certificateBlob == null) { throw new Error(WSManErrors.CERTIFICATE_BLOB) }
-        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_TRUSTED_ROOT_CERTIFICATE, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`, messageId)
-        const body = `<Body><r:AddTrustedRootCertificate_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService"><r:CertificateBlob>${certificateBlob}</r:CertificateBlob></r:AddTrustedRootCertificate_INPUT></Body>`
+        if ((data as AddCertificate)?.CertificateBlob == null) throw new Error(WSManErrors.CERTIFICATE_BLOB)
+        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_TRUSTED_ROOT_CERTIFICATE, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`)
+        const body = this.wsmanMessageCreator.createBody('AddTrustedRootCertificate_INPUT', this.resourceUriBase, Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
@@ -251,18 +304,18 @@ export class Messages {
     }
   }
 
-  RemoteAccessService = (method: Methods.ADD_MPS | Methods.ADD_REMOTE_ACCESS_POLICY_RULE, messageId: string, mpServer?: MPServer, remoteAccessPolicyRule?: RemoteAccessPolicyRule, selector?: Selector): string => {
+  RemoteAccessService = (method: Methods.ADD_MPS | Methods.ADD_REMOTE_ACCESS_POLICY_RULE, mpServer?: MPServer, remoteAccessPolicyRule?: RemoteAccessPolicyRule, selector?: Selector): string => {
     switch (method) {
       case Methods.ADD_MPS: {
         if (mpServer == null) { throw new Error(WSManErrors.MP_SERVER) }
-        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_MPS, `${this.resourceUriBase}${Classes.AMT_REMOTE_ACCESS_SERVICE}`, messageId)
+        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_MPS, `${this.resourceUriBase}${Classes.AMT_REMOTE_ACCESS_SERVICE}`)
         const body = `<Body><r:AddMpServer_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService"><r:AccessInfo>${mpServer.AccessInfo}</r:AccessInfo><r:InfoFormat>${mpServer.InfoFormat}</r:InfoFormat><r:Port>${mpServer.Port}</r:Port><r:AuthMethod>${mpServer.AuthMethod}</r:AuthMethod><r:Username>${mpServer.Username}</r:Username><r:Password>${mpServer.Password}</r:Password><r:CN>${mpServer.CommonName}</r:CN></r:AddMpServer_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.ADD_REMOTE_ACCESS_POLICY_RULE: {
         if (remoteAccessPolicyRule == null) { throw new Error(WSManErrors.REMOTE_ACCESS_POLICY_RULE) }
         if (selector == null) { throw new Error(WSManErrors.SELECTOR) }
-        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_REMOTE_ACCESS_POLICY_RULE, `${this.resourceUriBase}${Classes.AMT_REMOTE_ACCESS_SERVICE}`, messageId)
+        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_REMOTE_ACCESS_POLICY_RULE, `${this.resourceUriBase}${Classes.AMT_REMOTE_ACCESS_SERVICE}`)
         const body = `<Body><r:AddRemoteAccessPolicyRule_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService"><r:Trigger>${remoteAccessPolicyRule.Trigger}</r:Trigger><r:TunnelLifeTime>${remoteAccessPolicyRule.TunnelLifeTime}</r:TunnelLifeTime><r:ExtendedData>${remoteAccessPolicyRule.ExtendedData}</r:ExtendedData><r:MpServer><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="${selector.name}">${selector.value}</Selector></SelectorSet></ReferenceParameters></r:MpServer></r:AddRemoteAccessPolicyRule_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       }
@@ -271,17 +324,17 @@ export class Messages {
     }
   }
 
-  UserInitiatedConnectionService = (method: Methods.REQUEST_STATE_CHANGE, messageId: string, requestedState?: number): string => {
-    return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_USER_INITIATED_CONNECTION_SERVICE, requestedState: requestedState })
+  UserInitiatedConnectionService = (method: Methods.REQUEST_STATE_CHANGE, requestedState?: number): string => {
+    return this.amtSwitch({ method: method, class: Classes.AMT_USER_INITIATED_CONNECTION_SERVICE, requestedState: requestedState })
   }
 
-  BootSettingData = (method: Methods.GET | Methods.PUT, messageId: string, bootSettingData?: BootSettingData): string => {
+  BootSettingData = (method: Methods.GET | Methods.PUT, bootSettingData?: BootSettingData): string => {
     switch (method) {
       case Methods.GET:
-        return this.amtSwitch({ method: method, messageId: messageId, class: Classes.AMT_BOOT_SETTING_DATA })
+        return this.amtSwitch({ method: method, class: Classes.AMT_BOOT_SETTING_DATA })
       case Methods.PUT: {
         if (bootSettingData == null) { throw new Error(WSManErrors.BOOT_SETTING_DATA) }
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_BOOT_SETTING_DATA}`, messageId)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_BOOT_SETTING_DATA}`)
         let body = '<Body><r:AMT_BootSettingData xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootSettingData">'
         bootSettingData.BIOSLastStatus?.forEach(function (item) {
           body += `<r:BIOSLastStatus>${item}</r:BIOSLastStatus>`
@@ -300,10 +353,10 @@ export class Messages {
     }
   }
 
-  AuthorizationService = (method: Methods.SET_ADMIN_ACL_ENTRY_EX, messageId: string, username: string, digestPassword: string): string => {
+  AuthorizationService = (method: Methods.SET_ADMIN_ACL_ENTRY_EX, username: string, digestPassword: string): string => {
     switch (method) {
       case Methods.SET_ADMIN_ACL_ENTRY_EX: {
-        const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_ADMIN_ACL_ENTRY_EX, `${this.resourceUriBase}${Classes.AMT_AUTHORIZATION_SERVICE}`, messageId)
+        const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_ADMIN_ACL_ENTRY_EX, `${this.resourceUriBase}${Classes.AMT_AUTHORIZATION_SERVICE}`)
         const body: string = this.wsmanMessageCreator.createBody('SetAdminAclEntryEx_INPUT', this.resourceUriBase, Classes.AMT_AUTHORIZATION_SERVICE, {
           Username: username,
           DigestPassword: digestPassword
@@ -315,15 +368,15 @@ export class Messages {
     }
   }
 
-  TimeSynchronizationService = (method: Methods.GET_LOW_ACCURACY_TIME_SYNCH | Methods.SET_HIGH_ACCURACY_TIME_SYNCH, messageId: string, ta0?: number, tm1?: number, tm2?: number): string => {
+  TimeSynchronizationService = (method: Methods.GET_LOW_ACCURACY_TIME_SYNCH | Methods.SET_HIGH_ACCURACY_TIME_SYNCH, ta0?: number, tm1?: number, tm2?: number): string => {
     switch (method) {
       case Methods.GET_LOW_ACCURACY_TIME_SYNCH: {
-        const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_LOW_ACCURACY_TIME_SYNCH, `${this.resourceUriBase}${Classes.AMT_TIME_SYNCHRONIZATION_SERVICE}`, messageId)
+        const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_LOW_ACCURACY_TIME_SYNCH, `${this.resourceUriBase}${Classes.AMT_TIME_SYNCHRONIZATION_SERVICE}`)
         const body: string = this.wsmanMessageCreator.createBody('GetLowAccuracyTimeSynch_INPUT', this.resourceUriBase, Classes.AMT_TIME_SYNCHRONIZATION_SERVICE)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.SET_HIGH_ACCURACY_TIME_SYNCH: {
-        const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_HIGH_ACCURACY_TIME_SYNCH, `${this.resourceUriBase}${Classes.AMT_TIME_SYNCHRONIZATION_SERVICE}`, messageId)
+        const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_HIGH_ACCURACY_TIME_SYNCH, `${this.resourceUriBase}${Classes.AMT_TIME_SYNCHRONIZATION_SERVICE}`)
         const body: string = this.wsmanMessageCreator.createBody('SetHighAccuracyTimeSynch_INPUT', this.resourceUriBase, Classes.AMT_TIME_SYNCHRONIZATION_SERVICE, {
           Ta0: ta0,
           Tm1: tm1,
@@ -336,10 +389,10 @@ export class Messages {
     }
   }
 
-  WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS, messageId: string, wifiEndpointSettings: WiFiEndpointSettings, selector: Selector): string => {
+  WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS, wifiEndpointSettings: WiFiEndpointSettings, selector: Selector): string => {
     switch (method) {
       case Methods.ADD_WIFI_SETTINGS: {
-        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_WIFI_SETTINGS, `${this.resourceUriBase}${Classes.AMT_WIFIPORT_CONFIGURATION_SERVICE}`, messageId)
+        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_WIFI_SETTINGS, `${this.resourceUriBase}${Classes.AMT_WIFIPORT_CONFIGURATION_SERVICE}`)
         const body = `<Body><r:AddWiFiSettings_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><r:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name=${selector.name}>${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></r:WiFiEndpoint><r:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><q:ElementName>${wifiEndpointSettings.ElementName}</q:ElementName><q:InstanceID>${wifiEndpointSettings.InstanceID}</q:InstanceID><q:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</q:AuthenticationMethod><q:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</q:EncryptionMethod><q:SSID>${wifiEndpointSettings.SSID}</q:SSID><q:Priority>${wifiEndpointSettings.Priority}</q:Priority><q:PSKPassPhrase>${wifiEndpointSettings.PSKPassPhrase}</q:PSKPassPhrase></r:WiFiEndpointSettingsInput></r:AddWiFiSettings_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       }
