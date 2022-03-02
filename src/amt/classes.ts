@@ -21,8 +21,8 @@ export enum Classes {
   AMT_MESSAGE_LOG = 'AMT_MessageLog',
   AMT_AUTHORIZATION_SERVICE = 'AMT_AuthorizationService',
   AMT_TIME_SYNCHRONIZATION_SERVICE = 'AMT_TimeSynchronizationService',
+  AMT_WIFI_PORT_CONFIGURATION_SERVICE = 'AMT_WiFiPortConfigurationService',
   AMT_TLS_CREDENTIAL_CONTEXT = 'AMT_TLSCredentialContext',
   AMT_PUBLIC_PRIVATE_KEY_PAIR = 'AMT_PublicPrivateKeyPair',
   AMT_TLS_SETTING_DATA = 'AMT_TLSSettingData',
-  AMT_WIFIPORT_CONFIGURATION_SERVICE = 'AMT_WiFiPortConfigurationService'
 }
