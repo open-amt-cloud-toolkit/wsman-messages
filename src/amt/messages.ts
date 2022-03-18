@@ -389,11 +389,18 @@ export class Messages {
     }
   }
 
-  WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS, wifiEndpointSettings: WiFiEndpointSettings, selector: Selector): string => {
+  WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS | Methods.PUT | Methods.GET, data: WiFiEndpointSettings | any, selector: Selector, enumerationContext: string = ''): string => {
     switch (method) {
+      case Methods.PUT: {
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE}`, null, null, selector)
+        const body = this.wsmanMessageCreator.createBody('AMT_WiFiPortConfigurationService', this.resourceUriBase, Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, data)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      case Methods.GET:
+        return this.amtSwitch({ method, class: Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, enumerationContext })
       case Methods.ADD_WIFI_SETTINGS: {
         const header = this.wsmanMessageCreator.createHeader(Actions.ADD_WIFI_SETTINGS, `${this.resourceUriBase}${Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE}`)
-        const body = `<Body><r:AddWiFiSettings_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><r:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name=${selector.name}>${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></r:WiFiEndpoint><r:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><q:ElementName>${wifiEndpointSettings.ElementName}</q:ElementName><q:InstanceID>${wifiEndpointSettings.InstanceID}</q:InstanceID><q:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</q:AuthenticationMethod><q:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</q:EncryptionMethod><q:SSID>${wifiEndpointSettings.SSID}</q:SSID><q:Priority>${wifiEndpointSettings.Priority}</q:Priority><q:PSKPassPhrase>${wifiEndpointSettings.PSKPassPhrase}</q:PSKPassPhrase></r:WiFiEndpointSettingsInput></r:AddWiFiSettings_INPUT></Body>`
+        const body = `<Body><r:AddWiFiSettings_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><r:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name="${selector.name}">${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></r:WiFiEndpoint><r:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><q:ElementName>${data.ElementName}</q:ElementName><q:InstanceID>${data.InstanceID}</q:InstanceID><q:AuthenticationMethod>${data.AuthenticationMethod}</q:AuthenticationMethod><q:EncryptionMethod>${data.EncryptionMethod}</q:EncryptionMethod><q:SSID>${data.SSID}</q:SSID><q:Priority>${data.Priority}</q:Priority><q:PSKPassPhrase>${data.PSKPassPhrase}</q:PSKPassPhrase></r:WiFiEndpointSettingsInput></r:AddWiFiSettings_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
