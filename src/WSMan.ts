@@ -3,6 +3,8 @@
 * SPDX-License-Identifier: Apache-2.0
 ***********************************************************************/
 
+import { Classes } from './amt'
+
 export interface Selector {
   name: string
   value: string
@@ -87,13 +89,14 @@ export class WSManMessageCreator {
   }
 
   createBody = (method: string, resourceUriBase: string, xmlns: string, data?: any): string => {
+    this.processBody(data)
     let str = '<Body>'
     if (data) {
-      str += `<r:${method} xmlns:r="${resourceUriBase}${xmlns}">`
+      str += `<h:${method} xmlns:h="${resourceUriBase}${xmlns}">`
       str += this.OBJtoXML(data)
-      str += `</r:${method}>`
+      str += `</h:${method}>`
     } else {
-      str += `<r:${method} xmlns:r="${resourceUriBase}${xmlns}" />`
+      str += `<h:${method} xmlns:h="${resourceUriBase}${xmlns}" />`
     }
     str += '</Body>'
     return str
@@ -103,14 +106,104 @@ export class WSManMessageCreator {
     let xml = ''
     // keeping it basic
     for (const prop in data) {
-      xml += `<r:${prop}>`
-      if (typeof data[prop] === 'object') {
+      if (Array.isArray(data[prop])) {
+        xml += ''
+      } else {
+        xml += `<${prop}>`
+      }
+      if (Array.isArray(data[prop])) {
+        for (const arrayIdx in data[prop]) {
+          xml += `<${prop}`
+          for (const attr in data[prop][arrayIdx].$) {
+            xml += ` ${attr}="${data[prop][arrayIdx].$[attr]}"`
+          }
+          xml += '>'
+          xml += data[prop][arrayIdx]._
+          xml += `</${prop}>`
+        }
+      } else if (typeof data[prop] === 'object') {
         xml += this.OBJtoXML(data[prop])
       } else {
         xml += data[prop]
       }
-      xml += `</r:${prop}>`
+      if (Array.isArray(data[prop])) {
+        xml += ''
+      } else {
+        xml += `</${prop}>`
+      }
     }
     return xml
   }
+
+  processBody (data: any): any {
+    if (Array.isArray(data)) {
+      return
+    }
+    for (const val in data) {
+      switch (val) {
+        case 'Address':
+        case 'ReferenceParameters':
+          this.prependObjectKey(data, val, 'a:')
+          break
+        case 'SelectorSet':
+        case 'Selector':
+        case 'ResourceURI':
+          this.prependObjectKey(data, val, 'w:')
+          break
+        default:
+          this.prependObjectKey(data, val, 'h:')
+          break
+      }
+    }
+  }
+
+  prependObjectKey (data: object, key: string, prefix: string) {
+    data[prefix + key] = data[key]
+    if (typeof data[key] === 'object') {
+      this.processBody(data[key])
+    }
+    delete data[key]
+  }
+
+  // OBJtoXML2 (data: any, xmlns: string, resourceUriBase: string, wsmanObjType: string): string {
+  //   let xml = ''
+  //   if (Array.isArray(data)) {
+  //     for (let x = 0; x < data.length; x++) {
+  //       xml += `<${WSManObjType.c}:Selector Name="${data[x].$.Name}">${data[x]._}</${WSManObjType.c}:Selector>`
+  //     }
+  //   } else {
+  //     for (const prop in data) {
+  //       switch (prop) {
+  //         case 'Address':
+  //           xml += `<${WSManObjType.b}:${prop} xmlns:${WSManObjType.b}="${this.addressing}">${this.anonymousAddress}</${WSManObjType.b}:${prop}>`
+  //           break
+  //         case 'ReferenceParameters':
+  //           xml += `<${WSManObjType.b}:${prop} xmlns:${WSManObjType.b}="${this.addressing}">`
+  //           xml += this.OBJtoXML2(data[prop], xmlns, resourceUriBase, wsmanObjType)
+  //           xml += `</${WSManObjType.b}:${prop}>`
+  //           break
+  //         case 'ResourceURI':
+  //           xml += `<${WSManObjType.c}:${prop} xmlns:${WSManObjType.c}="${this.wsman}">${data[prop]}</${WSManObjType.c}:${prop}>`
+  //           break
+  //         case 'SelectorSet':
+  //           xml += `<${WSManObjType.c}:${prop} xmlns:${WSManObjType.c}="${this.wsman}">`
+  //           xml += this.OBJtoXML2(data[prop], xmlns, resourceUriBase, wsmanObjType)
+  //           xml += `</${WSManObjType.c}:${prop}>`
+  //           break
+  //         case 'Selector':
+  //           xml += this.OBJtoXML2(data[prop], xmlns, resourceUriBase, wsmanObjType)
+  //           break
+  //         default:
+  //           if (typeof data[prop] === 'object') {
+  //             xml += `<${wsmanObjType}:${prop}>`
+  //             xml += this.OBJtoXML2(data[prop], xmlns, resourceUriBase, wsmanObjType)
+  //             xml += `</${wsmanObjType}:${prop}>`
+  //           } else {
+  //             xml += `<${wsmanObjType}:${prop}>${data[prop]}</${wsmanObjType}:${prop}>`
+  //           }
+  //       }
+  //     }
+  //   }
+  //   return xml
+  // }
 }
