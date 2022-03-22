@@ -4,7 +4,7 @@
 **********************************************************************/
 
 import { Methods, Messages, Classes } from './'
-import { BootSettingData, EnvironmentDetectionSettingData, EthernetPortSettings, MPServer, RemoteAccessPolicyRule, RedirectionResponse } from './models'
+import { BootSettingData, EnvironmentDetectionSettingData, EthernetPortSettings, MPServer, RemoteAccessPolicyRule, RedirectionResponse, RemoteAccessPolicyAppliesToMPS } from './models'
 import { Selector, WSManErrors } from '../WSMan'
 
 describe('AMT Tests', () => {
@@ -482,6 +482,32 @@ describe('AMT Tests', () => {
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { amtClass.WiFiPortConfigurationService(Methods.ENUMERATE as any, null, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('RemoteAccessPolicyAppliesToMPS Tests', () => {
+    it('should return a valid amt_RemoteAccessPolicyAppliesToMPS ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RemoteAccessPolicyAppliesToMPS PULL wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RemoteAccessPolicyAppliesToMPS PUT wsman message', () => {
+      const remoteAccessPolicyAppliesToMPS: RemoteAccessPolicyAppliesToMPS = {
+        ManagedElement: null,
+        PolicySet: null,
+        MpsType: 2,
+        OrderOfAccess: 0
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:AMT_RemoteAccessPolicyAppliesToMPS xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS"><r:ManagedElement></r:ManagedElement><r:PolicySet></r:PolicySet><r:MpsType>2</r:MpsType><r:OrderOfAccess>0</r:OrderOfAccess></r:AMT_RemoteAccessPolicyAppliesToMPS></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.PUT, null, remoteAccessPolicyAppliesToMPS)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.RemoteAccessPolicyAppliesToMPS(Methods.GET as any, null, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
 })
