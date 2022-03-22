@@ -347,3 +347,8 @@ export interface WiFiPortConfigurationService extends NetworkPortConfigurationSe
   UEFIWiFiProfileShareEnabled: number
   // Enables or disables UEFI / CSME Wi - Fi Profile Sharing.
 }
+
+export interface RemoteAccessPolicyAppliesToMPS extends CIM.Models.PolicySetAppliesToElement{
+  OrderOfAccess: number
+  MpsType: number
+}
