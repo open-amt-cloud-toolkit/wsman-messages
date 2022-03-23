@@ -371,5 +371,18 @@ export interface PowerActionResponse {
   RequestPowerStateChange_OUTPUT: ReturnValue
 }
 
-export interface NetworkPortConfigurationService extends Service {
+export interface NetworkPortConfigurationService extends Service { }
+export interface Policy extends ManagedElement {
+  CommonName: string
+  PolicyKeywords: string[]
+}
+
+export interface PolicySet extends Policy {
+  PolicyDecisionStrategy: number
+  PolicyRoles: string[]
+  Enabled: number
+}
+export interface PolicySetAppliesToElement{
+  PolicySet: PolicySet
+  ManagedElement: ManagedElement
 }
