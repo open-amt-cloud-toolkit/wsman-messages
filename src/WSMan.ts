@@ -3,8 +3,6 @@
 * SPDX-License-Identifier: Apache-2.0
 ***********************************************************************/
 
-import { Classes } from './amt'
-
 export interface Selector {
   name: string
   value: string
@@ -88,15 +86,23 @@ export class WSManMessageCreator {
     return str
   }
 
-  createBody = (method: string, resourceUriBase: string, xmlns: string, data?: any): string => {
+  /**
+   *
+   * @param method
+   * @param resourceUriBase
+   * @param wsmanClass
+   * @param data object(s) below the WSMAN class
+   * @returns
+   */
+  createBody = (method: string, resourceUriBase: string, wsmanClass: string, data?: any): string => {
     this.processBody(data)
     let str = '<Body>'
     if (data) {
-      str += `<h:${method} xmlns:h="${resourceUriBase}${xmlns}">`
+      str += `<h:${method} xmlns:h="${resourceUriBase}${wsmanClass}">`
       str += this.OBJtoXML(data)
       str += `</h:${method}>`
     } else {
-      str += `<h:${method} xmlns:h="${resourceUriBase}${xmlns}" />`
+      str += `<h:${method} xmlns:h="${resourceUriBase}${wsmanClass}" />`
     }
     str += '</Body>'
     return str
@@ -104,7 +110,6 @@ export class WSManMessageCreator {
 
   OBJtoXML (data: any): string {
     let xml = ''
-    // keeping it basic
     for (const prop in data) {
       if (Array.isArray(data[prop])) {
         xml += ''
@@ -164,46 +169,4 @@ export class WSManMessageCreator {
     }
     delete data[key]
   }
-
-  // OBJtoXML2 (data: any, xmlns: string, resourceUriBase: string, wsmanObjType: string): string {
-  //   let xml = ''
-  //   if (Array.isArray(data)) {
-  //     for (let x = 0; x < data.length; x++) {
-  //       xml += `<${WSManObjType.c}:Selector Name="${data[x].$.Name}">${data[x]._}</${WSManObjType.c}:Selector>`
-  //     }
-  //   } else {
-  //     for (const prop in data) {
-  //       switch (prop) {
-  //         case 'Address':
-  //           xml += `<${WSManObjType.b}:${prop} xmlns:${WSManObjType.b}="${this.addressing}">${this.anonymousAddress}</${WSManObjType.b}:${prop}>`
-  //           break
-  //         case 'ReferenceParameters':
-  //           xml += `<${WSManObjType.b}:${prop} xmlns:${WSManObjType.b}="${this.addressing}">`
-  //           xml += this.OBJtoXML2(data[prop], xmlns, resourceUriBase, wsmanObjType)
-  //           xml += `</${WSManObjType.b}:${prop}>`
-  //           break
-  //         case 'ResourceURI':
-  //           xml += `<${WSManObjType.c}:${prop} xmlns:${WSManObjType.c}="${this.wsman}">${data[prop]}</${WSManObjType.c}:${prop}>`
-  //           break
-  //         case 'SelectorSet':
-  //           xml += `<${WSManObjType.c}:${prop} xmlns:${WSManObjType.c}="${this.wsman}">`
-  //           xml += this.OBJtoXML2(data[prop], xmlns, resourceUriBase, wsmanObjType)
-  //           xml += `</${WSManObjType.c}:${prop}>`
-  //           break
-  //         case 'Selector':
-  //           xml += this.OBJtoXML2(data[prop], xmlns, resourceUriBase, wsmanObjType)
-  //           break
-  //         default:
-  //           if (typeof data[prop] === 'object') {
-  //             xml += `<${wsmanObjType}:${prop}>`
-  //             xml += this.OBJtoXML2(data[prop], xmlns, resourceUriBase, wsmanObjType)
-  //             xml += `</${wsmanObjType}:${prop}>`
-  //           } else {
-  //             xml += `<${wsmanObjType}:${prop}>${data[prop]}</${wsmanObjType}:${prop}>`
-  //           }
-  //       }
-  //     }
-  //   }
-  //   return xml
-  // }
 }
