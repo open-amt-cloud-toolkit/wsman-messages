@@ -409,7 +409,7 @@ export class Messages {
     }
   }
 
-  RemoteAccessPolicyAppliesToMPS = (method: Methods.PULL | Methods.ENUMERATE | Methods.CREATE | Methods.GET | Methods.DELETE | Methods.PUT, enumerationContext?: string, data?: RemoteAccessPolicyAppliesToMPS, maxElements?: number, selector?: Selector): string => {
+  RemoteAccessPolicyAppliesToMPS = (method: Methods.PULL | Methods.ENUMERATE | Methods.GET | Methods.DELETE | Methods.PUT, enumerationContext?: string, data?: RemoteAccessPolicyAppliesToMPS, maxElements?: number, selector?: Selector): string => {
     switch (method) {
       case Methods.ENUMERATE:
       case Methods.GET:
@@ -417,7 +417,6 @@ export class Messages {
       case Methods.PULL: {
         return this.amtSwitch({ method: method, class: Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, enumerationContext: enumerationContext, maxElements: maxElements, selector })
       }
-      case Methods.CREATE:
       case Methods.PUT: {
         const action = (method === Methods.PUT ? Actions.PUT : Actions.CREATE)
         const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS}`)
