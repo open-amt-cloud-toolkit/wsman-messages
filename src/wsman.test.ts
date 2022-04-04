@@ -63,44 +63,44 @@ describe('WSManMessageCreator Tests', () => {
       expect(header).toEqual(correctHeader)
     })
   })
-  describe('createBody Tests', () => {
-    it('creates correct Pull body for createBody', () => {
+  describe('createCommonBody Tests', () => {
+    it('creates correct Pull body ', () => {
       const correctBody = '<Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>A4070000-0000-0000-0000-000000000000</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body>'
       const body = wsmanMessageCreator.createCommonBody('Pull', 'A4070000-0000-0000-0000-000000000000')
       expect(body).toEqual(correctBody)
     })
-    it('creates correct Enumerate body for createBody', () => {
+    it('creates correct Enumerate body ', () => {
       const correctBody = '<Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body>'
       const body = wsmanMessageCreator.createCommonBody('Enumerate')
       expect(body).toEqual(correctBody)
     })
-    it('creates correct Get body for createBody', () => {
+    it('creates correct Get body ', () => {
       const correctBody = '<Body></Body>'
       const body = wsmanMessageCreator.createCommonBody('Get')
       expect(body).toEqual(correctBody)
     })
-    it('creates correct Delete body for createBody', () => {
+    it('creates correct Delete body ', () => {
       const correctBody = '<Body></Body>'
       const body = wsmanMessageCreator.createCommonBody('Delete')
       expect(body).toEqual(correctBody)
     })
-    it('should throw error if Pull is missing enumerationContext in createBody', () => {
+    it('should throw error if Pull is missing enumerationContext', () => {
       expect(() => { wsmanMessageCreator.createCommonBody('Pull') }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
-    it('should throw error if RequestStateChange is missing input in createBody', () => {
+    it('should throw error if RequestStateChange is missing input', () => {
       expect(() => { wsmanMessageCreator.createCommonBody('RequestStateChange', null, null, 8) }).toThrow(WSManErrors.INPUT)
     })
-    it('should throw error if RequestStateChange is missing requestedState in createBody', () => {
+    it('should throw error if RequestStateChange is missing requestedState', () => {
       expect(() => { wsmanMessageCreator.createCommonBody('RequestStateChange', null, 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService', null) }).toThrow(WSManErrors.REQUESTED_STATE)
     })
-    it('should throw error if method is not handled in createBody', () => {
+    it('should throw error if method is not handled', () => {
       expect(() => { wsmanMessageCreator.createCommonBody('test') }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
-  describe('createBody', () => {
+  describe('createBody Tests', () => {
     it('should convert obj to XML with test values', () => {
       const result = wsmanMessageCreator.createBody('testMethod', 'testUri', 'testXmlns')
-      expect(result).toBe('<Body><r:testMethod xmlns:r="testUritestXmlns" /></Body>')
+      expect(result).toBe('<Body><h:testMethod xmlns:h="testUritestXmlns" /></Body>')
     })
     it('should convert obj to XML with not empty', () => {
       const result = wsmanMessageCreator.createBody('test_INPUT', 'http://test/', 'example', {
@@ -108,7 +108,7 @@ describe('WSManMessageCreator Tests', () => {
         DDNSPeriodicUpdateInterval: '1440',
         DDNSTTL: '900'
       })
-      expect(result).toBe('<Body><r:test_INPUT xmlns:r="http://test/example"><r:AMTNetworkEnabled>1</r:AMTNetworkEnabled><r:DDNSPeriodicUpdateInterval>1440</r:DDNSPeriodicUpdateInterval><r:DDNSTTL>900</r:DDNSTTL></r:test_INPUT></Body>')
+      expect(result).toBe('<Body><h:test_INPUT xmlns:h="http://test/example"><h:AMTNetworkEnabled>1</h:AMTNetworkEnabled><h:DDNSPeriodicUpdateInterval>1440</h:DDNSPeriodicUpdateInterval><h:DDNSTTL>900</h:DDNSTTL></h:test_INPUT></Body>')
     })
     it('should convert obj to XML with not empty with nested object', () => {
       const data = {
@@ -120,7 +120,7 @@ describe('WSManMessageCreator Tests', () => {
       }
       const key = Object.keys(data)[0]
       const result = wsmanMessageCreator.createBody('test_INPUT', 'http://test/', key, data[key])
-      expect(result).toBe('<Body><r:test_INPUT xmlns:r="http://test/AMT_GeneralSettings"><r:AMTNetworkEnabled>1</r:AMTNetworkEnabled><r:DDNSPeriodicUpdateInterval>1440</r:DDNSPeriodicUpdateInterval><r:DDNSTTL>900</r:DDNSTTL></r:test_INPUT></Body>')
+      expect(result).toBe('<Body><h:test_INPUT xmlns:h="http://test/AMT_GeneralSettings"><h:AMTNetworkEnabled>1</h:AMTNetworkEnabled><h:DDNSPeriodicUpdateInterval>1440</h:DDNSPeriodicUpdateInterval><h:DDNSTTL>900</h:DDNSTTL></h:test_INPUT></Body>')
     })
     it('should convert obj to XML with not empty with double nested object', () => {
       const data = {
@@ -137,7 +137,331 @@ describe('WSManMessageCreator Tests', () => {
       }
       const key = Object.keys(data)[0]
       const result = wsmanMessageCreator.createBody('test_INPUT', 'http://test/', key, data[key])
-      expect(result).toBe('<Body><r:test_INPUT xmlns:r="http://test/AMT_GeneralSettings"><r:AMTNetworkEnabled>1</r:AMTNetworkEnabled><r:DDNSPeriodicUpdateInterval>1440</r:DDNSPeriodicUpdateInterval><r:DDNSTTL>900</r:DDNSTTL><r:Settings><r:Set1>1</r:Set1><r:Set2>7</r:Set2><r:Set3>8</r:Set3></r:Settings></r:test_INPUT></Body>')
+      expect(result).toBe('<Body><h:test_INPUT xmlns:h="http://test/AMT_GeneralSettings"><h:AMTNetworkEnabled>1</h:AMTNetworkEnabled><h:DDNSPeriodicUpdateInterval>1440</h:DDNSPeriodicUpdateInterval><h:DDNSTTL>900</h:DDNSTTL><h:Settings><h:Set1>1</h:Set1><h:Set2>7</h:Set2><h:Set3>8</h:Set3></h:Settings></h:test_INPUT></Body>')
+    })
+    it('should convert obj to XML with data that includes Selector array', () => {
+      const data = {
+        ManagedElement: {
+          Address: 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+          ReferenceParameters: {
+            ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP',
+            SelectorSet: {
+              Selector: [
+                {
+                  _: 'AMT_ManagementPresenceRemoteSAP',
+                  $: {
+                    Name: 'CreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT:Management Presence Server 0',
+                  $: {
+                    Name: 'Name'
+                  }
+                },
+                {
+                  _: 'CIM_ComputerSystem',
+                  $: {
+                    Name: 'SystemCreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT',
+                  $: {
+                    Name: 'SystemName'
+                  }
+                }
+              ]
+            }
+          }
+        },
+        MpsType: 0,
+        OrderOfAccess: 0,
+        PolicySet: {
+          Address: 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+          ReferenceParameters: {
+            ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule',
+            SelectorSet: {
+              Selector: [
+                {
+                  _: 'AMT_RemoteAccessPolicyRule',
+                  $: {
+                    Name: 'CreationClassName'
+                  }
+                },
+                {
+                  _: 'Periodic',
+                  $: {
+                    Name: 'PolicyRuleName'
+                  }
+                },
+                {
+                  _: 'CIM_ComputerSystem',
+                  $: {
+                    Name: 'SystemCreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT',
+                  $: {
+                    Name: 'SystemName'
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+      const result = wsmanMessageCreator.createBody('AMT_RemoteAccessPolicyAppliesToMPS', 'http://intel.com/wbem/wscim/1/amt-schema/1/', 'AMT_RemoteAccessPolicyAppliesToMPS', data)
+      expect(result).toBe('<Body><h:AMT_RemoteAccessPolicyAppliesToMPS xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS"><h:ManagedElement><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">AMT_ManagementPresenceRemoteSAP</w:Selector><w:Selector Name="Name">Intel(r) AMT:Management Presence Server 0</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector></w:SelectorSet></a:ReferenceParameters></h:ManagedElement><h:MpsType>0</h:MpsType><h:OrderOfAccess>0</h:OrderOfAccess><h:PolicySet><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">AMT_RemoteAccessPolicyRule</w:Selector><w:Selector Name="PolicyRuleName">Periodic</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector></w:SelectorSet></a:ReferenceParameters></h:PolicySet></h:AMT_RemoteAccessPolicyAppliesToMPS></Body>')
+    })
+    it('should create a proper wsman body with a mix of xml properties', () => {
+      const resourceUriBase = 'http://intel.com/wbem/wscim/1/amt-schema/1/'
+      const data = {
+        ManagedElement: {
+          Address: 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+          ReferenceParameters: {
+            ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP',
+            SelectorSet: {
+              Selector: [
+                {
+                  _: 'AMT_ManagementPresenceRemoteSAP',
+                  $: {
+                    Name: 'CreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT:Management Presence Server 0',
+                  $: {
+                    Name: 'Name'
+                  }
+                },
+                {
+                  _: 'CIM_ComputerSystem',
+                  $: {
+                    Name: 'SystemCreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT',
+                  $: {
+                    Name: 'SystemName'
+                  }
+                }
+              ]
+            }
+          }
+        },
+        MpsType: 0,
+        OrderOfAccess: 0,
+        PolicySet: {
+          Address: 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+          ReferenceParameters: {
+            ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule',
+            SelectorSet: {
+              Selector: [
+                {
+                  _: 'AMT_RemoteAccessPolicyRule',
+                  $: {
+                    Name: 'CreationClassName'
+                  }
+                },
+                {
+                  _: 'Periodic',
+                  $: {
+                    Name: 'PolicyRuleName'
+                  }
+                },
+                {
+                  _: 'CIM_ComputerSystem',
+                  $: {
+                    Name: 'SystemCreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT',
+                  $: {
+                    Name: 'SystemName'
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+      const expectedBody = '<Body><h:AMT_RemoteAccessPolicyAppliesToMPS xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS"><h:ManagedElement><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">AMT_ManagementPresenceRemoteSAP</w:Selector><w:Selector Name="Name">Intel(r) AMT:Management Presence Server 0</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector></w:SelectorSet></a:ReferenceParameters></h:ManagedElement><h:MpsType>0</h:MpsType><h:OrderOfAccess>0</h:OrderOfAccess><h:PolicySet><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">AMT_RemoteAccessPolicyRule</w:Selector><w:Selector Name="PolicyRuleName">Periodic</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector></w:SelectorSet></a:ReferenceParameters></h:PolicySet></h:AMT_RemoteAccessPolicyAppliesToMPS></Body>'
+      const result = wsmanMessageCreator.createBody('AMT_RemoteAccessPolicyAppliesToMPS', resourceUriBase, 'AMT_RemoteAccessPolicyAppliesToMPS', data)
+      expect(result).toStrictEqual(expectedBody)
+    })
+  })
+  describe('processBody tests', () => {
+    it('should update the data with proper prefixes', () => {
+      const data = {
+        ManagedElement: {
+          Address: 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+          ReferenceParameters: {
+            ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP',
+            SelectorSet: {
+              Selector: [
+                {
+                  _: 'AMT_ManagementPresenceRemoteSAP',
+                  $: {
+                    Name: 'CreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT:Management Presence Server 0',
+                  $: {
+                    Name: 'Name'
+                  }
+                },
+                {
+                  _: 'CIM_ComputerSystem',
+                  $: {
+                    Name: 'SystemCreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT',
+                  $: {
+                    Name: 'SystemName'
+                  }
+                }
+              ]
+            }
+          }
+        },
+        MpsType: 0,
+        OrderOfAccess: 0,
+        PolicySet: {
+          Address: 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+          ReferenceParameters: {
+            ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule',
+            SelectorSet: {
+              Selector: [
+                {
+                  _: 'AMT_RemoteAccessPolicyRule',
+                  $: {
+                    Name: 'CreationClassName'
+                  }
+                },
+                {
+                  _: 'Periodic',
+                  $: {
+                    Name: 'PolicyRuleName'
+                  }
+                },
+                {
+                  _: 'CIM_ComputerSystem',
+                  $: {
+                    Name: 'SystemCreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT',
+                  $: {
+                    Name: 'SystemName'
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+      const expectedData = {
+        'h:ManagedElement': {
+          'a:Address': 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+          'a:ReferenceParameters': {
+            'w:ResourceURI': 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP',
+            'w:SelectorSet': {
+              'w:Selector': [
+                {
+                  _: 'AMT_ManagementPresenceRemoteSAP',
+                  $: {
+                    Name: 'CreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT:Management Presence Server 0',
+                  $: {
+                    Name: 'Name'
+                  }
+                },
+                {
+                  _: 'CIM_ComputerSystem',
+                  $: {
+                    Name: 'SystemCreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT',
+                  $: {
+                    Name: 'SystemName'
+                  }
+                }
+              ]
+            }
+          }
+        },
+        'h:MpsType': 0,
+        'h:OrderOfAccess': 0,
+        'h:PolicySet': {
+          'a:Address': 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+          'a:ReferenceParameters': {
+            'w:ResourceURI': 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule',
+            'w:SelectorSet': {
+              'w:Selector': [
+                {
+                  _: 'AMT_RemoteAccessPolicyRule',
+                  $: {
+                    Name: 'CreationClassName'
+                  }
+                },
+                {
+                  _: 'Periodic',
+                  $: {
+                    Name: 'PolicyRuleName'
+                  }
+                },
+                {
+                  _: 'CIM_ComputerSystem',
+                  $: {
+                    Name: 'SystemCreationClassName'
+                  }
+                },
+                {
+                  _: 'Intel(r) AMT',
+                  $: {
+                    Name: 'SystemName'
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+      wsmanMessageCreator.processBody(data)
+      expect(data).toStrictEqual(expectedData)
+    })
+  })
+  describe('renameKey tests', () => {
+    it('should properly rename keys', () => {
+      const data = {
+        origKey: {
+          nestedData: {
+            moreData: 'value'
+          }
+        }
+      }
+      const modifiedData = {
+        'h:origKey': {
+          'h:nestedData': {
+            'h:moreData': 'value'
+          }
+        }
+      }
+      wsmanMessageCreator.prependObjectKey(data, 'origKey', 'h:')
+      expect(data).toStrictEqual(modifiedData)
     })
   })
 })

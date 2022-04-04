@@ -86,14 +86,23 @@ export class WSManMessageCreator {
     return str
   }
 
-  createBody = (method: string, resourceUriBase: string, xmlns: string, data?: any): string => {
+  /**
+   *
+   * @param method
+   * @param resourceUriBase
+   * @param wsmanClass
+   * @param data object(s) below the WSMAN class
+   * @returns
+   */
+  createBody = (method: string, resourceUriBase: string, wsmanClass: string, data?: any): string => {
+    this.processBody(data)
     let str = '<Body>'
     if (data) {
-      str += `<r:${method} xmlns:r="${resourceUriBase}${xmlns}">`
+      str += `<h:${method} xmlns:h="${resourceUriBase}${wsmanClass}">`
       str += this.OBJtoXML(data)
-      str += `</r:${method}>`
+      str += `</h:${method}>`
     } else {
-      str += `<r:${method} xmlns:r="${resourceUriBase}${xmlns}" />`
+      str += `<h:${method} xmlns:h="${resourceUriBase}${wsmanClass}" />`
     }
     str += '</Body>'
     return str
@@ -101,16 +110,63 @@ export class WSManMessageCreator {
 
   OBJtoXML (data: any): string {
     let xml = ''
-    // keeping it basic
     for (const prop in data) {
-      xml += `<r:${prop}>`
-      if (typeof data[prop] === 'object') {
+      if (Array.isArray(data[prop])) {
+        xml += ''
+      } else {
+        xml += `<${prop}>`
+      }
+      if (Array.isArray(data[prop])) {
+        for (const arrayIdx in data[prop]) {
+          xml += `<${prop}`
+          for (const attr in data[prop][arrayIdx].$) {
+            xml += ` ${attr}="${data[prop][arrayIdx].$[attr]}"`
+          }
+          xml += '>'
+          xml += data[prop][arrayIdx]._
+          xml += `</${prop}>`
+        }
+      } else if (typeof data[prop] === 'object') {
         xml += this.OBJtoXML(data[prop])
       } else {
         xml += data[prop]
       }
-      xml += `</r:${prop}>`
+      if (Array.isArray(data[prop])) {
+        xml += ''
+      } else {
+        xml += `</${prop}>`
+      }
     }
     return xml
+  }
+
+  processBody (data: any): any {
+    if (Array.isArray(data)) {
+      return
+    }
+    for (const val in data) {
+      switch (val) {
+        case 'Address':
+        case 'ReferenceParameters':
+          this.prependObjectKey(data, val, 'a:')
+          break
+        case 'SelectorSet':
+        case 'Selector':
+        case 'ResourceURI':
+          this.prependObjectKey(data, val, 'w:')
+          break
+        default:
+          this.prependObjectKey(data, val, 'h:')
+          break
+      }
+    }
+  }
+
+  prependObjectKey (data: object, key: string, prefix: string) {
+    data[prefix + key] = data[key]
+    if (typeof data[key] === 'object') {
+      this.processBody(data[key])
+    }
+    delete data[key]
   }
 }
