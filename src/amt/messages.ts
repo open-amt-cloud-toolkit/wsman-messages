@@ -18,6 +18,7 @@ export interface AMTCall {
   selector?: Selector
   requestedState?: number
   data?: RedirectionResponse
+  maxElements?: number
 }
 
 export class Messages {
@@ -389,11 +390,11 @@ export class Messages {
     }
   }
 
-  WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS | Methods.PUT | Methods.GET, data: WiFiEndpointSettings | any, selector: Selector, enumerationContext: string = ''): string => {
+  WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS | Methods.PUT | Methods.GET, data?: WiFiEndpointSettings | any, selector?: Selector, enumerationContext?: string): string => {
     switch (method) {
       case Methods.PUT: {
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE}`, null, null, selector)
-        const body = this.wsmanMessageCreator.createBody('AMT_WiFiPortConfigurationService', this.resourceUriBase, Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, data)
+        const body = this.wsmanMessageCreator.createBody(Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, this.resourceUriBase, Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.GET:
@@ -408,15 +409,19 @@ export class Messages {
     }
   }
 
-  RemoteAccessPolicyAppliesToMPS = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, enumerationContext?: string, data?: RemoteAccessPolicyAppliesToMPS): string => {
+  RemoteAccessPolicyAppliesToMPS = (method: Methods.PULL | Methods.ENUMERATE | Methods.CREATE | Methods.GET | Methods.DELETE | Methods.PUT, enumerationContext?: string, data?: RemoteAccessPolicyAppliesToMPS, maxElements?: number, selector?: Selector): string => {
     switch (method) {
       case Methods.ENUMERATE:
+      case Methods.GET:
+      case Methods.DELETE:
       case Methods.PULL: {
-        return this.amtSwitch({ method: method, class: Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, enumerationContext: enumerationContext })
+        return this.amtSwitch({ method: method, class: Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, enumerationContext: enumerationContext, maxElements: maxElements, selector })
       }
+      case Methods.CREATE:
       case Methods.PUT: {
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS}`, null, null, null)
-        const body = this.wsmanMessageCreator.createBody('AMT_RemoteAccessPolicyAppliesToMPS', this.resourceUriBase, Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, data)
+        const action = (method === Methods.PUT ? Actions.PUT : Actions.CREATE)
+        const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS}`)
+        const body = this.wsmanMessageCreator.createBody(Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, this.resourceUriBase, Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, data)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
