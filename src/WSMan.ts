@@ -123,7 +123,7 @@ export class WSManMessageCreator {
             xml += ` ${attr}="${data[prop][arrayIdx].$[attr]}"`
           }
           xml += '>'
-          xml += data[prop][arrayIdx]._
+          xml += data[prop][arrayIdx]._ ? data[prop][arrayIdx]._ : data[prop][arrayIdx]
           xml += `</${prop}>`
         }
       } else if (typeof data[prop] === 'object') {

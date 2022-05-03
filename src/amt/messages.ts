@@ -168,20 +168,7 @@ export class Messages {
         if (ethernetPortObject == null) { throw new Error(WSManErrors.ETHERNET_PORT_OBJECT) }
         const selector: Selector = { name: 'InstanceID', value: ethernetPortObject.InstanceID }
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}`, null, null, selector)
-        let body = `<Body><r:AMT_EthernetPortSettings xmlns:r="${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}"><r:DHCPEnabled>${String(ethernetPortObject.DHCPEnabled)}</r:DHCPEnabled><r:ElementName>${ethernetPortObject.ElementName}</r:ElementName><r:InstanceID>${ethernetPortObject.InstanceID}</r:InstanceID><r:IpSyncEnabled>${String(ethernetPortObject.IpSyncEnabled)}</r:IpSyncEnabled><r:LinkIsUp>${String(ethernetPortObject.LinkIsUp)}</r:LinkIsUp>`
-        ethernetPortObject.LinkPolicy.forEach(function (item) {
-          body += `<r:LinkPolicy>${item}</r:LinkPolicy>`
-        })
-        body += `<r:MACAddress>${ethernetPortObject.MACAddress}</r:MACAddress><r:PhysicalConnectionType>${ethernetPortObject.PhysicalConnectionType}</r:PhysicalConnectionType><r:SharedDynamicIP>${String(ethernetPortObject.SharedDynamicIP)}</r:SharedDynamicIP><r:SharedMAC>${String(ethernetPortObject.SharedMAC)}</r:SharedMAC><r:SharedStaticIp>${String(ethernetPortObject.SharedStaticIp)}</r:SharedStaticIp></r:AMT_EthernetPortSettings></Body>`
-        // this.wsmanMessageCreator.createOtherBody('AMT_EthernetPortSettings', this.resourceUriBase, Classes.AMT_ETHERNET_PORT_SETTINGS, {
-        //   'DHCPEnabled': String(ethernetPortObject.DHCPEnabled),
-        //   'ElementName': ethernetPortObject.ElementName,
-        //   'InstanceID': ethernetPortObject.InstanceId,
-        //   'IpSyncEnabled': String(ethernetPortObject.IpSyncEnabled),
-        //   'LinkIsUp': String(ethernetPortObject.LinkIsUp),
-        //   'LinkIsUp': 7,
-
-        // })
+        const body = this.wsmanMessageCreator.createBody('AMT_EthernetPortSettings', this.resourceUriBase, Classes.AMT_ETHERNET_PORT_SETTINGS, ethernetPortObject)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
