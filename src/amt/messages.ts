@@ -98,7 +98,7 @@ export class Messages {
     }
   }
 
-  MessageLog = (method: Methods.GET_RECORDS|Methods.POSITION_TO_FIRST_RECORD, identifier?: number): string => {
+  MessageLog = (method: Methods.GET_RECORDS | Methods.POSITION_TO_FIRST_RECORD, identifier?: number): string => {
     let header: string, body: string
     switch (method) {
       case Methods.POSITION_TO_FIRST_RECORD:
@@ -168,6 +168,12 @@ export class Messages {
         if (ethernetPortObject == null) { throw new Error(WSManErrors.ETHERNET_PORT_OBJECT) }
         const selector: Selector = { name: 'InstanceID', value: ethernetPortObject.InstanceID }
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}`, null, null, selector)
+        // AMT doesn't accept XML with null values, remove properties with null values before creating body
+        Object.keys(ethernetPortObject).forEach(key => {
+          if (ethernetPortObject[key] == null) {
+            delete ethernetPortObject[key]
+          }
+        })
         const body = this.wsmanMessageCreator.createBody('AMT_EthernetPortSettings', this.resourceUriBase, Classes.AMT_ETHERNET_PORT_SETTINGS, ethernetPortObject)
         return this.wsmanMessageCreator.createXml(header, body)
       }
