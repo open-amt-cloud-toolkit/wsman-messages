@@ -197,6 +197,29 @@ describe('AMT Tests', () => {
       const response = amtClass.EthernetPortSettings(Methods.PUT, null, ethernetPortObject)
       expect(response).toEqual(correctResponse)
     })
+    it('should remove null properties before sending to createBody', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EthernetPortSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT Ethernet Port Settings 0</w:Selector></w:SelectorSet></Header><Body><h:AMT_EthernetPortSettings xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EthernetPortSettings"><h:InstanceID>Intel(r) AMT Ethernet Port Settings 0</h:InstanceID><h:ElementName>Intel(r) AMT Ethernet Port Settings</h:ElementName><h:SharedMAC>true</h:SharedMAC><h:MACAddress>a4-ae-11-1c-02-4d</h:MACAddress><h:LinkIsUp>true</h:LinkIsUp><h:LinkPolicy>1</h:LinkPolicy><h:LinkPolicy>14</h:LinkPolicy><h:LinkPolicy>16</h:LinkPolicy><h:SharedStaticIp>false</h:SharedStaticIp><h:SharedDynamicIP>true</h:SharedDynamicIP><h:IpSyncEnabled>true</h:IpSyncEnabled><h:DHCPEnabled>true</h:DHCPEnabled><h:PhysicalConnectionType>0</h:PhysicalConnectionType></h:AMT_EthernetPortSettings></Body></Envelope>`
+      const testBody: EthernetPortSettings = {
+        InstanceID: 'Intel(r) AMT Ethernet Port Settings 0',
+        ElementName: 'Intel(r) AMT Ethernet Port Settings',
+        SharedMAC: true,
+        MACAddress: 'a4-ae-11-1c-02-4d',
+        LinkIsUp: true,
+        LinkPolicy: [1, 14, 16],
+        SharedStaticIp: false,
+        SharedDynamicIP: true,
+        DefaultGateway: null,
+        IpSyncEnabled: true,
+        DHCPEnabled: true,
+        PhysicalConnectionType: 0,
+        IPAddress: null,
+        SubnetMask: null,
+        PrimaryDNS: null,
+        SecondaryDNS: null
+      }
+      const response = amtClass.EthernetPortSettings(Methods.PUT, null, testBody)
+      expect(response).toEqual(correctResponse)
+    })
     it('should throw error if ethernetPortObject is missing from amt_EthernetPortSettings Pull request', () => {
       expect(() => { amtClass.EthernetPortSettings(Methods.PUT) }).toThrow(WSManErrors.ETHERNET_PORT_OBJECT)
     })
