@@ -200,7 +200,7 @@ export class Messages {
     }
   }
 
-  TLSCredentialContext = (method: Methods.ENUMERATE | Methods.PULL | Methods.CREATE, enumerationContext?: string, data?: TLSCredentialContext) => {
+  TLSCredentialContext = (method: Methods.ENUMERATE | Methods.PULL | Methods.CREATE | Methods.DELETE, enumerationContext?: string, data?: TLSCredentialContext, selector?: any) => {
     switch (method) {
       case Methods.CREATE: {
         const header = this.wsmanMessageCreator.createHeader(Actions.CREATE, `${this.resourceUriBase}${Classes.AMT_TLS_CREDENTIAL_CONTEXT}`)
@@ -210,6 +210,9 @@ export class Messages {
       case Methods.ENUMERATE:
       case Methods.PULL:
         return this.amtSwitch({ method: method, class: Classes.AMT_TLS_CREDENTIAL_CONTEXT, enumerationContext: enumerationContext })
+      case Methods.DELETE: {
+        return this.amtSwitch({ method: method, class: Classes.AMT_TLS_CREDENTIAL_CONTEXT, selector: selector })
+      }
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -230,11 +233,13 @@ export class Messages {
     }
   }
 
-  PublicPrivateKeyPair = (method: Methods.ENUMERATE | Methods.PULL, enumerationContext?: string): string => {
+  PublicPrivateKeyPair = (method: Methods.ENUMERATE | Methods.PULL | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => {
     switch (method) {
       case Methods.ENUMERATE:
       case Methods.PULL:
         return this.amtSwitch({ method, class: Classes.AMT_PUBLIC_PRIVATE_KEY_PAIR, enumerationContext: enumerationContext })
+      case Methods.DELETE:
+        return this.amtSwitch({ method: method, class: Classes.AMT_PUBLIC_PRIVATE_KEY_PAIR, selector: selector })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
