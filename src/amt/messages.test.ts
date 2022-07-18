@@ -4,7 +4,7 @@
 **********************************************************************/
 
 import { Methods, Messages, Classes } from './'
-import { BootSettingData, EnvironmentDetectionSettingData, EthernetPortSettings, MPServer, RemoteAccessPolicyRule, RedirectionResponse, RemoteAccessPolicyAppliesToMPS } from './models'
+import { BootSettingData, EnvironmentDetectionSettingData, EthernetPortSettings, MPServer, RemoteAccessPolicyRule, RedirectionResponse, RemoteAccessPolicyAppliesToMPS, TLSCredentialContext } from './models'
 import { Selector, WSManErrors } from '../WSMan'
 
 describe('AMT Tests', () => {
@@ -434,6 +434,36 @@ describe('AMT Tests', () => {
     })
   })
   describe('TLSCredentialContext Tests', () => {
+    const tlsCredentialContext = {
+      ElementInContext: {
+        Address: 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+        ReferenceParameters: {
+          ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate',
+          SelectorSet: {
+            Selector: {
+              _: 'Intel(r) AMT Certificate: Handle: 1',
+              $: {
+                Name: 'InstanceID'
+              }
+            }
+          }
+        }
+      },
+      ElementProvidingContext: {
+        Address: 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
+        ReferenceParameters: {
+          ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSProtocolEndpointCollection',
+          SelectorSet: {
+            Selector: {
+              _: 'TLSProtocolEndpoint Instances Collection',
+              $: {
+                Name: 'ElementName'
+              }
+            }
+          }
+        }
+      }
+    }
     it('should return a valid TLSCredentialContext CREATE wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Create</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSCredentialContext</w:ResourceURI><a:MessageID>0</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><h:AMT_TLSCredentialContext xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSCredentialContext" /></Body></Envelope>`
       const response = amtClass.TLSCredentialContext(Methods.CREATE)
@@ -442,6 +472,11 @@ describe('AMT Tests', () => {
     it('should return a valid TLSCredentialContext ENUMERATE wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
       const response = amtClass.TLSCredentialContext(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid TLSCredentialContext DELETE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout><w:SelectorSet><w:Selector Name="ElementInContext"><a:EndpointReference><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT Certificate: Handle: 1</w:Selector></w:SelectorSet></a:ReferenceParameters></a:EndpointReference></w:Selector><w:Selector Name="ElementProvidingContext"><a:EndpointReference><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSProtocolEndpointCollection</w:ResourceURI><w:SelectorSet><w:Selector Name="ElementName">TLSProtocolEndpoint Instances Collection</w:Selector></w:SelectorSet></a:ReferenceParameters></a:EndpointReference></w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
+      const response = amtClass.TLSCredentialContext(Methods.DELETE, null, null, tlsCredentialContext)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
@@ -469,9 +504,18 @@ describe('AMT Tests', () => {
     })
   })
   describe('PublicPrivateKeyPair Tests', () => {
+    const selector: Selector = {
+      name: 'InstanceID',
+      value: 'Intel(r) AMT Key: Handle: 0'
+    }
     it('should return a valid PublicPrivateKeyPair ENUMERATE wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicPrivateKeyPair</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
       const response = amtClass.PublicPrivateKeyPair(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid PublicPrivateKeyPair DELETE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicPrivateKeyPair</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT Key: Handle: 0</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
+      const response = amtClass.PublicPrivateKeyPair(Methods.DELETE, null, selector)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
