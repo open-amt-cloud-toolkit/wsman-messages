@@ -52,9 +52,36 @@ export class WSManMessageCreator {
     if (address != null) { header += `<a:Address>${address}</a:Address>` } else { header += `<a:Address>${this.anonymousAddress}</a:Address>` }
     header += '</a:ReplyTo>'
     if (timeout != null) { header += `<w:OperationTimeout>${timeout}</w:OperationTimeout>` } else { header += `<w:OperationTimeout>${this.defaultTimeout}</w:OperationTimeout>` }
-    if (selector != null) { header += `<w:SelectorSet><w:Selector Name="${selector.name}">${selector.value}</w:Selector></w:SelectorSet>` }
+    if (selector != null) {
+      header += this.createSelector(selector)
+    }
     header += '</Header>'
     return header
+  }
+
+  createSelector = (selectorSet: any): any => {
+    if (selectorSet.name) return `<w:SelectorSet><w:Selector Name="${selectorSet.name}">${selectorSet.value}</w:Selector></w:SelectorSet>`
+    let result = '<w:SelectorSet>'
+    for (const propName in selectorSet) {
+      result += '<w:Selector Name="' + propName + '">'
+      if (selectorSet[propName].ReferenceParameters) {
+        result += '<a:EndpointReference>'
+        result += '<a:Address>' + selectorSet[propName].Address + '</a:Address><a:ReferenceParameters><w:ResourceURI>' + selectorSet[propName].ReferenceParameters.ResourceURI + '</w:ResourceURI><w:SelectorSet>'
+        const selectorArray = selectorSet[propName].ReferenceParameters.SelectorSet.Selector
+        if (Array.isArray(selectorArray)) {
+          // TODO: Enable when selector is an array. No need for now.
+          // for (let i = 0; i < selectorArray.length; i++) {
+          //   result += '<w:Selector Name="${selectorArray[i].$.Name}">${selectorArray[i]._}</w:Selector>'
+          // }
+        } else {
+          result += `<w:Selector Name="${selectorArray.$.Name}">${selectorArray._}</w:Selector>`
+        }
+        result += '</w:SelectorSet></a:ReferenceParameters></a:EndpointReference>'
+      }
+      result += '</w:Selector>'
+    }
+    result += '</w:SelectorSet>'
+    return result
   }
 
   /**

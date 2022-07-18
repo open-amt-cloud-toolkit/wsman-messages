@@ -45,3 +45,9 @@ jobs:
     - uses: codecov/codecov-action@v1.0.14
       name: Upload Coverage Results
       if: ${{ matrix.node-version == '16.x' }}
+    - run: mv junit.xml wsman-messages-unit.xml
+    - name: Upload JEST Results
+      uses: actions/upload-artifact@v3
+      with:
+        name: wsman-messages-unit
+        path: wsman-messages-unit.xml
