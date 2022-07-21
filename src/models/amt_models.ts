@@ -271,3 +271,11 @@ export interface AMT_RedirectionService{
 export interface AMT_RedirectionResponse{
   AMT_RedirectionService: AMT_RedirectionService
 }
+
+export interface AlarmClockService {
+  Name: string
+  CreationClassName: string
+  SystemName: string
+  SystemCreationClassName: string
+  ElementName: string
+}
