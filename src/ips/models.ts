@@ -3,7 +3,7 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { SecurityService, Service } from '../cim/models'
+import { SecurityService, Service, ManagedElement } from '../cim/models'
 import { ReturnValue } from '../models/common'
 
 export interface HostBasedSetupService extends SecurityService {
@@ -32,4 +32,11 @@ export interface CancelOptIn_OUTPUT {
 
 export interface SendOptInCode_OUTPUT {
   SendOptInCode_OUTPUT: ReturnValue
+}
+
+export interface AlarmClockOccurrence extends ManagedElement {
+  InstanceID: string
+  StartTime: Date
+  Interval?: number
+  DeleteOnCompletion: boolean
 }

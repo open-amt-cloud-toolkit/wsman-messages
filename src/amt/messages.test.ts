@@ -610,4 +610,42 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.RemoteAccessPolicyAppliesToMPS(Methods.ADD_MPS as any, null, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
+  describe('AlarmClockService Tests', () => {
+    it('should return a valid amt_AlarmClockService ADD_ALARM wsman message', () => {
+      const instanceID = 'Instance'
+      const elementName = 'Alarm instance name'
+      // Start time must be on the minute - seconds must be 00
+      const startTime = '2022-12-31T23:59:00Z'
+      // The interval is in minutes
+      const minutes = 59
+      const hours = 23
+      const days = 1
+      const interval = minutes + hours * 60 + days * 1440
+      const deleteOnCompletion = true
+      let correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService/AddAlarm</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService</w:ResourceURI><a:MessageID>0</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header>`
+      correctResponse += '<Body><p:AddAlarm_INPUT xmlns:p="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService"><p:AlarmTemplate>'
+      correctResponse += `<s:InstanceID xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${instanceID}</s:InstanceID>`
+      correctResponse += `<s:ElementName xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${elementName}</s:ElementName>`
+      correctResponse += `<s:StartTime xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Datetime xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">${startTime}</p:Datetime></s:StartTime>`
+      correctResponse += `<s:Interval xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Interval xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">P${days}DT${hours}H${minutes}M</p:Interval></s:Interval>`
+      correctResponse += `<s:DeleteOnCompletion xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${String(deleteOnCompletion)}</s:DeleteOnCompletion>`
+      correctResponse += '</p:AlarmTemplate></p:AddAlarm_INPUT></Body></Envelope>'
+      const response = amtClass.AlarmClockService(Methods.ADD_ALARM, { InstanceID: instanceID, ElementName: elementName, StartTime: new Date(startTime), Interval: interval, DeleteOnCompletion: deleteOnCompletion })
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if data is missing from amt_AlarmClockService AddAlarm method', () => {
+      expect(() => { amtClass.AlarmClockService(Methods.ADD_ALARM, null) }).toThrow(WSManErrors.ADD_ALARM_DATA)
+    })
+    it('should return a valid GET message ', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.AlarmClockService(Methods.GET, null)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.AlarmClockService(Methods.PUT as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.AlarmClockService(Methods.ENUMERATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.AlarmClockService(Methods.PULL as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.AlarmClockService(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
 })
