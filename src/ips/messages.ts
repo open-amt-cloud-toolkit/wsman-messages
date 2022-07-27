@@ -3,7 +3,7 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { WSManErrors, WSManMessageCreator } from '../WSMan'
+import { WSManErrors, WSManMessageCreator, Selector } from '../WSMan'
 import { Actions } from './actions'
 import { Methods } from './methods'
 import { Classes } from './classes'
@@ -14,6 +14,18 @@ type AllActions = Actions
 export class Messages {
   wsmanMessageCreator: WSManMessageCreator = new WSManMessageCreator()
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/ips-schema/1/'
+
+  private readonly enumerate = (action: Actions, ipsClass: Classes): string => {
+    const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`)
+    const body: string = this.wsmanMessageCreator.createCommonBody(Methods.ENUMERATE)
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  private readonly pull = (action: Actions, ipsClass: Classes, enumerationContext: string): string => {
+    const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`)
+    const body: string = this.wsmanMessageCreator.createCommonBody(Methods.PULL, enumerationContext)
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
 
   private readonly get = (action: AllActions, ipsClass: Classes): string => {
     const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`)
@@ -28,6 +40,12 @@ export class Messages {
       const key = Object.keys(data)[0]
       body = this.wsmanMessageCreator.createBody('IPS_OptInService', this.resourceUriBase, key, data[key])
     }
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  private readonly delete = (action: Actions, ipsClass: Classes, selector: Selector): string => {
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`, null, null, selector)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.DELETE)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -96,6 +114,21 @@ export class Messages {
         })
         return this.wsmanMessageCreator.createXml(header, body)
       }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  AlarmClockOccurrence = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => {
+    switch (method) {
+      case Methods.PULL:
+        if (enumerationContext == null) { throw new Error(WSManErrors.ENUMERATION_CONTEXT) }
+        return this.pull(Actions.PULL, Classes.IPS_ALARM_CLOCK_OCCURRENCE, enumerationContext)
+      case Methods.ENUMERATE:
+        return this.enumerate(Actions.ENUMERATE, Classes.IPS_ALARM_CLOCK_OCCURRENCE)
+      case Methods.DELETE:
+        if (selector == null) { throw new Error(WSManErrors.SELECTOR) }
+        return this.delete(Actions.DELETE, Classes.IPS_ALARM_CLOCK_OCCURRENCE, selector)
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }

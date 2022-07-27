@@ -25,5 +25,6 @@ export enum Classes {
   AMT_TLS_CREDENTIAL_CONTEXT = 'AMT_TLSCredentialContext',
   AMT_PUBLIC_PRIVATE_KEY_PAIR = 'AMT_PublicPrivateKeyPair',
   AMT_TLS_SETTING_DATA = 'AMT_TLSSettingData',
-  AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS = 'AMT_RemoteAccessPolicyAppliesToMPS'
+  AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS = 'AMT_RemoteAccessPolicyAppliesToMPS',
+  AMT_ALARM_CLOCK_SERVICE = 'AMT_AlarmClockService'
 }

@@ -28,7 +28,8 @@ export enum WSManErrors {
   CERTIFICATE_BLOB = 'missing certificateBlob',
   MP_SERVER = 'missing mpServer',
   REMOTE_ACCESS_POLICY_RULE = 'missing remoteAccessPolicyRule',
-  BOOT_SETTING_DATA = 'missing bootSettingData'
+  BOOT_SETTING_DATA = 'missing bootSettingData',
+  ADD_ALARM_DATA = 'missing alarmClockOccurrence'
 }
 
 export class WSManMessageCreator {
