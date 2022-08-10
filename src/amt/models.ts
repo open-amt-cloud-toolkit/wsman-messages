@@ -352,3 +352,5 @@ export interface RemoteAccessPolicyAppliesToMPS extends CIM.Models.PolicySetAppl
   OrderOfAccess: number
   MpsType: number
 }
+
+export interface AlarmClockService extends CIM.Models.Service { }

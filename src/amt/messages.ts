@@ -8,6 +8,7 @@ import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDete
 import { REQUEST_STATE_CHANGE } from './actions'
 import { Classes, Methods, Actions } from './'
 import { WiFiEndpointSettings } from '../models/cim_models'
+import { AlarmClockOccurrence } from '../ips/models'
 
 type AllActions = Actions
 
@@ -419,6 +420,34 @@ export class Messages {
         const action = (method === Methods.PUT ? Actions.PUT : Actions.CREATE)
         const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS}`)
         const body = this.wsmanMessageCreator.createBody(Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, this.resourceUriBase, Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, data)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  AlarmClockService = (method: Methods.ADD_ALARM | Methods.GET, data?: AlarmClockOccurrence | any): string => {
+    switch (method) {
+      case Methods.GET:
+        return this.amtSwitch({ method, class: Classes.AMT_ALARM_CLOCK_SERVICE })
+      case Methods.ADD_ALARM: {
+        if (data == null) { throw new Error(WSManErrors.ADD_ALARM_DATA) }
+        const header = this.wsmanMessageCreator.createHeader(Actions.ADD_ALARM, `${this.resourceUriBase}${Classes.AMT_ALARM_CLOCK_SERVICE}`)
+        // toIsoString() is adding milliseconds... remove them by taking everything before the '.' and adding back the 'Z'
+        const startTime = data.StartTime.toISOString().split('.')[0] + 'Z'
+        let body = `<Body><p:AddAlarm_INPUT xmlns:p="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService"><p:AlarmTemplate><s:InstanceID xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${data.InstanceID}</s:InstanceID>`
+        if (data.ElementName != null) {
+          body += `<s:ElementName xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${data.ElementName}</s:ElementName>`
+        }
+        body += `<s:StartTime xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Datetime xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">${startTime}</p:Datetime></s:StartTime>`
+        if (data.Interval != null) {
+          const minutes: number = data.Interval % 60
+          const hours: number = Math.floor(data.Interval / 60) % 24
+          const days: number = Math.floor(data.Interval / 1440)
+          body += `<s:Interval xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Interval xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">P${days}DT${hours}H${minutes}M</p:Interval></s:Interval>`
+        }
+        body += `<s:DeleteOnCompletion xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${String(data.DeleteOnCompletion)}</s:DeleteOnCompletion></p:AlarmTemplate></p:AddAlarm_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
