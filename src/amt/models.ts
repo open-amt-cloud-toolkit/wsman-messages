@@ -272,25 +272,13 @@ export interface RedirectionResponse {
   AMT_RedirectionService: RedirectionService
 }
 export interface PublicKeyCertificate{
-  // A user-friendly name for the object . . .
- ElementName:string
-  // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class.
- InstanceID :string
-  // The X.509 Certificate blob.
-   X509Certificate: string // uint8[4100]
-
-  // For root certificate [that were added by AMT_PublicKeyManagementService.AddTrustedRootCertificate()]this property will be true.
-  TrustedRootCertficate:boolean
-
-  // The Issuer field of this certificate.
-  Issuer:string
-
-  // The Subject field of this certificate.
-  Subject:string
-
-  // Indicates whether the certificate is an Intel AMT self-signed certificate. If True, the certificate cannot be deleted.
-  ReadOnlyCertificate:boolean
-
+  ElementName:string // A user-friendly name for the object . . .
+  InstanceID :string // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class.
+  X509Certificate: string // uint8[4100] // The X.509 Certificate blob.
+  TrustedRootCertficate:boolean // For root certificate [that were added by AMT_PublicKeyManagementService.AddTrustedRootCertificate()]this property will be true.
+  Issuer:string // The Issuer field of this certificate.
+  Subject:string // The Subject field of this certificate.
+  ReadOnlyCertificate:boolean // Indicates whether the certificate is an Intel AMT self-signed certificate. If True, the certificate cannot be deleted.
 }
 export interface TLSProtocolEndpointCollection extends CIM.Models.Collection {
 

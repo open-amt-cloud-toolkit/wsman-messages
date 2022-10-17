@@ -7,7 +7,7 @@ import { Selector, WSManMessageCreator, WSManErrors } from '../WSMan'
 import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDetectionSettingData, BootSettingData, RedirectionResponse, TLSSettingData, GenerateKeyPair, AddCertificate, GeneralSettings, TLSCredentialContext, RemoteAccessPolicyAppliesToMPS } from './models'
 import { REQUEST_STATE_CHANGE } from './actions'
 import { Classes, Methods, Actions } from './'
-import { WiFiEndpointSettings } from '../models/cim_models'
+import { WiFiEndpointSettings } from '../cim/models'
 import { AlarmClockOccurrence } from '../ips/models'
 
 type AllActions = Actions

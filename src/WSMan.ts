@@ -29,7 +29,10 @@ export enum WSManErrors {
   MP_SERVER = 'missing mpServer',
   REMOTE_ACCESS_POLICY_RULE = 'missing remoteAccessPolicyRule',
   BOOT_SETTING_DATA = 'missing bootSettingData',
-  ADD_ALARM_DATA = 'missing alarmClockOccurrence'
+  ADD_ALARM_DATA = 'missing alarmClockOccurrence',
+  IEEE8021X_SETTINGS = 'missing ieee8021xSettings',
+  OPT_IN_SERVICE_RESPONSE = 'missing OptInServiceResponse',
+  OPT_IN_CODE = 'missing OptInCode'
 }
 
 export class WSManMessageCreator {

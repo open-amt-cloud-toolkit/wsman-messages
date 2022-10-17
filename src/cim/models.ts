@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  **********************************************************************/
 
-import { CIM_ManagedElement } from '../models/cim_models'
 import { ReturnValue } from '../models/common'
 
 export interface ManagedElement {
@@ -118,6 +117,7 @@ export interface BIOSElement extends SoftwareElement {
   PrimaryBIOS?: boolean
   ReleaseDate?: Date
 }
+
 export interface Job extends LogicalElement {
   InstanceId?: string
   CommunicationStatus?: number
@@ -145,12 +145,14 @@ export interface Job extends LogicalElement {
   RecoveryAction?: number
   OtherRecoveryAction?: string
 }
+
 export interface ConcreteJob extends Job {
   UntilTime?: Date
   JobState?: number
   TimeOfLastStateChange?: Date
   TimeBeforeRemoval?: Date
 }
+
 export interface EnabledLogicalElement extends LogicalElement {
   EnabledState?: number
   OtherEnabledState?: string
@@ -272,23 +274,24 @@ export interface Role extends Collection {
 
 export interface AuthenticationService extends SecurityService {
 }
+
 export interface CredentialManagementService extends AuthenticationService {
   // InstanceID is an optional property that may be used to opaquely and uniquely identify an instance of this class within the scope of the instantiating Namespace . . .
   InstanceID: string
 }
 
-export interface Credential extends CIM_ManagedElement{
-  // The date and time when the credential was issued
-  Issued: Date
-  // The date and time when the credential expires (and is not appropriate for use for authentication/ authorization)
-  Expires: Date
+export interface Credential extends ManagedElement{
+  Issued?: Date // The date and time when the credential was issued.  Default is current time
+  Expires?: Date // The date and time when the credential expires (and is not appropriate for use for authentication/ authorization).  Default is '99991231235959.999999+999'
 }
+
 export interface CredentialContext {
   // A Credential whose context is defined.
   ElementInContext: Credential
   // The ManagedElement that provides context or scope for the Credential.
-  ElementProvidingContext: CIM_ManagedElement
+  ElementProvidingContext: ManagedElement
 }
+
 export interface ServiceAvailableToElement {
   ServiceProvided: {
     Address: string
@@ -316,6 +319,7 @@ export interface AssociatedPowerManagementService extends ServiceAvailableToElem
     PowerState: string
   } & ServiceAvailableToElement
 }
+
 export interface SoftwareIdentity
   extends LogicalElement {
   CIM_SoftwareIdentity: Array<
@@ -326,6 +330,7 @@ export interface SoftwareIdentity
     } & LogicalElement
   >
 }
+
 export interface Log extends EnabledLogicalElement {
   MaxNumberOfRecords: number
   CurrentNumberOfRecords: number
@@ -363,6 +368,7 @@ export interface KVMRedirectionSAP {
   RequestedState: number
   KVMProtocol: number
 }
+
 export interface KVMRedirectionSAPResponse {
   CIM_KVMRedirectionSAP: KVMRedirectionSAP
 }
@@ -371,7 +377,33 @@ export interface PowerActionResponse {
   RequestPowerStateChange_OUTPUT: ReturnValue
 }
 
+export interface WiFiEndpointSettings extends SettingData {
+  ElementName: string
+  // The user-friendly name for this instance of SettingData . . .
+  InstanceID: string
+  // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class . . .
+  Priority: number
+  // Priority shall indicate the priority of the instance among all WiFiEndpointSettings instances.
+  SSID?: string
+  // SSID shall indicate the Service Set Identifier (SSID) that shall be used when the settings are applied to a WiFiEndpoint . . .
+  BSSType?: number
+  // BSSType shall indicate the Basic Service Set (BSS) Type that shall be used when the settings are applied . . .
+  EncryptionMethod: number
+  // EncryptionMethod shall specify the 802.11 encryption method used when the settings are applied . . .
+  AuthenticationMethod: number
+  // AuthenticationMethod shall specify the 802.11 authentication method used when the settings are applied . . .
+  Keys?: string[4]
+  // Keys shall contain the default WEP encryption keys . . .
+  KeyIndex?: number
+  // KeyIndex shall contain the index of the active key in the Keys array property . . .
+  PSKValue?: number
+  // The actual binary value of a PSK (pre-shared key) . . .
+  PSKPassPhrase?: string
+  // An ASCII string of 8-63 printable characters used to generate a PSK (pre-shared key) . . .
+}
+
 export interface NetworkPortConfigurationService extends Service { }
+
 export interface Policy extends ManagedElement {
   CommonName: string
   PolicyKeywords: string[]
@@ -382,7 +414,27 @@ export interface PolicySet extends Policy {
   PolicyRoles: string[]
   Enabled: number
 }
+
 export interface PolicySetAppliesToElement{
   PolicySet: PolicySet
   ManagedElement: ManagedElement
+}
+
+export interface IEEE8021xSettings extends SettingData {
+  AuthenticationProtocol: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+  // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ..}
+  // Values={EAP-TLS, EAP-TTLS/MSCHAPv2, PEAPv0/EAP-MSCHAPv2, PEAPv1/EAP-GTC, EAP-FAST/MSCHAPv2, EAP-FAST/GTC, EAP-MD5, EAP-PSK, EAP-SIM, EAP-AKA, EAP-FAST/TLS, DMTF Reserved}
+  // MappingStrings={RFC4017.IETF, RFC2716.IETF, draft-ietf-pppext-eap-ttls.IETF, draft-kamath-pppext-peapv0.IETF, draft-josefsson-pppext-eap-tls-eap, RFC4851.IETF, RFC3748.IETF, RFC4764.IETF, RFC4186.IETF, RFC4187.IETF}
+  RoamingIdentity: string // Max Length 80
+  ServerCertificateName?: string // Max Length 80
+  ServerCertificateNameComparison?: 1 | 2 | 3
+  // ValueMap={1, 2, 3, ..}
+  // Values={Other, FullName, DomainSuffix, DMTF Reserved}
+  // ModelCorrespondence={CIM_IEEE8021xSettings.ServerCertificateName}
+  Username?: string // Max Length 128
+  Password?: string // Max Length 256
+  Domain?: string // Max Length 256
+  ProtectedAccessCredential?: string // OctetString Write-Only
+  PACPassword?: string // Max Length 256 Write-Only
+  PSK?: string // OctetString Write-Only
 }
