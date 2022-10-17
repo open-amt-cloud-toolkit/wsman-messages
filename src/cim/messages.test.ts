@@ -7,8 +7,12 @@ import { WSManErrors } from '../WSMan'
 import { Classes, Methods, Messages } from '.'
 
 describe('CIM Tests', () => {
-  let messageId = 0
-  const cimClass = new Messages()
+  let messageId: number
+  let cimClass: Messages
+  beforeEach(() => {
+    messageId = 0
+    cimClass = new Messages()
+  })
   const xmlHeader = '<?xml version="1.0" encoding="utf-8"?>'
   const envelope = '<Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>'
   const enumerationContext = 'AC070000-0000-0000-0000-000000000000'
