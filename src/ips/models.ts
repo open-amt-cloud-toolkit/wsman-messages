@@ -3,17 +3,16 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { SecurityService, Service, ManagedElement, IEEE8021xSettings as CIM_IEEE8021xSettings } from '../cim/models'
-import { ReturnValue } from '../models/common'
+import * as CIM from '../cim'
+import * as Common from '../models/common'
 
-export interface HostBasedSetupService extends SecurityService {
+export interface HostBasedSetupService extends CIM.Models.SecurityService {
   CurrentControlMode?: number
   AllowedControlModes?: number[]
   ConfigurationNonce?: number[]
   CertChainStatus?: number
 }
-
-export interface OptInService extends Service {
+export interface OptInService extends CIM.Models.Service {
   OptInCodeTimeout?: number
   OptInRequired?: number
   OptInState?: number
@@ -26,25 +25,25 @@ export interface OptInServiceResponse{
 }
 
 export interface StartOptIn_OUTPUT {
-  StartOptIn_OUTPUT: ReturnValue
+  StartOptIn_OUTPUT: Common.ReturnValue
 }
 
 export interface CancelOptIn_OUTPUT {
-  CancelOptIn_OUTPUT: ReturnValue
+  CancelOptIn_OUTPUT: Common.ReturnValue
 }
 
 export interface SendOptInCode_OUTPUT {
-  SendOptInCode_OUTPUT: ReturnValue
+  SendOptInCode_OUTPUT: Common.ReturnValue
 }
 
-export interface AlarmClockOccurrence extends ManagedElement {
+export interface AlarmClockOccurrence extends CIM.Models.ManagedElement {
   InstanceID: string
   StartTime: Date
   Interval?: number
   DeleteOnCompletion: boolean
 }
 
-export interface IEEE8021xSettings extends CIM_IEEE8021xSettings {
+export interface IEEE8021xSettings extends CIM.Models.IEEE8021xSettings {
   Enabled: 2 | 3 | 6
   // ValueMap={0..1, 2, 3, 4..5, 6, 7..}
   // Values={Reserved, Enabled, Disabled, Reserved1, Enabled Without Certificates, Reserved2}
