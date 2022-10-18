@@ -4,9 +4,10 @@
  **********************************************************************/
 
 import { ReturnValue } from '../models/common'
+import * as Common from '../models/common'
 
 export interface ManagedElement {
-  Caption?: string
+  Caption?: string // Max Length 64
   Description?: string
   ElementName?: string
 }
@@ -374,32 +375,25 @@ export interface KVMRedirectionSAPResponse {
 }
 
 export interface PowerActionResponse {
-  RequestPowerStateChange_OUTPUT: ReturnValue
+  RequestPowerStateChange_OUTPUT: Common.ReturnValue
 }
 
 export interface WiFiEndpointSettings extends SettingData {
   ElementName: string
-  // The user-friendly name for this instance of SettingData . . .
   InstanceID: string
-  // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class . . .
   Priority: number
-  // Priority shall indicate the priority of the instance among all WiFiEndpointSettings instances.
-  SSID?: string
-  // SSID shall indicate the Service Set Identifier (SSID) that shall be used when the settings are applied to a WiFiEndpoint . . .
-  BSSType?: number
-  // BSSType shall indicate the Basic Service Set (BSS) Type that shall be used when the settings are applied . . .
-  EncryptionMethod: number
-  // EncryptionMethod shall specify the 802.11 encryption method used when the settings are applied . . .
-  AuthenticationMethod: number
-  // AuthenticationMethod shall specify the 802.11 authentication method used when the settings are applied . . .
-  Keys?: string[4]
-  // Keys shall contain the default WEP encryption keys . . .
+  SSID?: string // Max Length 32
+  BSSType?: 0 | 2 | 3
+  EncryptionMethod: 1 | 2 | 3 | 4 | 5
+  // ValueMap={1, 2, 3, 4, 5, 6..}
+  // Values={Other, WEP, TKIP, CCMP, None, DMTF Reserved}
+  AuthenticationMethod: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 32768 | 32769
+  // ValueMap={1, 2, 3, 4, 5, 6, 7, 8..32767, 32768, 32769, 32770..}
+  // Values={Other, Open System, Shared Key, WPA PSK, WPA IEEE 802.1x, WPA2 PSK, WPA2 IEEE 802.1x, DMTF Reserved, WPA3 SAE, WPA3 OWE, Vendor Reserved}
+  Keys?: string[4] // OctetString ArrayType=Indexed Max Length 256
   KeyIndex?: number
-  // KeyIndex shall contain the index of the active key in the Keys array property . . .
-  PSKValue?: number
-  // The actual binary value of a PSK (pre-shared key) . . .
-  PSKPassPhrase?: string
-  // An ASCII string of 8-63 printable characters used to generate a PSK (pre-shared key) . . .
+  PSKValue?: number // OctetString
+  PSKPassPhrase?: string // Min Length 8 Max Length 63
 }
 
 export interface NetworkPortConfigurationService extends Service { }
@@ -414,8 +408,7 @@ export interface PolicySet extends Policy {
   PolicyRoles: string[]
   Enabled: number
 }
-
-export interface PolicySetAppliesToElement{
+export interface PolicySetAppliesToElement {
   PolicySet: PolicySet
   ManagedElement: ManagedElement
 }

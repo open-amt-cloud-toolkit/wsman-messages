@@ -25,6 +25,7 @@ describe('IPS Tests', () => {
   const mcNonce = 'ZxxE0cFy590zDBIR39q6QU6iuII='
   const signingAlgorithm = 2
   const digitalSignature = 'T0NvoR7RUkOpVULIcNL0VhpEK5rO3j5/TBpN82q1YgPM5sRBxqymu7fKBgAGGN49oD8xsqW4X0SWxjuB3q/TLHjNJJNxoHHlXZnb77HTwfXHp59E/TM10UvOX96qEgKU5Mp+8/IE9LnYxC1ajQostSRA/X+HA5F6kRctLiCK+ViWUCk4sAtPzHhhHSTB/98KDWuacPepScSpref532hpD2/g43nD3Wg0SjmOMExPLMMnijWE9KDkxE00+Bos28DD3Yclj4BMhkoXDw6k4EcTWKbGhtF/9meXXmSPwRmXEaWe8COIDrQks1mpyLblYu8yHHnUjhssdcCQHtAOu7t0RA=='
+  const certificate = 'certificate_blob'
   const enumerationContext = 'AC070000-0000-0000-0000-000000000000'
   const operationTimeout = 'PT60S'
 
@@ -123,17 +124,35 @@ describe('IPS Tests', () => {
       const response = ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, 'ExampleCertificate', true, false)
       expect(response).toEqual(correctResponse)
     })
-    it('should return null if adminPassEncryptionType in ips_HostBasedSetupService Setup is missing', () => {
+    it('should return null if adminPassEncryptionType in ips_HostBasedSetupService SETUP is missing', () => {
       expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService Setup is missing', () => {
+    it('should return null if adminPassword in ips_HostBasedSetupService SETUP is missing', () => {
       expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
     })
-    it('should return null if adminPassEncryptionType in ips_HostBasedSetupService Admin Setup is missing', () => {
+    it('should return null if adminPassEncryptionType in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
       expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService Admin Setup is missing', () => {
+    it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
       expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
+    })
+    it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, adminPassEncryptionType, adminPassword, null) }).toThrow(WSManErrors.NONCE)
+    })
+    it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, adminPassEncryptionType, adminPassword, mcNonce, null) }).toThrow(WSManErrors.SIGNING_ALGORITHM)
+    })
+    it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, adminPassEncryptionType, adminPassword, mcNonce, signingAlgorithm, null) }).toThrow(WSManErrors.DIGITAL_SIGNATURE)
+    })
+    it('should return null if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, false, true) }).toThrow(WSManErrors.CERTIFICATE_BLOB)
+    })
+    it('should return null if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, certificate, null, false) }).toThrow(WSManErrors.IS_LEAF)
+    })
+    it('should return null if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, certificate, false, null) }).toThrow(WSManErrors.IS_ROOT)
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { castedIPSClass.HostBasedSetupService(Methods.REQUEST_POWER_STATE_CHANGE) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
