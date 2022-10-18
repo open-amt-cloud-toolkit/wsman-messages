@@ -63,6 +63,38 @@ describe('WSManMessageCreator Tests', () => {
       expect(header).toEqual(correctHeader)
     })
   })
+  describe('createSelector Tests', () => {
+    it('creates a correct SelectorSet string when a simple name value pair is provided', () => {
+      const selectorSet = {
+        name: 'name',
+        value: 'value'
+      }
+      const correctString = `<w:SelectorSet><w:Selector Name="${selectorSet.name}">${selectorSet.value}</w:Selector></w:SelectorSet>`
+      const result = wsmanMessageCreator.createSelector(selectorSet)
+      expect(result).toEqual(correctString)
+    })
+    it('creates a correct SelectorSet string when selectorSet is complex', () => {
+      const selectorSet = {
+        test: {
+          ReferenceParameters: {
+            ResourceURI: 'ResourceURI',
+            SelectorSet: {
+              Selector: {
+                $: {
+                  Name: 'name'
+                },
+                _: 'InstanceID'
+              }
+            }
+          },
+          Address: 'address'
+        }
+      }
+      const correctString = '<w:SelectorSet><w:Selector Name="test"><a:EndpointReference><a:Address>address</a:Address><a:ReferenceParameters><w:ResourceURI>ResourceURI</w:ResourceURI><w:SelectorSet><w:Selector Name="name">InstanceID</w:Selector></w:SelectorSet></a:ReferenceParameters></a:EndpointReference></w:Selector></w:SelectorSet>'
+      const result = wsmanMessageCreator.createSelector(selectorSet)
+      expect(result).toEqual(correctString)
+    })
+  })
   describe('createCommonBody Tests', () => {
     it('creates correct Pull body ', () => {
       const correctBody = '<Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>A4070000-0000-0000-0000-000000000000</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body>'

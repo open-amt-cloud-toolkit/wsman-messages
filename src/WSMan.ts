@@ -3,6 +3,8 @@
 * SPDX-License-Identifier: Apache-2.0
 ***********************************************************************/
 
+import { Methods } from './cim'
+
 export interface Selector {
   name: string
   value: string
@@ -29,7 +31,20 @@ export enum WSManErrors {
   MP_SERVER = 'missing mpServer',
   REMOTE_ACCESS_POLICY_RULE = 'missing remoteAccessPolicyRule',
   BOOT_SETTING_DATA = 'missing bootSettingData',
-  ADD_ALARM_DATA = 'missing alarmClockOccurrence'
+  ADD_ALARM_DATA = 'missing alarmClockOccurrence',
+  IEEE8021X_SETTINGS = 'missing ieee8021xSettings',
+  OPT_IN_SERVICE_RESPONSE = 'missing OptInServiceResponse',
+  OPT_IN_CODE = 'missing OptInCode',
+  KEY_PAIR = 'missing KeyAlgorithm and/or KeyLength',
+  DATA = 'missing data',
+  NONCE = 'missing nonce',
+  SIGNING_ALGORITHM = 'missing signingAlgorithm',
+  DIGITAL_SIGNATURE = 'missing digitalSignature',
+  IS_LEAF = 'missing isLeaf',
+  IS_ROOT = 'missing isRoot',
+  TLS_CREDENTIAL_CONTEXT = 'missing tlsCredentialContext',
+  GENERAL_SETTINGS = 'missing generalSettings',
+  MEBX_PASSWORD = 'missing password'
 }
 
 export class WSManMessageCreator {
@@ -39,12 +54,27 @@ export class WSManMessageCreator {
   anonymousAddress: string = 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous'
   defaultTimeout: string = 'PT60S'
 
+  /**
+   * Assembles the xml from the xmlCommonPrefix, header, body, and xmlCommonEnd
+   * @param header Partial XML created by createHeader function
+   * @param body Partial XML created by createBody or createCommonBody functions
+   * @returns string
+   */
   createXml = (header: string, body: string): string => {
     if (header == null) throw new Error(WSManErrors.HEADER)
     if (body == null) throw new Error(WSManErrors.BODY)
     return this.xmlCommonPrefix + header + body + this.xmlCommonEnd
   }
 
+  /**
+   * Creates a partial XML header
+   * @param action WSMAN Action value based on DMTF schema
+   * @param resourceUri WSMAN ResourceURI value based on DMTF schema
+   * @param address WSMAN Address value based on DMTF schema
+   * @param timeout WSMAN OperationTimeout value for commands to be executed - PT60S default
+   * @param selector WSMAN Selector values for headers that require it
+   * @returns string
+   */
   createHeader = (action: string, resourceUri: string, address?: string, timeout?: string, selector?: Selector): string => {
     let header: string = '<Header>'
     if (action == null) { throw new Error(WSManErrors.ACTION) }
@@ -60,7 +90,12 @@ export class WSManMessageCreator {
     return header
   }
 
-  createSelector = (selectorSet: any): any => {
+  /**
+   * Creates a WSMAN string based on Selector Set information provided.  Can be used in header or body
+   * @param selectorSet Selector data being passed in.  Could take many forms depending on the WSMAN call
+   * @returns string
+   */
+  createSelector = (selectorSet: any): string => {
     if (selectorSet.name) return `<w:SelectorSet><w:Selector Name="${selectorSet.name}">${selectorSet.value}</w:Selector></w:SelectorSet>`
     let result = '<w:SelectorSet>'
     for (const propName in selectorSet) {
@@ -86,23 +121,29 @@ export class WSManMessageCreator {
   }
 
   /**
-   * @param method Valid methods are Pull, Enumerate, Get, Delete and RequestStateChange. For other methods use createBody()
+   * Creates a WSMAN Body for methods listed.  For other methods use createBody()
+   * @method Pull Methods.PULL
+   * @method Enumerate Methods.ENUMERATE
+   * @method Get Methods.GET
+   * @method Delete Methods.DELETE
+   * @method RequestStateChange Methods.REQUEST_STATE_CHANGE
+   * @returns string
    */
   createCommonBody = (method: string, enumerationContext?: string, input?: string, requestedState?: Number): string => {
     let str = '<Body>'
     switch (method) {
-      case 'Pull':
+      case Methods.PULL:
         if (enumerationContext == null) { throw new Error(WSManErrors.ENUMERATION_CONTEXT) }
         str += `<Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull>`
         break
-      case 'Enumerate':
+      case Methods.ENUMERATE:
         str += '<Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" />'
         break
-      case 'Get':
-      case 'Delete':
+      case Methods.GET:
+      case Methods.DELETE:
         str += ''
         break
-      case 'RequestStateChange':
+      case Methods.REQUEST_STATE_CHANGE:
         if (input == null) { throw new Error(WSManErrors.INPUT) }
         if (requestedState == null) { throw new Error(WSManErrors.REQUESTED_STATE) }
         str += `<r:RequestStateChange_INPUT xmlns:r="${input}"><r:RequestedState>${requestedState.toString()}</r:RequestedState></r:RequestStateChange_INPUT>`
@@ -115,12 +156,12 @@ export class WSManMessageCreator {
   }
 
   /**
-   *
-   * @param method
-   * @param resourceUriBase
-   * @param wsmanClass
-   * @param data object(s) below the WSMAN class
-   * @returns
+   * Creates a WSMAN Body for custom methods
+   * @param method string - methods not covered by createCommonBody()
+   * @param resourceUriBase string - URI address of the resource
+   * @param wsmanClass string - name of WSMAN class being used
+   * @param data Object being converted into XML format
+   * @returns string
    */
   createBody = (method: string, resourceUriBase: string, wsmanClass: string, data?: any): string => {
     this.processBody(data)
@@ -136,6 +177,11 @@ export class WSManMessageCreator {
     return str
   }
 
+  /**
+   * Converts JavaScript object to XML
+   * @param data JavaScript object
+   * @returns string
+   */
   OBJtoXML (data: any): string {
     let xml = ''
     for (const prop in data) {
@@ -168,6 +214,11 @@ export class WSManMessageCreator {
     return xml
   }
 
+  /**
+   * Helper function for createBody() to ensure WSMAN namespaces are formatted correctly
+   * @param data JavaScript object
+   * @returns any
+   */
   processBody (data: any): any {
     if (Array.isArray(data)) {
       return
@@ -190,6 +241,13 @@ export class WSManMessageCreator {
     }
   }
 
+  /**
+   * Helper function for processBody() to assist with formatting
+   * @param data JavaScript object
+   * @param key string
+   * @param prefix string
+   * @returns void
+   */
   prependObjectKey (data: object, key: string, prefix: string) {
     data[prefix + key] = data[key]
     if (typeof data[key] === 'object') {

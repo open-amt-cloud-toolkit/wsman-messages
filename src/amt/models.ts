@@ -4,18 +4,17 @@
 **********************************************************************/
 
 import * as CIM from '../cim'
-import { NetworkPortConfigurationService } from '../cim/models'
 
 export interface AMTAuthenticateObject {
-  nonce?: number[]
-  uuid?: string[]
-  fqdn?: string
-  fwVersion?: string
-  amtSvn?: number
-  signatureMechanism?: number
-  signature?: number[]
-  lengthOfCertificates?: number[]
-  certificates?: number[]
+  Nonce?: number[]
+  UUID?: string[]
+  FQDN?: string
+  FWVersion?: string
+  AMTSVN?: number
+  SignatureMechanism?: 0
+  Signature?: number[]
+  LengthOfCertificates?: number[]
+  Certificates?: number[]
 }
 
 export interface GeneralSettings extends CIM.Models.SettingData {
@@ -26,19 +25,21 @@ export interface GeneralSettings extends CIM.Models.SettingData {
   DomainName?: string
   PingResponseEnabled?: boolean
   WsmanOnlyMode?: boolean
-  PreferredAddressFamily?: number
+  PreferredAddressFamily?: 0 | 1
   DHCPv6ConfigurationTimeout?: number
+  DDNSUpdateEnabled?: boolean
   DDNSUpdateByDHCPServerEnabled?: boolean
   SharedFQDN?: boolean
   HostOSFQDN?: string
   DDNSTTL?: number
-  AMTNetworkEnabled?: number
+  AMTNetworkEnabled?: 0 | 1
   RmcpPingResponseEnabled?: boolean
   DDNSPeriodicUpdateInterval?: number
   PresenceNotificationInterval?: number
-  PrivacyLevel?: number
-  PowerSource?: number
-  ThunderboltDockEnabled?: number
+  PrivacyLevel?: 0 | 1 | 2
+  PowerSource?: 0 | 1
+  ThunderboltDockEnabled?: 0 | 1
+  OemID: number
   AMTAuthenticate?: (mcNonce: number) => AMTAuthenticateObject
 }
 
@@ -272,56 +273,70 @@ export interface RedirectionResponse {
   AMT_RedirectionService: RedirectionService
 }
 export interface PublicKeyCertificate{
-  // A user-friendly name for the object . . .
- ElementName:string
-  // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class.
- InstanceID :string
-  // The X.509 Certificate blob.
-   X509Certificate: string // uint8[4100]
-
-  // For root certificate [that were added by AMT_PublicKeyManagementService.AddTrustedRootCertificate()]this property will be true.
-  TrustedRootCertficate:boolean
-
-  // The Issuer field of this certificate.
-  Issuer:string
-
-  // The Subject field of this certificate.
-  Subject:string
-
-  // Indicates whether the certificate is an Intel AMT self-signed certificate. If True, the certificate cannot be deleted.
-  ReadOnlyCertificate:boolean
-
+  ElementName:string // A user-friendly name for the object . . .
+  InstanceID :string // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class.
+  X509Certificate: string // uint8[4100] // The X.509 Certificate blob.
+  TrustedRootCertficate:boolean // For root certificate [that were added by AMT_PublicKeyManagementService.AddTrustedRootCertificate()]this property will be true.
+  Issuer:string // The Issuer field of this certificate.
+  Subject:string // The Subject field of this certificate.
+  ReadOnlyCertificate:boolean // Indicates whether the certificate is an Intel AMT self-signed certificate. If True, the certificate cannot be deleted.
 }
 export interface TLSProtocolEndpointCollection extends CIM.Models.Collection {
 
 }
 export interface TLSCredentialContext {//  extends CIM.Models.CredentialContext{
-// A certificate whose context is defined.
-  ElementInContext: string
-// The TLSProtocolEndpointCollection that provides context or scope for the Credential.
-  ElementProvidingContext: string
+  // A certificate whose context is defined.
+  ElementInContext: {
+    Address: string,
+    ReferenceParameters: {
+      ResourceURI: string,
+      SelectorSet: {
+        Selector: {
+          _: string,
+          $: {
+            Name: string
+          }
+        }
+      }
+    }
+  }
+  // The TLSProtocolEndpointCollection that provides context or scope for the Credential.
+  ElementProvidingContext: {
+    Address: string,
+    ReferenceParameters: {
+      ResourceURI: string,
+      SelectorSet: {
+        Selector: {
+          _: string,
+          $: {
+            Name: string
+          }
+        }
+      }
+    }
+  }
 }
 
 export interface TLSSettingData extends CIM.Models.SettingData {
-   MutualAuthentication: boolean
+  MutualAuthentication: boolean
   // Adminstrator-settable property that determines whether or not mutual authentication is used at the TLS layer is used on the associated service access point . . .
-   Enabled: boolean
+  Enabled: boolean
   // Administrator-settable property that determines whether or not TLS is used on the associated service access point.
-   TrustedCN: string
+  TrustedCN: string
   // An array of strings, used to validate the CN subfield of the subject field in X.509 certificates presented to Intel(R) AMT in the TLS handshake . . .
-   AcceptNonSecureConnections: boolean
+  AcceptNonSecureConnections: boolean
   // This setting defines once TLS is enabled and configured whether non-secure EOI/WSMAN connections are still accepted by FW on ports 16992 and 623 . . .
-   NonSecureConnectionsSupported: boolean
+  NonSecureConnectionsSupported: boolean
   // If the value of this read-only field is True, the value of AcceptNonSecureConnections can be changed. Note that this class and field can be accessed locally as well as remotely.
 }
-export interface GenerateKeyPair{
+export interface GenerateKeyPair {
   KeyAlgorithm: number
   KeyLength: number
 }
-export interface AddCertificate{
+export interface AddCertificate {
   CertificateBlob: string
 }
-export interface WiFiPortConfigurationService extends NetworkPortConfigurationService {
+export interface WiFiPortConfigurationService extends CIM.Models.NetworkPortConfigurationService {
   RequestedState: number
   // RequestedState is an integer enumeration that indicates the last requested or desired state for the element, irrespective of the mechanism through which it was requested . . .
   EnabledState: number
@@ -348,7 +363,7 @@ export interface WiFiPortConfigurationService extends NetworkPortConfigurationSe
   // Enables or disables UEFI / CSME Wi - Fi Profile Sharing.
 }
 
-export interface RemoteAccessPolicyAppliesToMPS extends CIM.Models.PolicySetAppliesToElement{
+export interface RemoteAccessPolicyAppliesToMPS extends CIM.Models.PolicySetAppliesToElement {
   OrderOfAccess: number
   MpsType: number
 }

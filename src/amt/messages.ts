@@ -7,7 +7,7 @@ import { Selector, WSManMessageCreator, WSManErrors } from '../WSMan'
 import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDetectionSettingData, BootSettingData, RedirectionResponse, TLSSettingData, GenerateKeyPair, AddCertificate, GeneralSettings, TLSCredentialContext, RemoteAccessPolicyAppliesToMPS } from './models'
 import { REQUEST_STATE_CHANGE } from './actions'
 import { Classes, Methods, Actions } from './'
-import { WiFiEndpointSettings } from '../models/cim_models'
+import { WiFiEndpointSettings } from '../cim/models'
 import { AlarmClockOccurrence } from '../ips/models'
 
 type AllActions = Actions
@@ -86,11 +86,18 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of the AuditLog.
+   * @method READ_RECORDS - Requires startIndex.  Returns a list of consecutive audit log records in chronological order: The first record in the returned array is the oldest record stored in the log. The record entries are returned as an array of base64Binary elements.
+   * @param startIndex Identifies the position of the first record to retrieve. An index of 1 indicates the first record in the log.
+   * @returns string
+   */
   AuditLog = (method: Methods.READ_RECORDS, startIndex: number): string => {
     let header: string
     let body: string
     switch (method) {
       case Methods.READ_RECORDS:
+        if (startIndex == null) { startIndex = 1 }
         header = this.wsmanMessageCreator.createHeader(Actions.READ_RECORDS, `${this.resourceUriBase}${Classes.AMT_AUDIT_LOG}`)
         body = this.wsmanMessageCreator.createBody('ReadRecords_INPUT', this.resourceUriBase, Classes.AMT_AUDIT_LOG, { StartIndex: startIndex })
         return this.wsmanMessageCreator.createXml(header, body)
@@ -99,6 +106,13 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of the MessageLog (Event Log)
+   * @method GET_RECORDS - Requires identifier.  Retrieves multiple records from MessageLog.
+   * @method POSITION_TO_FIRST_RECORD - Requests that an iteration of the MessageLog be established and that the iterator be set to the first entry in the Log. An identifier for the iterator is returned as an output parameter of the method.
+   * @param identifier the IterationIdentifier input parameter is a numeric value (starting at 1) which is the position of the first record in the log that should be extracted.
+   * @returns string
+   */
   MessageLog = (method: Methods.GET_RECORDS | Methods.POSITION_TO_FIRST_RECORD, identifier?: number): string => {
     let header: string, body: string
     switch (method) {
@@ -107,6 +121,7 @@ export class Messages {
         body = `<Body><r:PositionToFirstRecord_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}" /></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       case Methods.GET_RECORDS:
+        if (identifier == null) { identifier = 1 }
         header = this.wsmanMessageCreator.createHeader(Actions.GET_RECORDS, `${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}`)
         body = this.wsmanMessageCreator.createBody('GetRecords_INPUT', this.resourceUriBase, Classes.AMT_MESSAGE_LOG, { IterationIdentifier: identifier, MaxReadRecords: 390 })
         return this.wsmanMessageCreator.createXml(header, body)
@@ -115,24 +130,58 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of the BootCapabilities options that the Intel® AMT device supports.
+   * @method GET - Retrieves a representation of BootCapabilities.
+   * @returns string
+   */
   BootCapabilities = (method: Methods.GET): string => {
     return this.amtSwitch({ method: method, class: Classes.AMT_BOOT_CAPABILITIES })
   }
 
-  RedirectionService = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE | Methods.PUT, requestedState?: number, data?: RedirectionResponse): string => {
+  /**
+   * Accesses a representation of the RedirectionService, which encompasses the IDER and SOL redirection functionalities.
+   * @method GET - Retrieves a representation of RedirectionService.
+   * @method REQUEST_STATE_CHANGE - Requires requestedState.  Requests that the state of the element be changed to the value specified in the RequestedState parameter.  The supported values in requestedState are 32768-32771.
+   * @method PUT - Requires data.  Changes properties of RedirectionService.
+   * @param requestedState The state requested for the element. This information will be placed into the RequestedState property of the instance if the return code of the RequestStateChange method is 0 ('Completed with No Error'), 3 ('Timeout'), or 4096 (0x1000) ('Job Started'). Refer to the description of the EnabledState and RequestedState properties for the detailed explanations of the RequestedState values.
+   * @remarks ValueMap={2, 3, 4, 6, 7, 8, 9, 10, 11, .., 32768, 32769, 32770, 32771, 32772..65535}
+   * @remarks Values={Enabled, Disabled, Shut Down, Offline, Test, Defer, Quiesce, Reboot, Reset, DMTF Reserved, disable IDER and SOL, enable IDER and disable SOL, enable SOL and disable IDER, enable IDER and SOL, Vendor Reserved}
+   * @param data RedirectionResponse Object.
+   * @returns string
+   */
+  RedirectionService = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE | Methods.PUT, requestedState?: 32768 | 32769 | 32770 | 32771, data?: RedirectionResponse): string => {
+    if (method === Methods.REQUEST_STATE_CHANGE && requestedState == null) { throw new Error(WSManErrors.REQUESTED_STATE) }
+    if (method === Methods.PUT && data == null) { throw new Error(WSManErrors.DATA) }
     return this.amtSwitch({ method: method, class: Classes.AMT_REDIRECTION_SERVICE, requestedState, data })
   }
 
-  SetupAndConfigurationService = (method: Methods.GET | Methods.UNPROVISION | Methods.SET_MEBX_PASSWORD | Methods.COMMIT_CHANGES, password?: string, provisioningMode?: number): string => {
+  /**
+   * Accesses a representation of the SetupAndConfigurationService.
+   * @method GET - Retrieves a representation of SetupAndConfigurationService.
+   * @method UNPROVISION - provisioningMode not required, defaults to 1 if not provided.  Resets the Intel(R) AMT device to default factory settings. The device will need to be re-provisioned after this command.
+   * @method SET_MEBX_PASSWORD - Requires password. This method sets the ME Bios extension password. It allows a remote caller to change the ME access password for the BIOS extension screen. This call succeeds depending on the password policy rule defined in MEBx (BIOS extension):"Default Password Only" - Method succeeds only when the current password is still the default value and only in PKI provisioning. "During Setup and Configuration" - Method succeeds only during provisioning, regardless of provisioning method or previous password value."ANYTIME" - Method will always succeed. (i.e. even when configured).
+   * @method COMMIT_CHANGES - Commits pending configuration commands made to the Intel(R) AMT device. Completes configuration when in "IN-provisioning" state.
+   * @param password Password needs to be strong: Contain at least one of: upper-case, lower-case, digit and special character.
+   * @remarks Min Length = 8
+   * @remarks Max Length = 32
+   * @param provisioningMode Indicates the provisioning mode (Enterprise , Small Business or Remote Connectivity) the device will enter following successful completion of the command. Starting from Release 6.0 only effective value is ProvisioningModeEnterprise.
+   * @remarks ValueMap={0, 1, 2, 3}
+   * @remarks Values={ProvisioningModeCurrent, ProvisioningModeEnterprise, ProvisioningModeSmallBusiness, ProvisioningRemoteConnectivity}
+   * @returns string
+   */
+  SetupAndConfigurationService = (method: Methods.GET | Methods.UNPROVISION | Methods.SET_MEBX_PASSWORD | Methods.COMMIT_CHANGES, password?: string, provisioningMode?: 1): string => {
     let header: string, body: string
     switch (method) {
       case Methods.GET:
         return this.amtSwitch({ method: method, class: Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE })
       case Methods.UNPROVISION:
+        if (provisioningMode == null) { provisioningMode = 1 }
         header = this.wsmanMessageCreator.createHeader(Actions.UNPROVISION, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`)
         body = `<Body><r:Unprovision_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}"><r:ProvisioningMode>${provisioningMode}</r:ProvisioningMode></r:Unprovision_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       case Methods.SET_MEBX_PASSWORD:
+        if (password == null) throw new Error(WSManErrors.MEBX_PASSWORD)
         header = this.wsmanMessageCreator.createHeader(Actions.SET_MEBX_PASSWORD, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`)
         body = `<Body><r:SetMEBxPassword_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}"><r:Password>${password}</r:Password></r:SetMEBxPassword_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
@@ -145,14 +194,21 @@ export class Messages {
     }
   }
 
-  GeneralSettings = (method: Methods.GET | Methods.PUT, data?: GeneralSettings): string => {
+  /**
+   * Accesses a representation of the GeneralSettings.
+   * @method GET - Retrieves a representation of GeneralSettings.
+   * @method PUT - Requires generalSettings.  Changes properties of GeneralSettings.
+   * @param generalSettings GeneralSettings Object.
+   * @returns string
+   */
+  GeneralSettings = (method: Methods.GET | Methods.PUT, generalSettings?: GeneralSettings): string => {
     switch (method) {
       case Methods.GET:
         return this.amtSwitch({ method: method, class: Classes.AMT_GENERAL_SETTINGS })
       case Methods.PUT: {
-        if (data == null) throw new Error(WSManErrors.BODY)
+        if (generalSettings == null) throw new Error(WSManErrors.GENERAL_SETTINGS)
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_GENERAL_SETTINGS}`)
-        const body = this.wsmanMessageCreator.createBody('AMT_GeneralSettings', this.resourceUriBase, Classes.AMT_GENERAL_SETTINGS, data)
+        const body = this.wsmanMessageCreator.createBody('AMT_GeneralSettings', this.resourceUriBase, Classes.AMT_GENERAL_SETTINGS, generalSettings)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
@@ -160,10 +216,20 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of the EthernetPortSettings.
+   * @method PULL - Requires enumerationContext.  Pulls instances of EthernetPortSettings, following an Enumerate operation.
+   * @method ENUMERATE - Enumerates the instances of EthernetPortSettings.
+   * @method PUT - Requires ethernetPortObject.  Changes properties of the EthernetPortSettings.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param ethernetPortObject EthernetPortSettings Object.
+   * @returns string
+   */
   EthernetPortSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, enumerationContext?: string, ethernetPortObject?: EthernetPortSettings): string => {
     switch (method) {
       case Methods.PULL:
       case Methods.ENUMERATE:
+        if (method === Methods.PULL && enumerationContext == null) { throw new Error(WSManErrors.ENUMERATION_CONTEXT) }
         return this.amtSwitch({ method: method, class: Classes.AMT_ETHERNET_PORT_SETTINGS, enumerationContext })
       case Methods.PUT: {
         if (ethernetPortObject == null) { throw new Error(WSManErrors.ETHERNET_PORT_OBJECT) }
@@ -183,17 +249,35 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of a RemoteAccessPolicyRule.
+   * @method DELETE - Requires selector.  Deletes the RemoteAccessPolicyRule.
+   * @param selector Selector Object.
+   * @returns string
+   */
   RemoteAccessPolicyRule = (method: Methods.DELETE, selector?: Selector): string => {
+    if (selector == null) { throw new Error(WSManErrors.SELECTOR) }
     return this.amtSwitch({ method: method, class: Classes.AMT_REMOTE_ACCESS_POLICY_RULE, selector: selector })
   }
 
+  /**
+   * Accesses a representation of a Management Presence Remote Service Access Point (or an MPS) to be accessed by the Intel(R) AMT subsystem from remote.
+   * @method PULL - Requires enumerationContext.  Pulls instances of ManagementPresenceRemoteSAP, following an Enumerate operation.
+   * @method ENUMERATE - Enumerates the instances of ManagementPresenceRemoteSAP.
+   * @method DELETE - Requires selector.  Deletes the ManagementPresenceRemoteSAP instance.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param selector Selector Object.
+   * @returns string
+   */
   ManagementPresenceRemoteSAP = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => {
     switch (method) {
       case Methods.ENUMERATE:
       case Methods.PULL: {
+        if (method === Methods.PULL && enumerationContext == null) { throw new Error(WSManErrors.ENUMERATION_CONTEXT) }
         return this.amtSwitch({ method: method, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, enumerationContext: enumerationContext })
       }
       case Methods.DELETE: {
+        if (selector == null) { throw new Error(WSManErrors.SELECTOR) }
         return this.amtSwitch({ method: method, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, selector: selector })
       }
       default:
@@ -201,17 +285,31 @@ export class Messages {
     }
   }
 
-  TLSCredentialContext = (method: Methods.ENUMERATE | Methods.PULL | Methods.CREATE | Methods.DELETE, enumerationContext?: string, data?: TLSCredentialContext, selector?: any) => {
+  /**
+   * Accesses a representation of the TLSCredentialContext.
+   * @method ENUMERATE - Enumerates the instances of TLSCredentialContext.
+   * @method PULL - Requires enumerationContext.  Pulls instances of TLSCredentialContext, following an Enumerate operation.
+   * @method CREATE - Requires tlsCredentialContext.  Creates a new instance of TLSCredentialContext.
+   * @method DELETE - Requires selector.  Deletes the TLSCredentialContext instance.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param tlsCredentialContext TLSCredentialContext Object.
+   * @param selector Selector Object.
+   * @returns string
+   */
+  TLSCredentialContext = (method: Methods.ENUMERATE | Methods.PULL | Methods.CREATE | Methods.DELETE, enumerationContext?: string, tlsCredentialContext?: TLSCredentialContext, selector?: Selector) => {
     switch (method) {
       case Methods.CREATE: {
+        if (tlsCredentialContext == null) { throw new Error(WSManErrors.TLS_CREDENTIAL_CONTEXT) }
         const header = this.wsmanMessageCreator.createHeader(Actions.CREATE, `${this.resourceUriBase}${Classes.AMT_TLS_CREDENTIAL_CONTEXT}`)
-        const body = this.wsmanMessageCreator.createBody('AMT_TLSCredentialContext', this.resourceUriBase, Classes.AMT_TLS_CREDENTIAL_CONTEXT, data)
+        const body = this.wsmanMessageCreator.createBody('AMT_TLSCredentialContext', this.resourceUriBase, Classes.AMT_TLS_CREDENTIAL_CONTEXT, tlsCredentialContext)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.ENUMERATE:
       case Methods.PULL:
+        if (method === Methods.PULL && enumerationContext == null) { throw new Error(WSManErrors.ENUMERATION_CONTEXT) }
         return this.amtSwitch({ method: method, class: Classes.AMT_TLS_CREDENTIAL_CONTEXT, enumerationContext: enumerationContext })
       case Methods.DELETE: {
+        if (selector == null) { throw new Error(WSManErrors.SELECTOR) }
         return this.amtSwitch({ method: method, class: Classes.AMT_TLS_CREDENTIAL_CONTEXT, selector: selector })
       }
       default:
@@ -219,14 +317,23 @@ export class Messages {
     }
   }
 
-  TLSSettingData = (method: Methods.ENUMERATE | Methods.PULL | Methods.PUT, enumerationContext?: string, data?: TLSSettingData) => {
+  /**
+   * Accesses a representation of the TLSSettingData.
+   * @method ENUMERATE - Enumerates the instances of TLSSettingData.
+   * @method PULL - Requires enumerationContext.  Pulls instances of TLSSettingData, following an Enumerate operation.
+   * @method PUT - Requires tlsSettingData.  Changes properties of TLSSettingData.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param tlsSettingData TLSSettingData Object.
+   * @returns string
+   */
+  TLSSettingData = (method: Methods.ENUMERATE | Methods.PULL | Methods.PUT, enumerationContext?: string, tlsSettingData?: TLSSettingData) => {
     switch (method) {
       case Methods.PULL:
       case Methods.ENUMERATE:
         return this.amtSwitch({ method: method, class: Classes.AMT_TLS_SETTING_DATA, enumerationContext })
       case Methods.PUT: {
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_TLS_SETTING_DATA}`, null, null, { name: 'InstanceID', value: data.InstanceID })
-        const body = this.wsmanMessageCreator.createBody('AMT_TLSSettingData', this.resourceUriBase, Classes.AMT_TLS_SETTING_DATA, data)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_TLS_SETTING_DATA}`, null, null, { name: 'InstanceID', value: tlsSettingData.InstanceID })
+        const body = this.wsmanMessageCreator.createBody('AMT_TLSSettingData', this.resourceUriBase, Classes.AMT_TLS_SETTING_DATA, tlsSettingData)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:
@@ -234,6 +341,15 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of the PublicPrivateKeyPair.
+   * @method ENUMERATE - Enumerates the instances of PublicPrivateKeyPair.
+   * @method PULL - Requires enumerationContext.  Pulls instances of PublicPrivateKeyPair, following an Enumerate operation.
+   * @method DELETE - Requires selector.  Deletes the PublicPrivateKeyPair instance.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param selector Selector Object.
+   * @returns string
+   */
   PublicPrivateKeyPair = (method: Methods.ENUMERATE | Methods.PULL | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => {
     switch (method) {
       case Methods.ENUMERATE:
@@ -246,6 +362,15 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of PublicKeyCertificate.
+   * @method PULL - Requires enumerationContext.  Pulls instances of PublicKeyCertificate, following an Enumerate operation.
+   * @method ENUMERATE - Enumerates the instances of PublicKeyCertificate.
+   * @method DELETE - Requires selector.  Deletes the PublicKeyCertificate instance.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param selector Selector Object.
+   * @returns string
+   */
   PublicKeyCertificate = (method: Methods.PULL | Methods.ENUMERATE | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => {
     switch (method) {
       case Methods.ENUMERATE:
@@ -260,6 +385,13 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of EnvironmentDetectionSettingData.
+   * @method GET - Retrieves a representation of EnvironmentDetectionSettingData.
+   * @method PUT - Requires environmentDetectionSettingData.  Changes properties of EnvironmentDetectionSettingData.
+   * @param environmentDetectionSettingData EnvironmentDetectionSettingData Object.
+   * @returns string
+   */
   EnvironmentDetectionSettingData = (method: Methods.GET | Methods.PUT, environmentDetectionSettingData?: EnvironmentDetectionSettingData): string => {
     switch (method) {
       case Methods.GET:
@@ -280,9 +412,18 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of PublicKeyManagementService.
+   * @method ADD_TRUSTED_ROOT_CERTIFICATE - Requires data as AddCertificate.  This method adds new root certificate to the Intel(R) AMT CertStore. A certificate cannot be removed if it is referenced (for example, used by TLS, 802.1X or EAC).
+   * @method GENERATE_KEY_PAIR - Requires data as GenerateKeyPair.  This method is used to generate a key in the FW.
+   * @method ADD_CERTIFICATE - Requires data as AddCertificate.  This method adds new certificate to the Intel(R) AMT CertStore. A certificate cannot be removed if it is referenced (for example, used by TLS, 802.1X or EAC).
+   * @param data Accepts either GenerateKeyPair Object or AddCertificate Object.
+   * @returns string
+   */
   PublicKeyManagementService = (method: Methods.ADD_TRUSTED_ROOT_CERTIFICATE | Methods.GENERATE_KEY_PAIR | Methods.ADD_CERTIFICATE, data?: GenerateKeyPair | AddCertificate): string => {
     switch (method) {
       case Methods.GENERATE_KEY_PAIR: {
+        if ((data as GenerateKeyPair)?.KeyAlgorithm == null || (data as GenerateKeyPair)?.KeyLength == null) throw new Error(WSManErrors.KEY_PAIR)
         const header = this.wsmanMessageCreator.createHeader(Actions.GENERATE_KEY_PAIR, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`)
         const body = this.wsmanMessageCreator.createBody('GenerateKeyPair_INPUT', this.resourceUriBase, Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)
@@ -304,6 +445,15 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of RemoteAccessService.
+   * @method ADD_MPS - Requires mpServer.  Adds a Management Presence Server to the Intel(R) AMT subsystem. Creates an AMT_ManagementPresenceRemoteSAP instance and an AMT_RemoteAccessCredentialContext association to a credential. This credential may be an existing AMT_PublicKeyCertificate instance (if the created MPS is configured to use mutual authentication). If the created MpServer is configured to use username password authentication, an AMT_MPSUsernamePassword instance is created and used as the associated credential.
+   * @method ADD_REMOTE_ACCESS_POLICY_RULE - Requires remoteAccessPolicyRule and selector.  Adds a Remote Access policy to the Intel(R) AMT subsystem. The policy defines an event that will trigger an establishment of a tunnel between AMT and a pre-configured MPS. Creates an AMT_RemoteAccessPolicyRule instance and associates it to a given list of AMT_ManagementPresenceRemoteSAP instances with AMT_PolicySetAppliesToElement association instances.
+   * @param mpServer MPServer Object.
+   * @param remoteAccessPolicyRule RemoteAccessPolicyRule Object.
+   * @param selector Selector Object.
+   * @returns string
+   */
   RemoteAccessService = (method: Methods.ADD_MPS | Methods.ADD_REMOTE_ACCESS_POLICY_RULE, mpServer?: MPServer, remoteAccessPolicyRule?: RemoteAccessPolicyRule, selector?: Selector): string => {
     switch (method) {
       case Methods.ADD_MPS: {
@@ -324,10 +474,23 @@ export class Messages {
     }
   }
 
-  UserInitiatedConnectionService = (method: Methods.REQUEST_STATE_CHANGE, requestedState?: number): string => {
+  /**
+   * Accesses a representation of UserInitiatedConnectionService.
+   * @method REQUEST_STATE_CHANGE - Requires requestedState.  Requests that the state of the element be changed to the value specified in the RequestedState parameter. When the requested state change takes place, the EnabledState and RequestedState of the element will be the same. Invoking the RequestStateChange method multiple times could result in earlier requests being overwritten or lost.  If 0 is returned, then the task completed successfully and the use of ConcreteJob was not required. If 4096 (0x1000) is returned, then the task will take some time to complete, ConcreteJob will be created, and its reference returned in the output parameter Job. Any other return code indicates an error condition.
+   * @param requestedState The state requested for the element. This information will be placed into the RequestedState property of the instance if the return code of the RequestStateChange method is 0 ('Completed with No Error'), 3 ('Timeout'), or 4096 (0x1000) ('Job Started'). Refer to the description of the EnabledState and RequestedState properties for the detailed explanations of the RequestedState values.
+   * @returns string
+   */
+  UserInitiatedConnectionService = (method: Methods.REQUEST_STATE_CHANGE, requestedState?: 32768 | 32769 | 32770 | 32771): string => {
     return this.amtSwitch({ method: method, class: Classes.AMT_USER_INITIATED_CONNECTION_SERVICE, requestedState: requestedState })
   }
 
+  /**
+   * Accesses a representation of BootSettingData.
+   * @method GET - Retrieves a representation of BootSettingData.
+   * @method PUT - Requires bootSettingData.  Changes properties of BootSettingData.
+   * @param bootSettingData BootSettingData Object.
+   * @returns string
+   */
   BootSettingData = (method: Methods.GET | Methods.PUT, bootSettingData?: BootSettingData): string => {
     switch (method) {
       case Methods.GET:
@@ -353,6 +516,15 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of AuthorizationService.
+   * @method SET_ADMIN_ACL_ENTRY_EX - Requires username and digestPassword.  Updates an Admin entry in the Intel(R) AMT device.
+   * @param username Username for access control. Contains 7-bit ASCII characters. String length is limited to 16 characters. Username cannot be an empty string.
+   * @remarks Max Length 16
+   * @param digestPassword An MD5 Hash of these parameters concatenated together (Username + ":" + DigestRealm + ":" + Password). The DigestRealm is a field in AMT_GeneralSettings.
+   * @remarks OctetString
+   * @returns string
+   */
   AuthorizationService = (method: Methods.SET_ADMIN_ACL_ENTRY_EX, username: string, digestPassword: string): string => {
     switch (method) {
       case Methods.SET_ADMIN_ACL_ENTRY_EX: {
@@ -368,6 +540,15 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of TimeSynchronizationService.
+   * @method GET_LOW_ACCURACY_TIME_SYNCH - This method is used for reading the Intel(R) AMT device's internal clock.
+   * @method SET_HIGH_ACCURACY_TIME_SYNCH - Requires ta0, tm1, tm2.  This method is used to synchronize the Intel(R) AMT device's internal clock with an external clock.
+   * @param ta0 The time value received from invoking GetLowAccuracyTimeSynch().
+   * @param tm1 The remote client timestamp after getting a response from GetLowAccuracyTimeSynch().
+   * @param tm2 The remote client timestamp obtained immediately prior to invoking this method.
+   * @returns string
+   */
   TimeSynchronizationService = (method: Methods.GET_LOW_ACCURACY_TIME_SYNCH | Methods.SET_HIGH_ACCURACY_TIME_SYNCH, ta0?: number, tm1?: number, tm2?: number): string => {
     switch (method) {
       case Methods.GET_LOW_ACCURACY_TIME_SYNCH: {
@@ -389,9 +570,21 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of WiFiPortConfigurationService.
+   * @method ADD_WIFI_SETTINGS - Requires data and selector.  Atomically creates an instance of CIM_WifiEndpointSettings from the embedded instance parameter and optionally an instance of CIM_IEEE8021xSettings from the embedded instance parameter (if provided), associates the CIM_WiFiEndpointSettings instance with the referenced instance of CIM_WiFiEndpoint using an instance of CIM_ElementSettingData optionally associates the newly created or referenced by parameter instance of CIM_IEEE8021xSettings with the instance of CIM_WiFiEndpointSettings using an instance of CIM_ConcreteComponent and optionally associates the referenced instance of AMT_PublicKeyCertificate (if provided) with the instance of CIM_IEEE8021xSettings (if provided) using an instance of CIM_CredentialContext.
+   * @method PUT - Requires data and selector.  Changes properties of WiFiEndpointSettings
+   * @method GET - Retrieves a representation of WiFiEndpointSettings.
+   * @param data WiFiEndpointSettings Object
+   * @param selector Selector Object.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @returns string
+   */
   WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS | Methods.PUT | Methods.GET, data?: WiFiEndpointSettings | any, selector?: Selector, enumerationContext?: string): string => {
     switch (method) {
       case Methods.PUT: {
+        if (data == null) { throw new Error(WSManErrors.DATA) }
+        if (selector == null) { throw new Error(WSManErrors.SELECTOR) }
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE}`, null, null, selector)
         const body = this.wsmanMessageCreator.createBody(Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, this.resourceUriBase, Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)
@@ -399,6 +592,8 @@ export class Messages {
       case Methods.GET:
         return this.amtSwitch({ method, class: Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, enumerationContext })
       case Methods.ADD_WIFI_SETTINGS: {
+        if (data == null) { throw new Error(WSManErrors.DATA) }
+        if (selector == null) { throw new Error(WSManErrors.SELECTOR) }
         const header = this.wsmanMessageCreator.createHeader(Actions.ADD_WIFI_SETTINGS, `${this.resourceUriBase}${Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE}`)
         // HANDLE SPECICAL CHARACTERS FOR XML
         const encodedPassphrase = data.PSKPassPhrase.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
@@ -410,6 +605,19 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of RemoteAccessPolicyAppliesToMPS.
+   * @method PULL - Requires enumerationContext.  Pulls instances of RemoteAccessPolicyAppliesToMPS, following an Enumerate operation
+   * @method ENUMERATE - Enumerates the instances of RemoteAccessPolicyAppliesToMPS
+   * @method GET - Gets the representation of RemoteAccessPolicyAppliesToMPS
+   * @method DELETE - Requires selector.  Deletes an instance
+   * @method PUT - Requires data. Changes properties of RemoteAccessPolicyAppliesToMPS
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param data RemoteAccessPolicyAppliesToMPS Object
+   * @param maxElements Number of elements to return
+   * @param selector Selector Object
+   * @returns string
+   */
   RemoteAccessPolicyAppliesToMPS = (method: Methods.PULL | Methods.ENUMERATE | Methods.GET | Methods.DELETE | Methods.PUT, enumerationContext?: string, data?: RemoteAccessPolicyAppliesToMPS, maxElements?: number, selector?: Selector): string => {
     switch (method) {
       case Methods.ENUMERATE:
@@ -429,6 +637,13 @@ export class Messages {
     }
   }
 
+  /**
+   * Accesses a representation of AlarmClockService.
+   * @method ADD_ALARM - Requires data.  This method creates an alarm that would wake the system at a given time.The method receives as input an embedded instance of type IPS_AlarmClockOccurrence, with the following fields set: StartTime, Interval, InstanceID, DeleteOnCompletion. Upon success, the method creates an instance of IPS_AlarmClockOccurrence which is associated with AlarmClockService.The method would fail if 5 instances or more of IPS_AlarmClockOccurrence already exist in the system.
+   * @method GET - Gets the representation of AlarmClockOccurrence
+   * @param data AlarmClockOccurrence Object
+   * @returns string
+   */
   AlarmClockService = (method: Methods.ADD_ALARM | Methods.GET, data?: AlarmClockOccurrence | any): string => {
     switch (method) {
       case Methods.GET:

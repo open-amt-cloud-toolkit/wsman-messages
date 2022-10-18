@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  **********************************************************************/
 
-import { CIM_ManagedElement } from '../models/cim_models'
 import { ReturnValue } from '../models/common'
+import * as Common from '../models/common'
 
 export interface ManagedElement {
-  Caption?: string
+  Caption?: string // Max Length 64
   Description?: string
   ElementName?: string
 }
@@ -118,6 +118,7 @@ export interface BIOSElement extends SoftwareElement {
   PrimaryBIOS?: boolean
   ReleaseDate?: Date
 }
+
 export interface Job extends LogicalElement {
   InstanceId?: string
   CommunicationStatus?: number
@@ -145,12 +146,14 @@ export interface Job extends LogicalElement {
   RecoveryAction?: number
   OtherRecoveryAction?: string
 }
+
 export interface ConcreteJob extends Job {
   UntilTime?: Date
   JobState?: number
   TimeOfLastStateChange?: Date
   TimeBeforeRemoval?: Date
 }
+
 export interface EnabledLogicalElement extends LogicalElement {
   EnabledState?: number
   OtherEnabledState?: string
@@ -272,23 +275,24 @@ export interface Role extends Collection {
 
 export interface AuthenticationService extends SecurityService {
 }
+
 export interface CredentialManagementService extends AuthenticationService {
   // InstanceID is an optional property that may be used to opaquely and uniquely identify an instance of this class within the scope of the instantiating Namespace . . .
   InstanceID: string
 }
 
-export interface Credential extends CIM_ManagedElement{
-  // The date and time when the credential was issued
-  Issued: Date
-  // The date and time when the credential expires (and is not appropriate for use for authentication/ authorization)
-  Expires: Date
+export interface Credential extends ManagedElement{
+  Issued?: Date // The date and time when the credential was issued.  Default is current time
+  Expires?: Date // The date and time when the credential expires (and is not appropriate for use for authentication/ authorization).  Default is '99991231235959.999999+999'
 }
+
 export interface CredentialContext {
   // A Credential whose context is defined.
   ElementInContext: Credential
   // The ManagedElement that provides context or scope for the Credential.
-  ElementProvidingContext: CIM_ManagedElement
+  ElementProvidingContext: ManagedElement
 }
+
 export interface ServiceAvailableToElement {
   ServiceProvided: {
     Address: string
@@ -316,6 +320,7 @@ export interface AssociatedPowerManagementService extends ServiceAvailableToElem
     PowerState: string
   } & ServiceAvailableToElement
 }
+
 export interface SoftwareIdentity
   extends LogicalElement {
   CIM_SoftwareIdentity: Array<
@@ -326,6 +331,7 @@ export interface SoftwareIdentity
     } & LogicalElement
   >
 }
+
 export interface Log extends EnabledLogicalElement {
   MaxNumberOfRecords: number
   CurrentNumberOfRecords: number
@@ -363,15 +369,35 @@ export interface KVMRedirectionSAP {
   RequestedState: number
   KVMProtocol: number
 }
+
 export interface KVMRedirectionSAPResponse {
   CIM_KVMRedirectionSAP: KVMRedirectionSAP
 }
 
 export interface PowerActionResponse {
-  RequestPowerStateChange_OUTPUT: ReturnValue
+  RequestPowerStateChange_OUTPUT: Common.ReturnValue
+}
+
+export interface WiFiEndpointSettings extends SettingData {
+  ElementName: string
+  InstanceID: string
+  Priority: number
+  SSID?: string // Max Length 32
+  BSSType?: 0 | 2 | 3
+  EncryptionMethod: 1 | 2 | 3 | 4 | 5
+  // ValueMap={1, 2, 3, 4, 5, 6..}
+  // Values={Other, WEP, TKIP, CCMP, None, DMTF Reserved}
+  AuthenticationMethod: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 32768 | 32769
+  // ValueMap={1, 2, 3, 4, 5, 6, 7, 8..32767, 32768, 32769, 32770..}
+  // Values={Other, Open System, Shared Key, WPA PSK, WPA IEEE 802.1x, WPA2 PSK, WPA2 IEEE 802.1x, DMTF Reserved, WPA3 SAE, WPA3 OWE, Vendor Reserved}
+  Keys?: string[4] // OctetString ArrayType=Indexed Max Length 256
+  KeyIndex?: number
+  PSKValue?: number // OctetString
+  PSKPassPhrase?: string // Min Length 8 Max Length 63
 }
 
 export interface NetworkPortConfigurationService extends Service { }
+
 export interface Policy extends ManagedElement {
   CommonName: string
   PolicyKeywords: string[]
@@ -382,7 +408,26 @@ export interface PolicySet extends Policy {
   PolicyRoles: string[]
   Enabled: number
 }
-export interface PolicySetAppliesToElement{
+export interface PolicySetAppliesToElement {
   PolicySet: PolicySet
   ManagedElement: ManagedElement
+}
+
+export interface IEEE8021xSettings extends SettingData {
+  AuthenticationProtocol: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+  // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ..}
+  // Values={EAP-TLS, EAP-TTLS/MSCHAPv2, PEAPv0/EAP-MSCHAPv2, PEAPv1/EAP-GTC, EAP-FAST/MSCHAPv2, EAP-FAST/GTC, EAP-MD5, EAP-PSK, EAP-SIM, EAP-AKA, EAP-FAST/TLS, DMTF Reserved}
+  // MappingStrings={RFC4017.IETF, RFC2716.IETF, draft-ietf-pppext-eap-ttls.IETF, draft-kamath-pppext-peapv0.IETF, draft-josefsson-pppext-eap-tls-eap, RFC4851.IETF, RFC3748.IETF, RFC4764.IETF, RFC4186.IETF, RFC4187.IETF}
+  RoamingIdentity: string // Max Length 80
+  ServerCertificateName?: string // Max Length 80
+  ServerCertificateNameComparison?: 1 | 2 | 3
+  // ValueMap={1, 2, 3, ..}
+  // Values={Other, FullName, DomainSuffix, DMTF Reserved}
+  // ModelCorrespondence={CIM_IEEE8021xSettings.ServerCertificateName}
+  Username?: string // Max Length 128
+  Password?: string // Max Length 256
+  Domain?: string // Max Length 256
+  ProtectedAccessCredential?: string // OctetString Write-Only
+  PACPassword?: string // Max Length 256 Write-Only
+  PSK?: string // OctetString Write-Only
 }

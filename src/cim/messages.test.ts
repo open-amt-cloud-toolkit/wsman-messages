@@ -7,8 +7,12 @@ import { WSManErrors } from '../WSMan'
 import { Classes, Methods, Messages } from '.'
 
 describe('CIM Tests', () => {
-  let messageId = 0
-  const cimClass = new Messages()
+  let messageId: number
+  let cimClass: Messages
+  beforeEach(() => {
+    messageId = 0
+    cimClass = new Messages()
+  })
   const xmlHeader = '<?xml version="1.0" encoding="utf-8"?>'
   const envelope = '<Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>'
   const enumerationContext = 'AC070000-0000-0000-0000-000000000000'
@@ -218,8 +222,8 @@ describe('CIM Tests', () => {
   })
   describe('cim_WiFiPort Tests', () => {
     it('should create a valid cim_WiFiPrt RequestStateChange wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort"><r:RequestedState>1</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>`
-      const response = cimClass.WiFiPort(Methods.REQUEST_STATE_CHANGE, 1)
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort"><r:RequestedState>3</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>`
+      const response = cimClass.WiFiPort(Methods.REQUEST_STATE_CHANGE, 3)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if requestedState is missing from cim_WiFiPort RequestStateChange request', () => {
@@ -229,13 +233,13 @@ describe('CIM Tests', () => {
   describe('cim_BootService Tests', () => {
     it('should return a valid cim_BootService SetBootConfigRole wsman message', () => {
       const bootSource: string = 'Intel(r) AMT: Boot Configuration 0'
-      const role: number = 1
+      const role = 1
       const correctResponse = `${xmlHeader}${envelope}http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService/SetBootConfigRole</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:SetBootConfigRole_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService"><r:BootConfigSetting><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">${bootSource}</Selector></SelectorSet></ReferenceParameters></r:BootConfigSetting><r:Role>${role}</r:Role></r:SetBootConfigRole_INPUT></Body></Envelope>`
       const response = cimClass.BootService(Methods.SET_BOOT_CONFIG_ROLE, bootSource, role)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if selector is missing from cim_BootService SetBootConfigRole method', () => {
-      const role: number = 1
+      const role = 1
       expect(() => { cimClass.BootService(Methods.SET_BOOT_CONFIG_ROLE, null, role) }).toThrow(WSManErrors.SELECTOR)
     })
     it('should throw error if role is missing from cim_BootService SetBootConfigRole method', () => {
@@ -258,7 +262,7 @@ describe('CIM Tests', () => {
   })
   describe('cim_PowerManagementService Tests', () => {
     it('should return a valid cim_PowerManagementService ChangeBootOrder wsman message', () => {
-      const powerState: number = 8
+      const powerState = 8
       const correctResponse = `${xmlHeader}${envelope}http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService/RequestPowerStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:RequestPowerStateChange_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService"><r:PowerState>${powerState}</r:PowerState><r:ManagedElement><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="CreationClassName">CIM_ComputerSystem</Selector><Selector Name="Name">ManagedSystem</Selector></SelectorSet></ReferenceParameters></r:ManagedElement></r:RequestPowerStateChange_INPUT></Body></Envelope>`
       const response = cimClass.PowerManagementService(Methods.REQUEST_POWER_STATE_CHANGE, powerState)
       expect(response).toEqual(correctResponse)
