@@ -168,7 +168,7 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should throw an error if password is null for SET_MEBX_PASSWORD', () => {
-      expect(() => { amtClass.SetupAndConfigurationService(Methods.SET_MEBX_PASSWORD, null) }).toThrow(WSManErrors.MEBX_PASSWORD)
+      expect(() => { amtClass.SetupAndConfigurationService(Methods.SET_MEBX_PASSWORD, null) }).toThrow(WSManErrors.PASSWORD)
     })
     it('should return a valid amt_SetupAndConfigurationService Unprovision wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/Unprovision</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:Unprovision_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"><r:ProvisioningMode>1</r:ProvisioningMode></r:Unprovision_INPUT></Body></Envelope>`

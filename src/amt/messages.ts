@@ -181,7 +181,7 @@ export class Messages {
         body = `<Body><r:Unprovision_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}"><r:ProvisioningMode>${provisioningMode}</r:ProvisioningMode></r:Unprovision_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
       case Methods.SET_MEBX_PASSWORD:
-        if (password == null) throw new Error(WSManErrors.MEBX_PASSWORD)
+        if (password == null) throw new Error(WSManErrors.PASSWORD)
         header = this.wsmanMessageCreator.createHeader(Actions.SET_MEBX_PASSWORD, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`)
         body = `<Body><r:SetMEBxPassword_INPUT xmlns:r="${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}"><r:Password>${password}</r:Password></r:SetMEBxPassword_INPUT></Body>`
         return this.wsmanMessageCreator.createXml(header, body)
