@@ -4,11 +4,9 @@
 **********************************************************************/
 
 import { Selector, WSManMessageCreator, WSManErrors } from '../WSMan'
-import { EthernetPortSettings, MPServer, RemoteAccessPolicyRule, EnvironmentDetectionSettingData, BootSettingData, RedirectionResponse, TLSSettingData, GenerateKeyPair, AddCertificate, GeneralSettings, TLSCredentialContext, RemoteAccessPolicyAppliesToMPS } from './models'
 import { REQUEST_STATE_CHANGE } from './actions'
-import { Classes, Methods, Actions } from './'
-import { WiFiEndpointSettings } from '../cim/models'
-import { AlarmClockOccurrence } from '../ips/models'
+import { Classes, Methods, Actions, Models, Types } from './'
+import { CIM, IPS } from '../'
 
 type AllActions = Actions
 
@@ -18,7 +16,7 @@ export interface AMTCall {
   enumerationContext?: string
   selector?: Selector
   requestedState?: number
-  data?: RedirectionResponse
+  data?: Models.RedirectionResponse
   maxElements?: number
 }
 
@@ -44,7 +42,7 @@ export class Messages {
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  private readonly put = (action: AllActions, amtClass: Classes, data: RedirectionResponse): string => {
+  private readonly put = (action: AllActions, amtClass: Classes, data: Models.RedirectionResponse): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`)
     const key = Object.keys(data)[0]
     const body = this.wsmanMessageCreator.createBody(Classes.AMT_REDIRECTION_SERVICE, this.resourceUriBase, key, data[key])
@@ -150,7 +148,7 @@ export class Messages {
    * @param data RedirectionResponse Object.
    * @returns string
    */
-  RedirectionService = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE | Methods.PUT, requestedState?: 32768 | 32769 | 32770 | 32771, data?: RedirectionResponse): string => {
+  RedirectionService = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE | Methods.PUT, requestedState?: Types.RedirectionService.RequestedState, data?: Models.RedirectionResponse): string => {
     if (method === Methods.REQUEST_STATE_CHANGE && requestedState == null) { throw new Error(WSManErrors.REQUESTED_STATE) }
     if (method === Methods.PUT && data == null) { throw new Error(WSManErrors.DATA) }
     return this.amtSwitch({ method: method, class: Classes.AMT_REDIRECTION_SERVICE, requestedState, data })
@@ -170,7 +168,7 @@ export class Messages {
    * @remarks Values={ProvisioningModeCurrent, ProvisioningModeEnterprise, ProvisioningModeSmallBusiness, ProvisioningRemoteConnectivity}
    * @returns string
    */
-  SetupAndConfigurationService = (method: Methods.GET | Methods.UNPROVISION | Methods.SET_MEBX_PASSWORD | Methods.COMMIT_CHANGES, password?: string, provisioningMode?: 1): string => {
+  SetupAndConfigurationService = (method: Methods.GET | Methods.UNPROVISION | Methods.SET_MEBX_PASSWORD | Methods.COMMIT_CHANGES, password?: string, provisioningMode?: Types.SetupAndConfigurationService.ProvisioningMode): string => {
     let header: string, body: string
     switch (method) {
       case Methods.GET:
@@ -201,7 +199,7 @@ export class Messages {
    * @param generalSettings GeneralSettings Object.
    * @returns string
    */
-  GeneralSettings = (method: Methods.GET | Methods.PUT, generalSettings?: GeneralSettings): string => {
+  GeneralSettings = (method: Methods.GET | Methods.PUT, generalSettings?: Models.GeneralSettings): string => {
     switch (method) {
       case Methods.GET:
         return this.amtSwitch({ method: method, class: Classes.AMT_GENERAL_SETTINGS })
@@ -225,7 +223,7 @@ export class Messages {
    * @param ethernetPortObject EthernetPortSettings Object.
    * @returns string
    */
-  EthernetPortSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, enumerationContext?: string, ethernetPortObject?: EthernetPortSettings): string => {
+  EthernetPortSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, enumerationContext?: string, ethernetPortObject?: Models.EthernetPortSettings): string => {
     switch (method) {
       case Methods.PULL:
       case Methods.ENUMERATE:
@@ -296,7 +294,7 @@ export class Messages {
    * @param selector Selector Object.
    * @returns string
    */
-  TLSCredentialContext = (method: Methods.ENUMERATE | Methods.PULL | Methods.CREATE | Methods.DELETE, enumerationContext?: string, tlsCredentialContext?: TLSCredentialContext, selector?: Selector) => {
+  TLSCredentialContext = (method: Methods.ENUMERATE | Methods.PULL | Methods.CREATE | Methods.DELETE, enumerationContext?: string, tlsCredentialContext?: Models.TLSCredentialContext, selector?: Selector) => {
     switch (method) {
       case Methods.CREATE: {
         if (tlsCredentialContext == null) { throw new Error(WSManErrors.TLS_CREDENTIAL_CONTEXT) }
@@ -326,7 +324,7 @@ export class Messages {
    * @param tlsSettingData TLSSettingData Object.
    * @returns string
    */
-  TLSSettingData = (method: Methods.ENUMERATE | Methods.PULL | Methods.PUT, enumerationContext?: string, tlsSettingData?: TLSSettingData) => {
+  TLSSettingData = (method: Methods.ENUMERATE | Methods.PULL | Methods.PUT, enumerationContext?: string, tlsSettingData?: Models.TLSSettingData) => {
     switch (method) {
       case Methods.PULL:
       case Methods.ENUMERATE:
@@ -392,7 +390,7 @@ export class Messages {
    * @param environmentDetectionSettingData EnvironmentDetectionSettingData Object.
    * @returns string
    */
-  EnvironmentDetectionSettingData = (method: Methods.GET | Methods.PUT, environmentDetectionSettingData?: EnvironmentDetectionSettingData): string => {
+  EnvironmentDetectionSettingData = (method: Methods.GET | Methods.PUT, environmentDetectionSettingData?: Models.EnvironmentDetectionSettingData): string => {
     switch (method) {
       case Methods.GET:
         return this.amtSwitch({ method: method, class: Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA })
@@ -420,22 +418,22 @@ export class Messages {
    * @param data Accepts either GenerateKeyPair Object or AddCertificate Object.
    * @returns string
    */
-  PublicKeyManagementService = (method: Methods.ADD_TRUSTED_ROOT_CERTIFICATE | Methods.GENERATE_KEY_PAIR | Methods.ADD_CERTIFICATE, data?: GenerateKeyPair | AddCertificate): string => {
+  PublicKeyManagementService = (method: Methods.ADD_TRUSTED_ROOT_CERTIFICATE | Methods.GENERATE_KEY_PAIR | Methods.ADD_CERTIFICATE, data?: Models.GenerateKeyPair | Models.AddCertificate): string => {
     switch (method) {
       case Methods.GENERATE_KEY_PAIR: {
-        if ((data as GenerateKeyPair)?.KeyAlgorithm == null || (data as GenerateKeyPair)?.KeyLength == null) throw new Error(WSManErrors.KEY_PAIR)
+        if ((data as Models.GenerateKeyPair)?.KeyAlgorithm == null || (data as Models.GenerateKeyPair)?.KeyLength == null) throw new Error(WSManErrors.KEY_PAIR)
         const header = this.wsmanMessageCreator.createHeader(Actions.GENERATE_KEY_PAIR, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`)
         const body = this.wsmanMessageCreator.createBody('GenerateKeyPair_INPUT', this.resourceUriBase, Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.ADD_CERTIFICATE: {
-        if ((data as AddCertificate)?.CertificateBlob == null) throw new Error(WSManErrors.CERTIFICATE_BLOB)
+        if ((data as Models.AddCertificate)?.CertificateBlob == null) throw new Error(WSManErrors.CERTIFICATE_BLOB)
         const header = this.wsmanMessageCreator.createHeader(Actions.ADD_CERTIFICATE, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`)
         const body = this.wsmanMessageCreator.createBody('AddCertificate_INPUT', this.resourceUriBase, Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.ADD_TRUSTED_ROOT_CERTIFICATE: {
-        if ((data as AddCertificate)?.CertificateBlob == null) throw new Error(WSManErrors.CERTIFICATE_BLOB)
+        if ((data as Models.AddCertificate)?.CertificateBlob == null) throw new Error(WSManErrors.CERTIFICATE_BLOB)
         const header = this.wsmanMessageCreator.createHeader(Actions.ADD_TRUSTED_ROOT_CERTIFICATE, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`)
         const body = this.wsmanMessageCreator.createBody('AddTrustedRootCertificate_INPUT', this.resourceUriBase, Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)
@@ -454,7 +452,7 @@ export class Messages {
    * @param selector Selector Object.
    * @returns string
    */
-  RemoteAccessService = (method: Methods.ADD_MPS | Methods.ADD_REMOTE_ACCESS_POLICY_RULE, mpServer?: MPServer, remoteAccessPolicyRule?: RemoteAccessPolicyRule, selector?: Selector): string => {
+  RemoteAccessService = (method: Methods.ADD_MPS | Methods.ADD_REMOTE_ACCESS_POLICY_RULE, mpServer?: Models.MPServer, remoteAccessPolicyRule?: Models.RemoteAccessPolicyRule, selector?: Selector): string => {
     switch (method) {
       case Methods.ADD_MPS: {
         if (mpServer == null) { throw new Error(WSManErrors.MP_SERVER) }
@@ -480,7 +478,7 @@ export class Messages {
    * @param requestedState The state requested for the element. This information will be placed into the RequestedState property of the instance if the return code of the RequestStateChange method is 0 ('Completed with No Error'), 3 ('Timeout'), or 4096 (0x1000) ('Job Started'). Refer to the description of the EnabledState and RequestedState properties for the detailed explanations of the RequestedState values.
    * @returns string
    */
-  UserInitiatedConnectionService = (method: Methods.REQUEST_STATE_CHANGE, requestedState?: 32768 | 32769 | 32770 | 32771): string => {
+  UserInitiatedConnectionService = (method: Methods.REQUEST_STATE_CHANGE, requestedState?: Types.UserInitiatedConnectionService.RequestedState): string => {
     return this.amtSwitch({ method: method, class: Classes.AMT_USER_INITIATED_CONNECTION_SERVICE, requestedState: requestedState })
   }
 
@@ -491,7 +489,7 @@ export class Messages {
    * @param bootSettingData BootSettingData Object.
    * @returns string
    */
-  BootSettingData = (method: Methods.GET | Methods.PUT, bootSettingData?: BootSettingData): string => {
+  BootSettingData = (method: Methods.GET | Methods.PUT, bootSettingData?: Models.BootSettingData): string => {
     switch (method) {
       case Methods.GET:
         return this.amtSwitch({ method: method, class: Classes.AMT_BOOT_SETTING_DATA })
@@ -580,7 +578,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS | Methods.PUT | Methods.GET, data?: WiFiEndpointSettings | any, selector?: Selector, enumerationContext?: string): string => {
+  WiFiPortConfigurationService = (method: Methods.ADD_WIFI_SETTINGS | Methods.PUT | Methods.GET, data?: CIM.Models.WiFiEndpointSettings | any, selector?: Selector, enumerationContext?: string): string => {
     switch (method) {
       case Methods.PUT: {
         if (data == null) { throw new Error(WSManErrors.DATA) }
@@ -618,7 +616,7 @@ export class Messages {
    * @param selector Selector Object
    * @returns string
    */
-  RemoteAccessPolicyAppliesToMPS = (method: Methods.PULL | Methods.ENUMERATE | Methods.GET | Methods.DELETE | Methods.PUT, enumerationContext?: string, data?: RemoteAccessPolicyAppliesToMPS, maxElements?: number, selector?: Selector): string => {
+  RemoteAccessPolicyAppliesToMPS = (method: Methods.PULL | Methods.ENUMERATE | Methods.GET | Methods.DELETE | Methods.PUT, enumerationContext?: string, data?: Models.RemoteAccessPolicyAppliesToMPS, maxElements?: number, selector?: Selector): string => {
     switch (method) {
       case Methods.ENUMERATE:
       case Methods.GET:
@@ -644,7 +642,7 @@ export class Messages {
    * @param data AlarmClockOccurrence Object
    * @returns string
    */
-  AlarmClockService = (method: Methods.ADD_ALARM | Methods.GET, data?: AlarmClockOccurrence | any): string => {
+  AlarmClockService = (method: Methods.ADD_ALARM | Methods.GET, data?: IPS.Models.AlarmClockOccurrence | any): string => {
     switch (method) {
       case Methods.GET:
         return this.amtSwitch({ method, class: Classes.AMT_ALARM_CLOCK_SERVICE })

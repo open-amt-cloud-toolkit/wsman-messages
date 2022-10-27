@@ -3,10 +3,9 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { Methods, Messages, Classes } from './'
-import { BootSettingData, EnvironmentDetectionSettingData, EthernetPortSettings, MPServer, RemoteAccessPolicyRule, RedirectionResponse, RemoteAccessPolicyAppliesToMPS, TLSCredentialContext, GenerateKeyPair } from './models'
+import { Methods, Messages, Classes, Models } from './'
 import { Selector, WSManErrors } from '../WSMan'
-import { WiFiEndpointSettings } from '../cim/models'
+import { CIM } from '../'
 
 describe('AMT Tests', () => {
   let messageId = 0
@@ -20,7 +19,7 @@ describe('AMT Tests', () => {
   const envelope = '<Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>'
   const enumerationContext = 'AC070000-0000-0000-0000-000000000000'
   const operationTimeout = 'PT60S'
-  const ethernetPortObject: EthernetPortSettings = {
+  const ethernetPortObject: Models.EthernetPortSettings = {
     InstanceID: 'Intel(r) AMT Ethernet Port Settings 0',
     ElementName: 'Intel(r) AMT Ethernet Port Settings',
     SharedMAC: true,
@@ -33,7 +32,7 @@ describe('AMT Tests', () => {
     DHCPEnabled: true,
     PhysicalConnectionType: 0
   }
-  const mpsServer: MPServer = {
+  const mpsServer: Models.MPServer = {
     AccessInfo: '192.168.0.38',
     InfoFormat: 3,
     Port: 4433,
@@ -42,12 +41,12 @@ describe('AMT Tests', () => {
     Password: 'eD9J*56Bn7ieEsVR',
     CommonName: '192.168.0.38'
   }
-  const remoteAccessPolicyRule: RemoteAccessPolicyRule = {
+  const remoteAccessPolicyRule: Models.RemoteAccessPolicyRule = {
     Trigger: 2,
     TunnelLifeTime: 0,
     ExtendedData: 'AAAAAAAAABk='
   }
-  const bootSettingData: BootSettingData = {
+  const bootSettingData: Models.BootSettingData = {
     BIOSLastStatus: [2, 0],
     BIOSPause: false,
     BIOSSetup: false,
@@ -80,7 +79,7 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.amtSwitch({ method: Methods.READ_RECORDS, class: Classes.AMT_AUDIT_LOG }) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
     it('should return a valid Put wsman message', () => {
-      const data: RedirectionResponse = {
+      const data: Models.RedirectionResponse = {
         AMT_RedirectionService: {
           Name: 'myservice',
           CreationClassName: 'redirection_service',
@@ -225,7 +224,7 @@ describe('AMT Tests', () => {
     })
     it('should remove null properties before sending to createBody', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EthernetPortSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT Ethernet Port Settings 0</w:Selector></w:SelectorSet></Header><Body><h:AMT_EthernetPortSettings xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EthernetPortSettings"><h:InstanceID>Intel(r) AMT Ethernet Port Settings 0</h:InstanceID><h:ElementName>Intel(r) AMT Ethernet Port Settings</h:ElementName><h:SharedMAC>true</h:SharedMAC><h:MACAddress>a4-ae-11-1c-02-4d</h:MACAddress><h:LinkIsUp>true</h:LinkIsUp><h:LinkPolicy>1</h:LinkPolicy><h:LinkPolicy>14</h:LinkPolicy><h:LinkPolicy>16</h:LinkPolicy><h:SharedStaticIp>false</h:SharedStaticIp><h:SharedDynamicIP>true</h:SharedDynamicIP><h:IpSyncEnabled>true</h:IpSyncEnabled><h:DHCPEnabled>true</h:DHCPEnabled><h:PhysicalConnectionType>0</h:PhysicalConnectionType></h:AMT_EthernetPortSettings></Body></Envelope>`
-      const testBody: EthernetPortSettings = {
+      const testBody: Models.EthernetPortSettings = {
         InstanceID: 'Intel(r) AMT Ethernet Port Settings 0',
         ElementName: 'Intel(r) AMT Ethernet Port Settings',
         SharedMAC: true,
@@ -328,7 +327,7 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should create a valid amt_EnvironmentDetectionSettingData Put wsman message', () => {
-      const environmentDetectionSettingData: EnvironmentDetectionSettingData = {
+      const environmentDetectionSettingData: Models.EnvironmentDetectionSettingData = {
         InstanceID: 'Intel(r) AMT Environment Detection Settings',
         DetectionAlgorithm: 0,
         ElementName: 'Intel(r) AMT Environment Detection Settings',
@@ -371,15 +370,15 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR) }).toThrow(WSManErrors.KEY_PAIR)
     })
     it('should throw error if KeyAlgorithm is null from amt_PublicKeyManagementService methods', () => {
-      const data: GenerateKeyPair = {
+      const data: Models.GenerateKeyPair = {
         KeyAlgorithm: null,
         KeyLength: 8
       }
       expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, data) }).toThrow(WSManErrors.KEY_PAIR)
     })
     it('should throw error if KeyLength is null from amt_PublicKeyManagementService methods', () => {
-      const data: GenerateKeyPair = {
-        KeyAlgorithm: 3,
+      const data: Models.GenerateKeyPair = {
+        KeyAlgorithm: 0,
         KeyLength: null
       }
       expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, data) }).toThrow(WSManErrors.KEY_PAIR)
@@ -405,7 +404,7 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.RemoteAccessService(Methods.ADD_REMOTE_ACCESS_POLICY_RULE, null, remoteAccessPolicyRule) }).toThrow(WSManErrors.SELECTOR)
     })
     it('should return a valid amt_RemoteAccessPolicyRule wsman message', () => {
-      const remoteAccessPolicyRule: RemoteAccessPolicyRule = {
+      const remoteAccessPolicyRule: Models.RemoteAccessPolicyRule = {
         Trigger: 2,
         TunnelLifeTime: 0,
         ExtendedData: '0300'
@@ -477,7 +476,7 @@ describe('AMT Tests', () => {
     })
   })
   describe('TLSCredentialContext Tests', () => {
-    const tlsCredentialContext: TLSCredentialContext = {
+    const tlsCredentialContext: Models.TLSCredentialContext = {
       ElementInContext: {
         Address: 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous',
         ReferenceParameters: {
@@ -615,7 +614,7 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.WiFiPortConfigurationService(Methods.PUT, null, selector) }).toThrow(WSManErrors.DATA)
     })
     it('should throw error if selector is null when PUT is called', () => {
-      const data: WiFiEndpointSettings = {
+      const data: CIM.Models.WiFiEndpointSettings = {
         AuthenticationMethod: 6,
         ElementName: 'test',
         EncryptionMethod: 1,
@@ -625,7 +624,7 @@ describe('AMT Tests', () => {
         Caption: 'caption',
         Description: 'description',
         KeyIndex: 1,
-        Keys: 'keys',
+        Keys: ['keys'],
         PSKPassPhrase: 'passphrase',
         PSKValue: 0,
         SSID: 'ssid'
@@ -640,7 +639,7 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.WiFiPortConfigurationService(Methods.ADD_WIFI_SETTINGS, null, selector) }).toThrow(WSManErrors.DATA)
     })
     it('should throw error if selector is null when ADD_WIFI_SETTINGS is called', () => {
-      const data: WiFiEndpointSettings = {
+      const data: CIM.Models.WiFiEndpointSettings = {
         AuthenticationMethod: 6,
         ElementName: 'test',
         EncryptionMethod: 1,
@@ -650,7 +649,7 @@ describe('AMT Tests', () => {
         Caption: 'caption',
         Description: 'description',
         KeyIndex: 1,
-        Keys: 'keys',
+        Keys: ['keys'],
         PSKPassPhrase: 'passphrase',
         PSKValue: 0,
         SSID: 'ssid'
@@ -687,7 +686,7 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should create a valid amt_RemoteAccessPolicyAppliesToMPS PUT wsman message', () => {
-      const remoteAccessPolicyAppliesToMPS: RemoteAccessPolicyAppliesToMPS = {
+      const remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS = {
         ManagedElement: null,
         PolicySet: null,
         MpsType: 2,
@@ -702,7 +701,7 @@ describe('AMT Tests', () => {
         name: 'Name',
         value: 'Instance'
       }
-      const remoteAccessPolicyAppliesToMPS: RemoteAccessPolicyAppliesToMPS = {
+      const remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS = {
         ManagedElement: null,
         PolicySet: null,
         MpsType: 2,

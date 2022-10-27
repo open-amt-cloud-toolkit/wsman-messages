@@ -3,11 +3,9 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { Messages } from './messages'
-import { Methods } from './methods'
+import { Messages, Methods, Models } from './'
 import { WSManErrors, Selector } from '../WSMan'
-import { IEEE8021xSettings, OptInServiceResponse } from './models'
-import { PublicKeyCertificate } from '../amt/models'
+import { AMT } from '../'
 
 const castedIPSClass = new Messages() as any
 
@@ -71,7 +69,7 @@ describe('IPS Tests', () => {
       expect(() => { castedIPSClass.OptInService(Methods.REQUEST_POWER_STATE_CHANGE) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
     it('should create a valid ips_OptInService Put wsman message', () => {
-      const data: OptInServiceResponse = {
+      const data: Models.OptInServiceResponse = {
         IPS_OptInService: {
           OptInCodeTimeout: 300
         }
@@ -170,7 +168,7 @@ describe('IPS Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid ips_IEEE8021xSettings Put wsman message', () => {
-      const ieee8021xSettings: IEEE8021xSettings = {
+      const ieee8021xSettings: Models.IEEE8021xSettings = {
         Enabled: 2,
         AuthenticationProtocol: 0,
         RoamingIdentity: 'testdomain/testname'
@@ -180,7 +178,7 @@ describe('IPS Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid ips_IEEE8021xSettings SetCertificates wsman message', () => {
-      const serverCertificateIssuer: PublicKeyCertificate = {
+      const serverCertificateIssuer: AMT.Models.PublicKeyCertificate = {
         ElementName: 'publicKeyCertificate',
         InstanceID: 'abc',
         Issuer: 'serverTest',
@@ -189,7 +187,7 @@ describe('IPS Tests', () => {
         TrustedRootCertficate: true,
         X509Certificate: 'certificateblob'
       }
-      const clientCertificate: PublicKeyCertificate = {
+      const clientCertificate: AMT.Models.PublicKeyCertificate = {
         ElementName: 'publicKeyCertificate',
         InstanceID: 'abc',
         Issuer: 'clientTest',
