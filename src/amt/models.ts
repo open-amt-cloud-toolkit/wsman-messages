@@ -41,7 +41,7 @@ export namespace Models {
     PrivacyLevel?: Types.GeneralSettings.PrivacyLevel
     PowerSource?: Types.GeneralSettings.PowerSource
     ThunderboltDockEnabled?: Types.GeneralSettings.ThunderboltDockEnabled
-    OemID: number
+    OemID?: number
   }
 
   export interface GeneralSettingsResponse {

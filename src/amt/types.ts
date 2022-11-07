@@ -80,6 +80,6 @@ export namespace Types {
   }
 
   export namespace SetupAndConfigurationService {
-    export type ProvisioningMode = 1
+    export type ProvisioningMode = 0 | 1 | 2 | 3
   }
 }
