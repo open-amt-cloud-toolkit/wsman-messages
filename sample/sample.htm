@@ -1,0 +1,260 @@
+<!--
+*********************************************************************
+* Copyright (c) Intel Corporation 2022
+* SPDX-License-Identifier: Apache-2.0
+**********************************************************************
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WSMan Message Test UI</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+    body {
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    .container {
+      line-height: 150%;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background-color: #e9e9e9;
+    }
+
+    .header h1 {
+      color: #222222;
+      font-size: 30px;
+    }
+
+    .header .social a {
+      padding: 0 5px;
+      color: #222222;
+    }
+
+    .content {
+      margin-left: 20px;
+      padding: 1em;
+      overflow: hidden;
+    }
+
+    .footer {
+      padding: 10px 20px;
+      background-color: #2e3550;
+      color: white;
+      text-align: center;
+    }
+
+    .xml {
+      height: 200px;
+      width: 500px;
+    }
+
+    form {
+      display: table;
+    }
+
+    p {
+      display: table-row;
+    }
+
+    input,
+    select,
+    label,
+    textarea {
+      display: table-cell;
+      width: 200px;
+      vertical-align: middle;
+    }
+
+    h4 {
+      display: inline;
+      margin-right: 70px;
+    }
+  </style>
+  <script src="webpack-wsman-messages.js"></script>
+</head>
+<script>
+  const methods = {
+    default: { value: 'Select Method', view: [{ parameters: 'hidden' }] },
+    get: { value: 'GET', view: { parameters: 'hidden' } },
+    put: { value: 'PUT', view: { parameters: 'visible' } },
+    enumerate: { value: 'ENUMERATE', view: { parameters: 'hidden' } },
+    pull: { value: 'PULL', view: { parameters: 'visible' } }
+  }
+
+  const apiCalls = {
+    default: { 
+      value: 'Select API Call', 
+      class: 'default', 
+      view: { method: 'hidden', xmlTransmit: 'hidden', xmlReceive: 'hidden', submit: 'hidden' },
+      enabledMethods: []
+    },
+    GeneralSettings: { 
+      value: 'General Settings',
+      class: 'GeneralSettings',
+      view: { method: 'visible', xmlTransmit: 'visible', xmlReceive: 'visible', submit: 'visible' },
+      enabledMethods: [ methods.default, methods.get, methods.put ]
+    }
+  }
+
+  let Messages = null
+  const ServerPost = 'http://localhost:3000/'
+
+  function pageLoad() {
+    loadAPICallList()
+  }
+
+  function loadAPICallList() {
+    let apiCallList = document.getElementById('apiCallList')
+    for (item in apiCalls) {
+      apiCallList.options[apiCallList.options.length] = new Option(apiCalls[item].value, apiCalls[item].class)
+    }
+  }
+
+  function loadMethodCalls(callList) {
+    let methodList = document.getElementById('methodList')
+    let options = methodList.getElementsByTagName('option')
+    for (var i = options.length; i--;) {
+      methodList.removeChild(options[i])
+    }
+    callList.forEach(element => {
+      methodList.options[methodList.options.length] = new Option(element.value, element.value)
+    })
+  }
+
+  function switchAPIView(viewProperties) {
+    let method = document.getElementById('method')
+    let xmlTransmit = document.getElementById('xmlTransmit')
+    let xmlReceive = document.getElementById('xmlReceive')
+    let submit = document.getElementById('submit')
+    method.style.visibility = viewProperties.method
+    xmlTransmit.style.visibility = viewProperties.xmlTransmit
+    xmlReceive.style.visibility = viewProperties.xmlReceive
+    submit.style.visibility = viewProperties.submit
+    clearTextBoxes()
+  }
+
+  function switchMethodView(viewProperties) {
+    let parameters = document.getElementById('parameters')
+    parameters.style.visibility = viewProperties.parameters
+    clearTextBoxes()
+  }
+
+  function clearTextBoxes() {
+    let tbXMLTransmit = document.getElementById('tbXMLTransmit')
+    let tbXMLReceive = document.getElementById('tbXMLReceive')
+    tbXMLTransmit.value = ''
+    tbXMLReceive.value = ''
+  }
+  function apiCallChange(selectedValue) {
+    Messages = null
+    switch (selectedValue.value) {
+      case apiCalls.GeneralSettings.class: {
+        Messages = new WsmanMessages.AMT.Messages()
+        switchAPIView(apiCalls.GeneralSettings.view)
+        loadMethodCalls(apiCalls.GeneralSettings.enabledMethods)
+        break
+      }
+      case apiCalls.default.class: {
+        Messages = null
+        switchAPIView(apiCalls.default.view)
+        loadMethodCalls([])
+        break
+      }
+    }
+  }
+
+  function methodChange(selectedValue) {
+    let apiCall = document.getElementById('apiCallList').value
+    let tbXMLTransmit = document.getElementById('tbXMLTransmit')
+    let tbXMLReceive = document.getElementById('tbXMLReceive')
+    switch (selectedValue.value) {
+      case methods.get.value: {
+        switchMethodView(methods.get.view)
+        tbXMLTransmit.value = Messages[apiCall]('Get', null)
+        break
+      }
+      case methods.put.value: {
+        switchMethodView(methods.put.view)
+        tbXMLTransmit.value = Messages[apiCall]('Put', tbXMLReceive.value)
+        tbXMLReceive.value = ''
+        break
+      }
+      case methods.enumerate.value: {
+        switchMethodView(methods.enumerate.view)        
+        tbXMLTransmit.value = Messages[apiCall]('Enumerate', null)
+        break
+      }
+      case methods.pull.value: {
+        switchMethodView(methods.pull.view)        
+        tbXMLTransmit.value = Messages[apiCall]('Pull', null)
+        break
+      }
+      case methods.default.value: {
+        switchMethodView(methods.default.view)
+      }
+    }
+  }
+
+  function send(event) {
+    //event.preventDefault()
+    const xml = {
+      host: document.getElementsByName('host')[0].value,
+      port: document.getElementsByName('port')[0].value,
+      username: document.getElementsByName('username')[0].value,
+      password: document.getElementsByName('password')[0].value,
+      wsman: document.getElementById('tbXMLTransmit').value
+    }
+    const xhr = new XMLHttpRequest()
+    xhr.open("POST", ServerPost, true)
+    xhr.setRequestHeader('Content-type', 'application/json')
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        // process xhr.responseText
+      }
+    }
+    xhr.send(JSON.stringify(xml))
+  }
+
+</script>
+
+<body onload="pageLoad()">
+  <div class="container">
+    <header class="header">
+      <h1>WSMan Message Test UI</h1>
+    </header>
+    <main class="content">
+      <form>
+        <p><label>Host:</label><input type="text" name="host" value="localhost"></p>
+        <p><label>Port:</label><input type="text" name="port" value="16992"></p>
+        <p><label>Username:</label><input type="text" name="username" value="admin"></p>
+        <p><label>Password:</label><input type="password" name="password" value=""></p>
+        <p><label>API Call:</label><select id="apiCallList" onchange="apiCallChange(this)"></select></p>
+        <p id="method" style="visibility: hidden;"><label>Method:</label><select id="methodList"
+            onchange="methodChange(this)"></select></p>
+        <p id="parameters" style="visibility: hidden;"></p>
+        <p id="xmlTransmit" style="visibility: hidden;"><label>XML Transmit:</label><textarea id="tbXMLTransmit"
+            name="xml" class="xml" value="" rows="10" cols="80"></textarea></p>
+        <p><label></label><button id="submit" type="button" style="float: right; visibility: hidden;"
+            onclick="send(this)">Submit</button></p>
+        <p id="xmlReceive" style="visibility: hidden;"><label>XML Received:</label><textarea id="tbXMLReceive"
+            class="xml" rows="10" cols="80"></textarea></p>
+      </form>
+    </main>
+    <footer class="footer">&copy; Copyright Intel&reg; Corporation</footer>
+  </div>
+</body>
+
+</html>

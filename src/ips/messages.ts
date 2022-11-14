@@ -4,11 +4,8 @@
 **********************************************************************/
 
 import { WSManErrors, WSManMessageCreator, Selector } from '../WSMan'
-import { Actions } from './actions'
-import { Methods } from './methods'
-import { Classes } from './classes'
-import { IEEE8021xSettings, OptInServiceResponse } from './models'
-import { PublicKeyCertificate as AMT_PublicKeyCertificate } from './../amt/models'
+import { Actions, Methods, Classes, Models, Types } from './'
+import { AMT } from '../'
 
 type AllActions = Actions
 
@@ -50,7 +47,7 @@ export class Messages {
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
-  OptInService = (method: Methods.GET | Methods.PUT | Methods.START_OPT_IN | Methods.CANCEL_OPT_IN | Methods.SEND_OPT_IN_CODE, optInCode?: Number, optInServiceResponse?: OptInServiceResponse): string => {
+  OptInService = (method: Methods.GET | Methods.PUT | Methods.START_OPT_IN | Methods.CANCEL_OPT_IN | Methods.SEND_OPT_IN_CODE, optInCode?: Number, optInServiceResponse?: Models.OptInServiceResponse): string => {
     let header: string, body: string
     switch (method) {
       case Methods.GET:
@@ -110,7 +107,7 @@ export class Messages {
    * @param isRoot true, when the current certificate is root. Marks end of the certificate chain
    * @returns string
    */
-  HostBasedSetupService = (method: Methods.GET | Methods.SETUP | Methods.ADMIN_SETUP | Methods.ADD_NEXT_CERT_IN_CHAIN, adminPassEncryptionType?: 0 | 1 | 2, adminPassword?: string, mcNonce?: string, signingAlgorithm?: 0 | 1 | 2, digitalSignature?: string, cert?: string, isLeaf?: boolean, isRoot?: boolean): string => {
+  HostBasedSetupService = (method: Methods.GET | Methods.SETUP | Methods.ADMIN_SETUP | Methods.ADD_NEXT_CERT_IN_CHAIN, adminPassEncryptionType?: Types.HostBasedSetupService.AdminPassEncryptionType, adminPassword?: string, mcNonce?: string, signingAlgorithm?: Types.HostBasedSetupService.SigningAlgorithm, digitalSignature?: string, cert?: string, isLeaf?: boolean, isRoot?: boolean): string => {
     // Consider breaking add_next_cert_in_chain out into its own method
     switch (method) {
       case Methods.GET: {
@@ -198,7 +195,7 @@ export class Messages {
    * @param clientCertificate AMT_PublicKeyCertificate
    * @returns string
    */
-  IEEE8021xSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT | Methods.SET_CERTIFICATES, enumerationContext?: string, ieee8021xSettings?: IEEE8021xSettings, serverCertificateIssuer?: AMT_PublicKeyCertificate, clientCertificate?: AMT_PublicKeyCertificate): string => {
+  IEEE8021xSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT | Methods.SET_CERTIFICATES, enumerationContext?: string, ieee8021xSettings?: Models.IEEE8021xSettings, serverCertificateIssuer?: AMT.Models.PublicKeyCertificate, clientCertificate?: AMT.Models.PublicKeyCertificate): string => {
     switch (method) {
       case Methods.PULL: {
         if (enumerationContext == null) { throw new Error(WSManErrors.ENUMERATION_CONTEXT) }

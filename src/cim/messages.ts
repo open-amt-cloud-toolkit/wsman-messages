@@ -4,7 +4,7 @@
 **********************************************************************/
 
 import { REQUEST_STATE_CHANGE } from './actions'
-import { Classes, Methods, Actions } from './'
+import { Classes, Methods, Actions, Types } from './'
 import { WSManMessageCreator, WSManErrors, Selector } from '../WSMan'
 
 interface CIMCall {
@@ -14,6 +14,7 @@ interface CIMCall {
   enumerationContext?: string
   requestedState?: number
 }
+
 export class Messages {
   wsmanMessageCreator: WSManMessageCreator = new WSManMessageCreator()
   readonly resourceUriBase: string = 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
@@ -119,7 +120,7 @@ export class Messages {
    * @remarks Values={Enabled, Disabled, Shut Down, Offline, Test, Defer, Quiesce, Reboot, Reset, DMTF Reserved, Vendor Reserved}
    * @returns string
    */
-  KVMRedirectionSAP = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE, requestedState?: 2 | 3 | 4 | 6 | 7 | 8 | 9 | 10 | 11): string => {
+  KVMRedirectionSAP = (method: Methods.GET | Methods.REQUEST_STATE_CHANGE, requestedState?: Types.KVMRedirectionSAP.RequestedStateInputs): string => {
     return this.switch({ method, class: Classes.CIM_KVM_REDIRECTION_SAP, requestedState })
   }
 
@@ -234,7 +235,7 @@ export class Messages {
    * @remarks Values={Enabled, Disabled, Shut Down, Offline, Test, Defer, Quiesce, Reboot, Reset, DMTF Reserved, Vendor Reserved}
    * @returns string
    */
-  WiFiPort = (method: Methods.REQUEST_STATE_CHANGE, requestedState: 2 | 3 | 4 | 6 | 7 | 8 | 9 | 10 | 11): string => {
+  WiFiPort = (method: Methods.REQUEST_STATE_CHANGE, requestedState: Types.WiFiPort.RequestedState): string => {
     return this.switch({ method, class: Classes.CIM_WIFI_PORT, requestedState: requestedState })
   }
 
@@ -250,7 +251,7 @@ export class Messages {
    * @remarks Values={IsNext, IsNextSingleUse, IsDefault, DMTF Reserved, Vendor Specified}
    * @returns string
    */
-  BootService = (method: Methods.SET_BOOT_CONFIG_ROLE, bootSource: string, role: 0 | 1 | 2): string => {
+  BootService = (method: Methods.SET_BOOT_CONFIG_ROLE, bootSource: string, role: Types.BootService.Role): string => {
     switch (method) {
       case 'SetBootConfigRole': {
         if (bootSource == null) { throw new Error(WSManErrors.SELECTOR) }
@@ -296,7 +297,7 @@ export class Messages {
    * @remark Values={Power On, Sleep - Light, Sleep - Deep, Power Cycle (Off Soft), Power Off - Hard, Hibernate, Power Off - Soft, Power Cycle (Off Hard), Master Bus Reset, Diagnostic Interrupt (NMI), Power Off - Soft Graceful, Power Off - Hard Graceful, Master Bus Reset Graceful, Power Cycle (Off - Soft Graceful), Power Cycle (Off - Hard Graceful)}
    * @returns string
    */
-  PowerManagementService = (method: Methods.REQUEST_POWER_STATE_CHANGE, powerState?: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16): string => {
+  PowerManagementService = (method: Methods.REQUEST_POWER_STATE_CHANGE, powerState?: Types.PowerManagementService.PowerState): string => {
     switch (method) {
       case 'RequestPowerStateChange': {
         if (powerState == null) { throw new Error(WSManErrors.REQUESTED_POWER_STATE_CHANGE) }
