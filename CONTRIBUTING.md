@@ -52,13 +52,12 @@ Must be one of the following:
 
 Should be one of the following:
 Modules:
-* **common**: A change or addition to the common module
-* **tracker**: A change or addition to the tracker module
-* **server**: A change or addition to the server module
-* **msgs**: A change or addition to msgs module
-* **eval**: Any change to benchmark tools
-* **deps**: A change to any dependency or 3rd-party library
-* **all**: A change that affects all modules
+* **amt**: A change or addition to AMT class
+* **cim**: A change or addition to CIM class
+* **deps**: A change or addition to dependencies (primarily used by dependabot)
+* **deps-dev**: A change or addition to developer dependencies (primarily used by dependabot)
+* **gh-actions**: A change or addition to GitHub actions
+* **ips**: A change or addition to IPS class
 * *no scope*:  If no scope is provided, it is assumed the PR does not apply to the above scopes
 
 ### Body
