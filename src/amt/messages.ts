@@ -582,7 +582,6 @@ export class Messages {
     switch (method) {
       case Methods.PUT: {
         if (data == null) { throw new Error(WSManErrors.DATA) }
-        if (selector == null) { throw new Error(WSManErrors.SELECTOR) }
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE}`, null, null, selector)
         const body = this.wsmanMessageCreator.createBody(Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, this.resourceUriBase, Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)

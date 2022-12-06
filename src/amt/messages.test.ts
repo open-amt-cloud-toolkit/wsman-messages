@@ -613,24 +613,6 @@ describe('AMT Tests', () => {
       }
       expect(() => { amtClass.WiFiPortConfigurationService(Methods.PUT, null, selector) }).toThrow(WSManErrors.DATA)
     })
-    it('should throw error if selector is null when PUT is called', () => {
-      const data: CIM.Models.WiFiEndpointSettings = {
-        AuthenticationMethod: 6,
-        ElementName: 'test',
-        EncryptionMethod: 1,
-        InstanceID: 'InstanceID',
-        Priority: 1,
-        BSSType: 2,
-        Caption: 'caption',
-        Description: 'description',
-        KeyIndex: 1,
-        Keys: ['keys'],
-        PSKPassPhrase: 'passphrase',
-        PSKValue: 0,
-        SSID: 'ssid'
-      }
-      expect(() => { amtClass.WiFiPortConfigurationService(Methods.PUT, data, null) }).toThrow(WSManErrors.SELECTOR)
-    })
     it('should throw error if data is null when ADD_WIFI_SETTINGS is called', () => {
       const selector: Selector = {
         name: 'name',
