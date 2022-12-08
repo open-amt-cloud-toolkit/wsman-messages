@@ -44,7 +44,8 @@ export enum WSManErrors {
   IS_ROOT = 'missing isRoot',
   TLS_CREDENTIAL_CONTEXT = 'missing tlsCredentialContext',
   GENERAL_SETTINGS = 'missing generalSettings',
-  PASSWORD = 'missing password'
+  PASSWORD = 'missing password',
+  PKCS10Request = 'missing PKCS10Request'
 }
 
 export class WSManMessageCreator {

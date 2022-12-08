@@ -418,7 +418,7 @@ export class Messages {
    * @param data Accepts either GenerateKeyPair Object or AddCertificate Object.
    * @returns string
    */
-  PublicKeyManagementService = (method: Methods.ADD_TRUSTED_ROOT_CERTIFICATE | Methods.GENERATE_KEY_PAIR | Methods.ADD_CERTIFICATE, data?: Models.GenerateKeyPair | Models.AddCertificate): string => {
+  PublicKeyManagementService = (method: Methods.ADD_TRUSTED_ROOT_CERTIFICATE | Methods.GENERATE_KEY_PAIR | Methods.ADD_CERTIFICATE | Methods.GENERATE_PKCS10_REQUEST_EX, data?: Models.GenerateKeyPair | Models.AddCertificate | Models.PKCS10Request): string => {
     switch (method) {
       case Methods.GENERATE_KEY_PAIR: {
         if ((data as Models.GenerateKeyPair)?.KeyAlgorithm == null || (data as Models.GenerateKeyPair)?.KeyLength == null) throw new Error(WSManErrors.KEY_PAIR)
@@ -436,6 +436,12 @@ export class Messages {
         if ((data as Models.AddCertificate)?.CertificateBlob == null) throw new Error(WSManErrors.CERTIFICATE_BLOB)
         const header = this.wsmanMessageCreator.createHeader(Actions.ADD_TRUSTED_ROOT_CERTIFICATE, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`)
         const body = this.wsmanMessageCreator.createBody('AddTrustedRootCertificate_INPUT', this.resourceUriBase, Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, data)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      case Methods.GENERATE_PKCS10_REQUEST_EX: {
+        if ((data as Models.PKCS10Request) == null) throw new Error(WSManErrors.PKCS10Request)
+        const header = this.wsmanMessageCreator.createHeader(Actions.GENERATE_PKCS10_REQUEST_EX, `${this.resourceUriBase}${Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE}`)
+        const body = this.wsmanMessageCreator.createBody('GeneratePKCS10RequestEx_INPUT', this.resourceUriBase, Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)
       }
       default:

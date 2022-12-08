@@ -26,7 +26,8 @@ export enum Actions {
   GET_LOW_ACCURACY_TIME_SYNCH = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/GetLowAccuracyTimeSynch',
   SET_HIGH_ACCURACY_TIME_SYNCH = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/SetHighAccuracyTimeSynch',
   ADD_WIFI_SETTINGS = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService/AddWiFiSettings',
-  ADD_ALARM = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService/AddAlarm'
+  ADD_ALARM = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService/AddAlarm',
+  GENERATE_PKCS10_REQUEST_EX = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService/GeneratePKCS10RequestEx'
 }
 const REQUEST_STATE_CHANGE = (className: string): string => { return `http://intel.com/wbem/wscim/1/amt-schema/1/${className}/RequestStateChange` }
 
