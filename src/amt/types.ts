@@ -62,6 +62,10 @@ export namespace Types {
     export type KeyAlgorithm = 0
   }
 
+  export namespace GeneratePKCS10RequestEx {
+    export type SigningAlgorithm = 0 | 1
+  }
+
   export namespace WiFiPortConfigurationService {
     export type RequestedState = 0 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
     export type EnabledState = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10

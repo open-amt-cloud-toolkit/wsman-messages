@@ -335,6 +335,12 @@ export namespace Models {
     CertificateBlob: string
   }
 
+  export interface PKCS10Request {
+    KeyPair: string
+    SigningAlgorithm: Types.GeneratePKCS10RequestEx.SigningAlgorithm
+    NullSignedCertificateRequest: string
+  }
+
   export interface WiFiPortConfigurationService extends CIM.Models.NetworkPortConfigurationService {
     RequestedState: Types.WiFiPortConfigurationService.RequestedState // ValueMap={0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, .., 32768..65535} Values={Unknown, Enabled, Disabled, Shut Down, No Change, Offline, Test, Deferred, Quiesce, Reboot, Reset, Not Applicable, DMTF Reserved, Vendor Reserved}
     EnabledState: Types.WiFiPortConfigurationService.EnabledState // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11..32767, 32768..65535} Values={Unknown, Other, Enabled, Disabled, Shutting Down, Not Applicable, Enabled but Offline, In Test, Deferred, Quiesce, Starting, DMTF Reserved, Vendor Reserved}

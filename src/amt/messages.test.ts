@@ -3,7 +3,7 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { Methods, Messages, Classes, Models } from './'
+import { Methods, Messages, Classes, Models, Types } from './'
 import { Selector, WSManErrors } from '../WSMan'
 import { CIM } from '../'
 
@@ -360,6 +360,16 @@ describe('AMT Tests', () => {
       const response = amtClass.PublicKeyManagementService(Methods.ADD_CERTIFICATE, { CertificateBlob: trustedRootCert })
       expect(response).toEqual(correctResponse)
     })
+    it('should return a valid amt_PublicKeyManagementService GeneratePKCS10RequestEx wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService/GeneratePKCS10RequestEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GeneratePKCS10RequestEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService"><h:KeyPair>test</h:KeyPair><h:NullSignedCertificateRequest>reallylongcertificateteststring</h:NullSignedCertificateRequest><h:SigningAlgorithm>1</h:SigningAlgorithm></h:GeneratePKCS10RequestEx_INPUT></Body></Envelope>`
+      const pkcs10Request: Models.PKCS10Request = {
+        KeyPair: 'test',
+        NullSignedCertificateRequest: 'reallylongcertificateteststring',
+        SigningAlgorithm: 1
+      }
+      const response = amtClass.PublicKeyManagementService(Methods.GENERATE_PKCS10_REQUEST_EX, pkcs10Request)
+      expect(response).toEqual(correctResponse)
+    })
     it('should throw error if certificateBlob is missing from amt_PublicKeyManagementService methods', () => {
       expect(() => { amtClass.PublicKeyManagementService(Methods.ADD_TRUSTED_ROOT_CERTIFICATE) }).toThrow(WSManErrors.CERTIFICATE_BLOB)
     })
@@ -382,6 +392,9 @@ describe('AMT Tests', () => {
         KeyLength: null
       }
       expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, data) }).toThrow(WSManErrors.KEY_PAIR)
+    })
+    it('should throw error if PKCS10Request is missing from amt_PublicKeyManagementService methods', () => {
+      expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_PKCS10_REQUEST_EX) }).toThrow(WSManErrors.PKCS10Request)
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { amtClass.PublicKeyManagementService(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
