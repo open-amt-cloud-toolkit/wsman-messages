@@ -86,4 +86,9 @@ export namespace Types {
   export namespace SetupAndConfigurationService {
     export type ProvisioningMode = 0 | 1 | 2 | 3
   }
+
+  export namespace IEEE8021xProfile {
+    export type AuthenticationProtocol = 0 | 1 | 2 | 3 | 4 | 5 | 6
+    export type ServerCertificateNameComparison = 0 | 1
+  }
 }

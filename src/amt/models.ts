@@ -362,4 +362,23 @@ export namespace Models {
   }
 
   export interface AlarmClockService extends CIM.Models.Service { }
+
+  export interface IEEE8021xProfile extends CIM.Models.SettingData {
+    ElementName: string
+    InstanceID: string
+    Enabled: boolean
+    ActiveInS0?: boolean
+    AuthenticationProtocol?: Types.IEEE8021xProfile.AuthenticationProtocol // ValueMap={0, 1, 2, 3, 4, 5, 6} Values={TLS, TTLS_MSCHAPv2, PEAP_MSCHAPv2, EAP_GTC, EAPFAST_MSCHAPv2, EAPFAST_GTC, EAPFAST_TLS}
+    RoamingIdentity?: string
+    ServerCertificateName?: string
+    ServerCertificateNameComparison?: Types.IEEE8021xProfile.ServerCertificateNameComparison // ValueMap={0, 1} Values={FullName, DomainSuffix}
+    Username?: string
+    Password?: string
+    Domain?: string
+    ProtectedAccessCredential?: Array<number>
+    PACPassword?: string
+    ClientCertificate?: string
+    ServerCertificateIssue?: string
+    PxeTimeout?: number
+  }
 }
