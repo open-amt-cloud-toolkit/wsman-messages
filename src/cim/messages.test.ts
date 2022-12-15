@@ -274,4 +274,22 @@ describe('CIM Tests', () => {
       expect(() => { cimClass.PowerManagementService(Methods.CHANGE_BOOT_ORDER as any, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
+  describe('cim_IEEE8021xSettings Tests', () => {
+    it('should return a valid cim_IEEE8021xSettings enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_IEEE8021xSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = cimClass.IEEE8021xSettings(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid cim_IEEE8021xSettings pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_IEEE8021xSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = cimClass.IEEE8021xSettings(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if enumerationContext is missing from cim_IEEE8021xSettings pull method', () => {
+      expect(() => { cimClass.IEEE8021xSettings(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { cimClass.IEEE8021xSettings(Methods.CHANGE_BOOT_ORDER as any, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
 })
