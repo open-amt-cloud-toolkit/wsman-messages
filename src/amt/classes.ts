@@ -26,5 +26,7 @@ export enum Classes {
   AMT_PUBLIC_PRIVATE_KEY_PAIR = 'AMT_PublicPrivateKeyPair',
   AMT_TLS_SETTING_DATA = 'AMT_TLSSettingData',
   AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS = 'AMT_RemoteAccessPolicyAppliesToMPS',
-  AMT_ALARM_CLOCK_SERVICE = 'AMT_AlarmClockService'
+  AMT_ALARM_CLOCK_SERVICE = 'AMT_AlarmClockService',
+  AMT_IEEE8021X_CREDENTIAL_CONTEXT = 'AMT_8021xCredentialContext',
+  AMT_IEEE8021X_PROFILE = 'AMT_8021XProfile'
 }

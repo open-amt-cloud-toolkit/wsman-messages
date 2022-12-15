@@ -309,4 +309,21 @@ export class Messages {
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
   }
+
+  /**
+   * Accesses a representation of IEEE8021xSettings.
+   * @method PULL - Requires enumerationContext. Pulls instances of IEEE8021xSettings, following an Enumerate operation
+   * @method ENUMERATE - Enumerates the instances of WiFiEndpointSettings
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @returns string
+   */
+  IEEE8021xSettings = (method: Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
+    switch (method) {
+      case Methods.PULL:
+      case Methods.ENUMERATE:
+        return this.switch({ method, enumerationContext: enumerationContext, class: Classes.CIM_IEEE8021X_SETTINGS })
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
 }

@@ -9,6 +9,15 @@ import { AMT } from '../'
 
 type AllActions = Actions
 
+export interface IPSCall {
+  method: Methods
+  class: Classes
+  enumerationContext?: string
+  selector?: Selector
+  requestedState?: number
+  data?: any
+  maxElements?: number
+}
 export class Messages {
   wsmanMessageCreator: WSManMessageCreator = new WSManMessageCreator()
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/ips-schema/1/'
@@ -45,6 +54,26 @@ export class Messages {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`, null, null, selector)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.DELETE)
     return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  switch = (ips: IPSCall): string => {
+    switch (ips.method) {
+      case Methods.GET:
+        return this.get(Actions.GET, ips.class)
+      case Methods.PUT:
+        if (ips.data == null) { throw new Error(WSManErrors.BODY) }
+        return this.put(Actions.PUT, ips.class, ips.data)
+      case Methods.PULL:
+        if (ips.enumerationContext == null) { throw new Error(WSManErrors.ENUMERATION_CONTEXT) }
+        return this.pull(Actions.PULL, ips.class, ips.enumerationContext)
+      case Methods.ENUMERATE:
+        return this.enumerate(Actions.ENUMERATE, ips.class)
+      case Methods.DELETE:
+        if (ips.selector == null) { throw new Error(WSManErrors.SELECTOR) }
+        return this.delete(Actions.DELETE, ips.class, ips.selector)
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
   }
 
   OptInService = (method: Methods.GET | Methods.PUT | Methods.START_OPT_IN | Methods.CANCEL_OPT_IN | Methods.SEND_OPT_IN_CODE, optInCode?: Number, optInServiceResponse?: Models.OptInServiceResponse): string => {
@@ -197,12 +226,9 @@ export class Messages {
    */
   IEEE8021xSettings = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT | Methods.SET_CERTIFICATES, enumerationContext?: string, ieee8021xSettings?: Models.IEEE8021xSettings, serverCertificateIssuer?: AMT.Models.PublicKeyCertificate, clientCertificate?: AMT.Models.PublicKeyCertificate): string => {
     switch (method) {
-      case Methods.PULL: {
-        if (enumerationContext == null) { throw new Error(WSManErrors.ENUMERATION_CONTEXT) }
-        return this.pull(Actions.PULL, Classes.IPS_IEEE8021X_SETTINGS, enumerationContext)
-      }
+      case Methods.PULL:
       case Methods.ENUMERATE: {
-        return this.enumerate(Actions.ENUMERATE, Classes.IPS_IEEE8021X_SETTINGS)
+        return this.switch({ method: method, class: Classes.IPS_IEEE8021X_SETTINGS, enumerationContext })
       }
       case Methods.PUT: {
         if (ieee8021xSettings == null) { throw new Error(WSManErrors.IEEE8021X_SETTINGS) }
@@ -219,6 +245,15 @@ export class Messages {
       }
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  IEEE8021xCredentialContext = (method: Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
+    switch (method) {
+      case Methods.PULL:
+      case Methods.ENUMERATE: {
+        return this.switch({ method: method, class: Classes.IPS_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext })
+      }
     }
   }
 }

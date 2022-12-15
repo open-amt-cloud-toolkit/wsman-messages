@@ -674,4 +674,49 @@ export class Messages {
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
   }
+
+  /**
+   * Accesses a representation of IEEE8021xCredentialContext.  This is referenced in AMT SDK as AMT_8021xCredentialContext
+   * @method PULL - Requires enumerationContext.  Pulls instances of RemoteAccessPolicyAppliesToMPS, following an Enumerate operation
+   * @method ENUMERATE - Enumerates the instances of RemoteAccessPolicyAppliesToMPS
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @returns string
+   */
+  IEEE8021xCredentialContext = (method: Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
+    switch (method) {
+      case Methods.ENUMERATE:
+      case Methods.PULL: {
+        return this.amtSwitch({ method: method, class: Classes.AMT_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext: enumerationContext })
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  /**
+   * Accesses a representation of IEEE8021xProfile.  This is referenced in AMT SDK as AMT_8021xProfile
+   * @method PULL - Requires enumerationContext.  Pulls instances of IEEE8021xProfile, following an Enumerate operation
+   * @method ENUMERATE - Enumerates the instances of IEEE8021xProfile
+   * @method PUT - Requires data as IEEE8021xProfile object.  Changes properties of IEEE8021xProfile
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param instance object returned from PULL call
+   * @returns string
+   */
+  IEEE8021xProfile = (method: Methods.PULL | Methods.ENUMERATE | Methods.PUT, enumerationContext?: string, data?: Models.IEEE8021xProfile): string => {
+    switch (method) {
+      case Methods.ENUMERATE:
+      case Methods.PULL: {
+        return this.amtSwitch({ method: method, class: Classes.AMT_IEEE8021X_PROFILE, enumerationContext: enumerationContext })
+      }
+      case Methods.PUT: {
+        if (data == null) { throw new Error(WSManErrors.DATA) }
+        const action = Actions.PUT
+        const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${Classes.AMT_IEEE8021X_PROFILE}`)
+        const body = this.wsmanMessageCreator.createBody(Classes.AMT_IEEE8021X_PROFILE, this.resourceUriBase, Classes.AMT_IEEE8021X_PROFILE, data)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
 }
