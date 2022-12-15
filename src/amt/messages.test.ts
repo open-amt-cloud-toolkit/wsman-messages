@@ -151,7 +151,7 @@ describe('AMT Tests', () => {
     it('should throw error if requestedState is null when method is REQUEST_STATE_CHANGE', () => {
       expect(() => { amtClass.RedirectionService(Methods.REQUEST_STATE_CHANGE) }).toThrow(WSManErrors.REQUESTED_STATE)
     })
-    it('should throw error if data is null when method is PUT', () => {
+    it('should throw error if data is missing from PUT call', () => {
       expect(() => { amtClass.RedirectionService(Methods.PUT) }).toThrow(WSManErrors.DATA)
     })
   })
@@ -248,7 +248,7 @@ describe('AMT Tests', () => {
     it('should throw error if ethernetPortObject is missing from amt_EthernetPortSettings Pull request', () => {
       expect(() => { amtClass.EthernetPortSettings(Methods.PUT) }).toThrow(WSManErrors.ETHERNET_PORT_OBJECT)
     })
-    it('should throw error if enumerationContext is missing from amt_EthernetPortSettings Pull request', () => {
+    it('should throw error if enumerationContext is missing from PULL call', () => {
       expect(() => { amtClass.EthernetPortSettings(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
     it('should throw error if an unsupported method is called', () => {
@@ -277,7 +277,7 @@ describe('AMT Tests', () => {
       const response = amtClass.ManagementPresenceRemoteSAP(Methods.PULL, enumerationContext)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if enumerationContext is missing from amt_ManagementPresenceRemoteSAP Pull request', () => {
+    it('should throw error if enumerationContext is missing from PULL call', () => {
       expect(() => { amtClass.ManagementPresenceRemoteSAP(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
     it('should create a valid amt_ManagementPresenceRemoteSAP Delete wsman message', () => {
@@ -304,7 +304,7 @@ describe('AMT Tests', () => {
       const response = amtClass.PublicKeyCertificate(Methods.PULL, enumerationContext)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if enumerationContext is missing from amt_PublicKeyCertificate Pull request', () => {
+    it('should throw error if enumerationContext is missing from PULL call', () => {
       expect(() => { amtClass.PublicKeyCertificate(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
     it('should create a valid amt_PublicKeyCertificate Delete wsman message', () => {
@@ -544,7 +544,7 @@ describe('AMT Tests', () => {
     it('should throw error if tlsCredentialContext is null when CREATE is called', () => {
       expect(() => { amtClass.TLSCredentialContext(Methods.CREATE, null, null) }).toThrow(WSManErrors.TLS_CREDENTIAL_CONTEXT)
     })
-    it('should throw error if enumerationContext is null when PULL is called', () => {
+    it('should throw error if enumerationContext is missing from PULL call', () => {
       expect(() => { amtClass.TLSCredentialContext(Methods.PULL, null) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
     it('should throw error if selector is null when DELETE is called', () => {
@@ -619,21 +619,21 @@ describe('AMT Tests', () => {
       const response = amtClass.WiFiPortConfigurationService(Methods.GET, null, null)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if data is null when PUT is called', () => {
+    it('should throw error if data is missing from PUT call', () => {
       const selector: Selector = {
         name: 'name',
         value: 'value'
       }
       expect(() => { amtClass.WiFiPortConfigurationService(Methods.PUT, null, selector) }).toThrow(WSManErrors.DATA)
     })
-    it('should throw error if data is null when ADD_WIFI_SETTINGS is called', () => {
+    it('should throw error if data is missing from ADD_WIFI_SETTINGS call', () => {
       const selector: Selector = {
         name: 'name',
         value: 'value'
       }
       expect(() => { amtClass.WiFiPortConfigurationService(Methods.ADD_WIFI_SETTINGS, null, selector) }).toThrow(WSManErrors.DATA)
     })
-    it('should throw error if selector is null when ADD_WIFI_SETTINGS is called', () => {
+    it('should throw error if selector is missing from ADD_WIFI_SETTINGS call', () => {
       const data: CIM.Models.WiFiEndpointSettings = {
         AuthenticationMethod: 6,
         ElementName: 'test',
@@ -746,6 +746,67 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.AlarmClockService(Methods.ENUMERATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
       expect(() => { amtClass.AlarmClockService(Methods.PULL as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
       expect(() => { amtClass.AlarmClockService(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('IEEE8021xCredentialContext Tests', () => {
+    it('should return a valid amt_8021xCredentialContext ENUMERATE message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.IEEE8021xCredentialContext(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_8021xCredentialContext PULL message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.IEEE8021xCredentialContext(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if enumerationContext is missing from PULL call', () => {
+      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.PUT as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('IEEE8021XProfile Tests', () => {
+    it('should return a valid amt_8021XProfile ENUMERATE message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.IEEE8021xProfile(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_8021XProfile PULL message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.IEEE8021xProfile(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_8021XProfile PUT message', () => {
+      const data: Models.IEEE8021xProfile = {
+        ElementName: 'test',
+        InstanceID: 'test',
+        Enabled: true,
+        ActiveInS0: true,
+        AuthenticationProtocol: 0,
+        RoamingIdentity: 'test',
+        Username: 'test',
+        Password: 'test',
+        Domain: 'test',
+        PxeTimeout: 0
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_8021XProfile xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile"><h:ElementName>test</h:ElementName><h:InstanceID>test</h:InstanceID><h:Enabled>true</h:Enabled><h:ActiveInS0>true</h:ActiveInS0><h:AuthenticationProtocol>0</h:AuthenticationProtocol><h:RoamingIdentity>test</h:RoamingIdentity><h:Username>test</h:Username><h:Password>test</h:Password><h:Domain>test</h:Domain><h:PxeTimeout>0</h:PxeTimeout></h:AMT_8021XProfile></Body></Envelope>`
+      const response = amtClass.IEEE8021xProfile(Methods.PUT, null, data)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if enumerationContext is missing from PULL call', () => {
+      expect(() => { amtClass.IEEE8021xProfile(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
+    })
+    it('should throw error if data is missing from PUT call', () => {
+      expect(() => { amtClass.IEEE8021xProfile(Methods.PUT) }).toThrow(WSManErrors.DATA)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.IEEE8021xProfile(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.IEEE8021xProfile(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.IEEE8021xProfile(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
 })
