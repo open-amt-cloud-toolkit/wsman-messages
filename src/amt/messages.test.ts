@@ -76,7 +76,7 @@ describe('AMT Tests', () => {
   const trustedRootCert = 'MIIEOzCCAqOgAwIBAgIDAZiFMA0GCSqGSIb3DQEBDAUAMD0xFzAVBgNVBAMTDk1QU1Jvb3QtNjE0ZDg4MRAwDgYDVQQKEwd1bmtub3duMRAwDgYDVQQGEwd1bmtub3duMCAXDTIwMDgyNTE4MzMzN1oYDzIwNTEwODI1MTgzMzM3WjA9MRcwFQYDVQQDEw5NUFNSb290LTYxNGQ4ODEQMA4GA1UEChMHdW5rbm93bjEQMA4GA1UEBhMHdW5rbm93bjCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAOi1jx9L8DG6gBPxd9gmJ6vqQC/F/TBMTJvb3ZAuRbDxUKnxZk3PafyNM6fO8QTL4qZVhvyGEZaIzVePrdJj31aZ93mNY2TJee3/DLRsJUIZHGFufBvi8pgQL+JjE9JmFD5/S2yciHIEVpKmXo1CbGmZGsnb8NRjaQVwB94pI1mg8JFMxyKzU/cUoCBfI+wmeMgBVdOJPNpH2zjC/GxwEFNQaxGe9GHmYbwoeiDeMPo75E/o+Gw6kJm429cuhJBC3KqHevAJj9V2nSUvoO0oxKqzLVkUYcjHEGYjxIvP6a6uo7x9llwfshJsBZ3PE5hucNdWS3dY3GeCqOwcaAQQIj2jULpZ/KlgVAdBK/o5QjE+IIQXCVK9USvktGzz7I5oH98zy8jCFStbGM7PQCo+DEnHn/SANmVbcy3hjzrXC8zf5dvmKiUb2eKnpv+z3FHsi64sVwFqBArB2ipcTM/qv4nEM6uLW1t+7+NB0OyaBmLktJrpb6af7z/EW1QuPIfTcQIDAQABo0IwQDAMBgNVHRMEBTADAQH/MBEGCWCGSAGG+EIBAQQEAwIABzAdBgNVHQ4EFgQUYU2IeTFqWXI1rG+JqZq8eVDO/LMwDQYJKoZIhvcNAQEMBQADggGBANoKIsFOn8/Lrb98DjOP+LUeopoU9KQ70ndreNqchrkPmM61V9IdD9OZiLr/7OY/rLGZwNvkhQYRPUa842Mqjfpr4YcV6HC0j6Zg0lcpxQ5eGGBkLb/teBcboi3sZcJvbCFUW2DJjhy7uqYxzE4eqSsKx5fEjp/wa6oNzNrgWRXyxQlaOo42RjXnOXS7sB0jPrgO0FClL1Xzif06kFHzzyJCVUqzNEJv0ynLgkpzCVdUUfoMM1RcKc3xJes5C0zg64ugj2R9e4VwJfn9W3+rlYS1So1q1jL8w+3qOM7lXyvr8Bdgc5BMvrOvHxzdOnpZmUEJkbKty62e8fYKN+WP7BrpxnzFQSzczX5S0uN4rn0rLO4wxVf2rtnTqIhKKYTsPMRBVEjpbRT1smzPPdINKu5l/Rz/zZS0b5I4yKJrkTYNgoPC/QSq8A9uXZxxQvj6x1bWZJVWywmaqYolEp8NaVHd+JYnlTmr4XpMHm01TPi1laowtY3ZepnKm8I55Ly0JA=='
   describe('AMT private function Tests', () => {
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.amtSwitch({ method: Methods.READ_RECORDS, class: Classes.AMT_AUDIT_LOG }) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.switch({ method: Methods.READ_RECORDS, class: Classes.AMT_AUDIT_LOG }) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
     it('should return a valid Put wsman message', () => {
       const data: Models.RedirectionResponse = {
@@ -92,11 +92,11 @@ describe('AMT Tests', () => {
         }
       }
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EthernetPortSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_RedirectionService xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService"><h:Name>${data.AMT_RedirectionService.Name}</h:Name><h:CreationClassName>${data.AMT_RedirectionService.CreationClassName}</h:CreationClassName><h:SystemName>${data.AMT_RedirectionService.SystemName}</h:SystemName><h:SystemCreationClassName>${data.AMT_RedirectionService.SystemCreationClassName}</h:SystemCreationClassName><h:ElementName>${data.AMT_RedirectionService.ElementName}</h:ElementName><h:ListenerEnabled>${data.AMT_RedirectionService.ListenerEnabled}</h:ListenerEnabled><h:AccessLog>${data.AMT_RedirectionService.AccessLog}</h:AccessLog><h:EnabledState>${data.AMT_RedirectionService.EnabledState}</h:EnabledState></h:AMT_RedirectionService></Body></Envelope>`
-      const response = amtClass.amtSwitch({ method: Methods.PUT, class: Classes.AMT_ETHERNET_PORT_SETTINGS, data })
+      const response = amtClass.switch({ method: Methods.PUT, class: Classes.AMT_ETHERNET_PORT_SETTINGS, data })
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if amt.data is null', () => {
-      expect(() => { amtClass.amtSwitch({ method: Methods.PUT, class: Classes.AMT_ETHERNET_PORT_SETTINGS, data: null }) }).toThrow(WSManErrors.BODY)
+      expect(() => { amtClass.switch({ method: Methods.PUT, class: Classes.AMT_ETHERNET_PORT_SETTINGS, data: null }) }).toThrow(WSManErrors.BODY)
     })
   })
   describe('AuditLog Tests', () => {
