@@ -337,6 +337,17 @@ describe('AMT Tests', () => {
       const response = amtClass.EnvironmentDetectionSettingData(Methods.PUT, environmentDetectionSettingData)
       expect(response).toEqual(correctResponse)
     })
+    it('should handle if DetectionStrings is not an array', () => {
+      const environmentDetectionSettingData: any = {
+        InstanceID: 'Intel(r) AMT Environment Detection Settings',
+        DetectionAlgorithm: 0,
+        ElementName: 'Intel(r) AMT Environment Detection Settings',
+        DetectionStrings: 'dummy.com'
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">${environmentDetectionSettingData.InstanceID}</w:Selector></w:SelectorSet></Header><Body><r:AMT_EnvironmentDetectionSettingData xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData"><r:DetectionAlgorithm>${environmentDetectionSettingData.DetectionAlgorithm}</r:DetectionAlgorithm><r:ElementName>${environmentDetectionSettingData.ElementName}</r:ElementName><r:InstanceID>${environmentDetectionSettingData.InstanceID}</r:InstanceID><r:DetectionStrings>${environmentDetectionSettingData.DetectionStrings}</r:DetectionStrings></r:AMT_EnvironmentDetectionSettingData></Body></Envelope>`
+      const response = amtClass.EnvironmentDetectionSettingData(Methods.PUT, environmentDetectionSettingData)
+      expect(response).toEqual(correctResponse)
+    })
     it('should throw error if environmentDetectionSettingData is missing from amt_EnvironmentDetectionSettingData Pull request', () => {
       expect(() => { amtClass.EnvironmentDetectionSettingData(Methods.PUT) }).toThrow(WSManErrors.ENVIRONMENT_DETECTION_SETTING_DATA)
     })
