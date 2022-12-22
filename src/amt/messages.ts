@@ -399,6 +399,9 @@ export class Messages {
         const selector: Selector = { name: 'InstanceID', value: environmentDetectionSettingData.InstanceID }
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}`, null, null, selector)
         let body = `<Body><r:AMT_EnvironmentDetectionSettingData xmlns:r="${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}"><r:DetectionAlgorithm>${environmentDetectionSettingData.DetectionAlgorithm}</r:DetectionAlgorithm><r:ElementName>${environmentDetectionSettingData.ElementName}</r:ElementName><r:InstanceID>${environmentDetectionSettingData.InstanceID}</r:InstanceID>`
+        if (!Array.isArray(environmentDetectionSettingData.DetectionStrings)) {
+          environmentDetectionSettingData.DetectionStrings = [environmentDetectionSettingData.DetectionStrings]
+        }
         environmentDetectionSettingData.DetectionStrings.forEach(function (item) {
           body += `<r:DetectionStrings>${item}</r:DetectionStrings>`
         })
