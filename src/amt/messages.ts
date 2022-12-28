@@ -378,6 +378,25 @@ export class Messages {
   }
 
   /**
+   * Accesses a representation of the KerberosSettingData.
+   * @method GET - Retrieves a representation of the KerberosSettingData.
+   * @method PULL - Requires enumerationContext.  Pulls instances of KerberosSettingData, following an Enumerate operation.
+   * @method ENUMERATE - Enumerates the instances of KerberosSettingData.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @returns string
+   */
+  KerberosSettingData = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
+    switch (method) {
+      case Methods.GET:
+      case Methods.PULL:
+      case Methods.ENUMERATE:
+        return this.switch({ method: method, class: Classes.AMT_KERBEROS_SETTING_DATA, enumerationContext: enumerationContext })
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  /**
    * Accesses a representation of a Management Presence Remote Service Access Point (or an MPS) to be accessed by the Intel(R) AMT subsystem from remote.
    * @method GET - Retrieves a representation of the ManagementPresenceRemoteSAP.
    * @method PULL - Requires enumerationContext.  Pulls instances of ManagementPresenceRemoteSAP, following an Enumerate operation.
