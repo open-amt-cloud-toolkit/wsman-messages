@@ -282,7 +282,13 @@ export namespace Models {
     // The ManagedElement that provides context or scope for the Credential.
     ElementProvidingContext: ManagedElement
   }
-
+  export interface SharedCredential extends Credential {
+    InstanceID: string // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class . . .
+    RemoteID?: string // RemoteID is the name by which the principal is known at the remote secret key authentication service.
+    Secret?: string // The secret known by the principal.
+    Algorithm?: string // The transformation algorithm, if any, used to protect passwords before use in the protocol . . .
+    Protocol?: string // The protocol with which the SharedCredential is used.
+  }
   export interface ServiceAvailableToElement {
     ServiceProvided: {
       Address: string

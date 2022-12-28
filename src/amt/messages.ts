@@ -454,6 +454,33 @@ export class Messages {
   }
 
   /**
+   * Accesses a representation of MPSUsernamePassword.
+   * @method GET - Retrieves a representation of MPSUsernamePassword.
+   * @method PUT - Requires MPSUsernamePassword.  Changes properties of MPSUsernamePassword.
+   * @method PULL - Requires enumerationContext.  Pulls instances of MPSUsernamePassword, following an Enumerate operation.
+   * @method ENUMERATE - Enumerates the instances of MPSUsernamePassword.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param data MPSUsernamePassword Object.
+   * @returns string
+   */
+  MPSUsernamePassword = (method: Methods.GET | Methods.ENUMERATE | Methods.PULL | Methods.PUT, enumerationContext?: string, data?: AMT.Models.MPSUsernamePassword): string => {
+    switch (method) {
+      case Methods.GET:
+      case Methods.PULL:
+      case Methods.ENUMERATE:
+        return this.switch({ method: method, class: Classes.AMT_MPS_USERNAME_PASSWORD, enumerationContext: enumerationContext })
+      case Methods.PUT: {
+        if (data == null) throw new Error(WSManErrors.DATA)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_MPS_USERNAME_PASSWORD}`)
+        const body = this.wsmanMessageCreator.createBody(Classes.AMT_MPS_USERNAME_PASSWORD, this.resourceUriBase, Classes.AMT_MPS_USERNAME_PASSWORD, data)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  /**
    * Accesses a representation of PublicKeyCertificate.
    * @method GET - Retrieves a representation of PublicKeyCertificate.
    * @method PULL - Requires enumerationContext.  Pulls instances of PublicKeyCertificate, following an Enumerate operation.
