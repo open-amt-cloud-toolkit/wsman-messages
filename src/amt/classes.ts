@@ -31,5 +31,6 @@ export enum Classes {
   AMT_IEEE8021X_PROFILE = 'AMT_8021XProfile',
   AMT_KERBEROS_SETTING_DATA = 'AMT_KerberosSettingData',
   AMT_MPS_USERNAME_PASSWORD = 'AMT_MPSUsernamePassword',
-  AMT_PUBLIC_KEY_MANAGEMENT_CAPABILITIES = 'AMT_PublicKeyManagementCapabilities'
+  AMT_PUBLIC_KEY_MANAGEMENT_CAPABILITIES = 'AMT_PublicKeyManagementCapabilities',
+  AMT_REMOTE_ACCESS_CAPABILITIES = 'AMT_RemoteAccessCapabilities'
 }
