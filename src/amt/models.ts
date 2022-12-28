@@ -381,4 +381,6 @@ export namespace Models {
     ServerCertificateIssue?: string
     PxeTimeout?: number
   }
+
+  export interface MPSUsernamePassword extends CIM.Models.SharedCredential { }
 }
