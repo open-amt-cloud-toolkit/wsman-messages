@@ -45,7 +45,9 @@ export enum WSManErrors {
   TLS_CREDENTIAL_CONTEXT = 'missing tlsCredentialContext',
   GENERAL_SETTINGS = 'missing generalSettings',
   PASSWORD = 'missing password',
-  PKCS10Request = 'missing PKCS10Request'
+  PKCS10Request = 'missing PKCS10Request',
+  USERNAME = 'missing username',
+  DIGEST_PASSWORD = 'missing digestPassword'
 }
 
 export class WSManMessageCreator {
