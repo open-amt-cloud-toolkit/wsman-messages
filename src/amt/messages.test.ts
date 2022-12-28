@@ -581,6 +581,26 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.PublicKeyCertificate(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
+  describe('PublicKeyManagementCapabilities Tests', () => {
+    it('should return a valid amt_PublicKeyManagementCapabilities Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementCapabilities</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.PublicKeyManagementCapabilities(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_PublicKeyManagementCapabilities ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementCapabilities</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.PublicKeyManagementCapabilities(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_PublicKeyManagementCapabilities Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementCapabilities</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.PublicKeyManagementCapabilities(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.PublicKeyManagementCapabilities(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
   describe('PublicKeyManagementService Tests', () => {
     it('should return a valid amt_PublicKeyManagementService Get wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`

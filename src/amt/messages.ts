@@ -505,6 +505,26 @@ export class Messages {
   }
 
   /**
+   * Accesses a representation of PublicKeyManagementCapabilities.
+   * @method GET - Retrieves a representation of PublicKeyManagementCapabilities.
+   * @method PULL - Requires enumerationContext.  Pulls instances of PublicKeyManagementCapabilities, following an Enumerate operation.
+   * @method ENUMERATE - Enumerates the instances of PublicKeyManagementCapabilities.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @returns string
+   */
+  PublicKeyManagementCapabilities = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
+    switch (method) {
+      case Methods.GET:
+      case Methods.ENUMERATE:
+      case Methods.PULL: {
+        return this.switch({ method: method, class: Classes.AMT_PUBLIC_KEY_MANAGEMENT_CAPABILITIES, enumerationContext: enumerationContext })
+      }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  /**
    * Accesses a representation of PublicKeyManagementService.
    * @method GET - Retrieves a representation of PublicKeyManagementCapabilities.
    * @method PULL - Requires enumerationContext.  Pulls instances of PublicKeyManagementCapabilities, following an Enumerate operation.
