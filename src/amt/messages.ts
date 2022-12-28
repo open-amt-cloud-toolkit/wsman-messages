@@ -621,6 +621,25 @@ export class Messages {
   }
 
   /**
+     * Accesses a representation of RemoteAccessCapabilities.
+     * @method GET - Retrieves a representation of RemoteAccessCapabilities.
+     * @method PULL - Requires enumerationContext.  Pulls instances of RemoteAccessCapabilities, following an Enumerate operation.
+     * @method ENUMERATE - Enumerates the instances of RemoteAccessCapabilities.
+     * @param enumerationContext string returned from an ENUMERATE call.
+     * @returns string
+     */
+  RemoteAccessCapabilities = (method: Methods.GET | Methods.ENUMERATE | Methods.PULL, enumerationContext?: string): string => {
+    switch (method) {
+      case Methods.GET:
+      case Methods.ENUMERATE:
+      case Methods.PULL:
+        return this.switch({ method: method, class: Classes.AMT_REMOTE_ACCESS_CAPABILITIES, enumerationContext: enumerationContext })
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  /**
    * Accesses a representation of RemoteAccessPolicyAppliesToMPS.
    * @method PULL - Requires enumerationContext.  Pulls instances of RemoteAccessPolicyAppliesToMPS, following an Enumerate operation
    * @method ENUMERATE - Enumerates the instances of RemoteAccessPolicyAppliesToMPS
