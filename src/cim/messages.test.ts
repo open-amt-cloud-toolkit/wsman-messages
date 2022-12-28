@@ -90,7 +90,7 @@ describe('CIM Tests', () => {
     })
     it('should create a valid cim_KVMRedirectionSAP Request_State_Change wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_KVMRedirectionSAP/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_KVMRedirectionSAP</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_KVMRedirectionSAP"><r:RequestedState>2</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>`
-      const response = cimClass.KVMRedirectionSAP(Methods.REQUEST_STATE_CHANGE, 2)
+      const response = cimClass.KVMRedirectionSAP(Methods.REQUEST_STATE_CHANGE, null, 2)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if requested state is null', () => {
@@ -194,6 +194,11 @@ describe('CIM Tests', () => {
     })
   })
   describe('cim_WiFiEndpointSettings Tests', () => {
+    it('should return a valid cim_WiFiEndpointSettings Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = cimClass.WiFiEndpointSettings(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
     it('should create a valid cim_WiFiEndpointSettings Enumerate wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
       const response = cimClass.WiFiEndpointSettings(Methods.ENUMERATE)
@@ -217,43 +222,73 @@ describe('CIM Tests', () => {
       expect(() => { cimClass.WiFiEndpointSettings(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { cimClass.WiFiEndpointSettings(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { cimClass.WiFiEndpointSettings(Methods.CHANGE_BOOT_ORDER as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('cim_WiFiPort Tests', () => {
     it('should create a valid cim_WiFiPrt RequestStateChange wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiPort"><r:RequestedState>3</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>`
-      const response = cimClass.WiFiPort(Methods.REQUEST_STATE_CHANGE, 3)
+      const response = cimClass.WiFiPort(Methods.REQUEST_STATE_CHANGE, null, 3)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if requestedState is missing from cim_WiFiPort RequestStateChange request', () => {
-      expect(() => { cimClass.WiFiPort(Methods.REQUEST_STATE_CHANGE, null) }).toThrow(WSManErrors.REQUESTED_STATE)
+      expect(() => { cimClass.WiFiPort(Methods.REQUEST_STATE_CHANGE, null, null) }).toThrow(WSManErrors.REQUESTED_STATE)
     })
   })
   describe('cim_BootService Tests', () => {
+    it('should return a valid cim_BootService Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = cimClass.BootService(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid cim_BootService Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = cimClass.BootService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid cim_BootService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = cimClass.BootService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid cim_BootService SetBootConfigRole wsman message', () => {
       const bootSource: string = 'Intel(r) AMT: Boot Configuration 0'
       const role = 1
       const correctResponse = `${xmlHeader}${envelope}http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService/SetBootConfigRole</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:SetBootConfigRole_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService"><r:BootConfigSetting><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">${bootSource}</Selector></SelectorSet></ReferenceParameters></r:BootConfigSetting><r:Role>${role}</r:Role></r:SetBootConfigRole_INPUT></Body></Envelope>`
-      const response = cimClass.BootService(Methods.SET_BOOT_CONFIG_ROLE, bootSource, role)
+      const response = cimClass.BootService(Methods.SET_BOOT_CONFIG_ROLE, null, bootSource, role)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if selector is missing from cim_BootService SetBootConfigRole method', () => {
       const role = 1
-      expect(() => { cimClass.BootService(Methods.SET_BOOT_CONFIG_ROLE, null, role) }).toThrow(WSManErrors.SELECTOR)
+      expect(() => { cimClass.BootService(Methods.SET_BOOT_CONFIG_ROLE, null, null, role) }).toThrow(WSManErrors.SELECTOR)
     })
     it('should throw error if role is missing from cim_BootService SetBootConfigRole method', () => {
       const selector: string = 'Intel(r) AMT: Boot Configuration 0'
-      expect(() => { cimClass.BootService(Methods.SET_BOOT_CONFIG_ROLE, selector, null) }).toThrow(WSManErrors.ROLE)
+      expect(() => { cimClass.BootService(Methods.SET_BOOT_CONFIG_ROLE, null, selector, null) }).toThrow(WSManErrors.ROLE)
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { cimClass.BootService(Methods.CHANGE_BOOT_ORDER as any, null, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('cim_BootConfigSetting Tests', () => {
+    it('should return a valid cim_BootConfigSetting Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = cimClass.BootConfigSetting(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid cim_BootConfigSetting Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = cimClass.BootConfigSetting(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid cim_BootConfigSetting Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = cimClass.BootConfigSetting(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid cim_BootConfigSetting ChangeBootOrder wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting/ChangeBootOrder</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:ChangeBootOrder_INPUT xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting"><h:Source>source</h:Source></h:ChangeBootOrder_INPUT></Body></Envelope>`
-      const response = cimClass.BootConfigSetting(Methods.CHANGE_BOOT_ORDER, 'source')
+      const response = cimClass.BootConfigSetting(Methods.CHANGE_BOOT_ORDER, null, 'source')
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
@@ -261,10 +296,25 @@ describe('CIM Tests', () => {
     })
   })
   describe('cim_PowerManagementService Tests', () => {
+    it('should return a valid cim_PowerManagementService Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = cimClass.PowerManagementService(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid cim_PowerManagementService Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = cimClass.PowerManagementService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid cim_PowerManagementService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = cimClass.PowerManagementService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid cim_PowerManagementService ChangeBootOrder wsman message', () => {
       const powerState = 8
       const correctResponse = `${xmlHeader}${envelope}http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService/RequestPowerStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:RequestPowerStateChange_INPUT xmlns:r="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService"><r:PowerState>${powerState}</r:PowerState><r:ManagedElement><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="CreationClassName">CIM_ComputerSystem</Selector><Selector Name="Name">ManagedSystem</Selector></SelectorSet></ReferenceParameters></r:ManagedElement></r:RequestPowerStateChange_INPUT></Body></Envelope>`
-      const response = cimClass.PowerManagementService(Methods.REQUEST_POWER_STATE_CHANGE, powerState)
+      const response = cimClass.PowerManagementService(Methods.REQUEST_POWER_STATE_CHANGE, null, powerState)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if powerState is missing from cim_PowerManagementService ChangeBootOrder method', () => {
