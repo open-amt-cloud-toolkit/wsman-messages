@@ -49,7 +49,7 @@ describe('IPS Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if missing data when PUT is called on switch', () => {
-      expect(() => { ipsClass.switch({ method: Methods.PUT, class: Classes.IPS_OPT_IN_SERVICE }) }).toThrow(WSManErrors.BODY)
+      expect(() => { ipsClass.switch({ method: Methods.PUT, class: Classes.IPS_OPT_IN_SERVICE }) }).toThrow(WSManErrors.DATA)
     })
     it('should throw error if an unsupported method is called on switch', () => {
       expect(() => { ipsClass.switch({ method: Methods.SET_CERTIFICATES, class: Classes.IPS_IEEE8021X_SETTINGS }) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
@@ -61,12 +61,46 @@ describe('IPS Tests', () => {
       expect(() => { ipsClass.switch({ method: Methods.DELETE, class: Classes.IPS_OPT_IN_SERVICE }) }).toThrow(WSManErrors.SELECTOR)
     })
   })
-
+  describe('ips_IEEE8021xCredentialContext Tests', () => {
+    it('should return a valid ips_IEEE8021xCredentialContext Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = ipsClass.IEEE8021xCredentialContext(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid ips_IEEE8021xSettings Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = ipsClass.IEEE8021xCredentialContext(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid ips_IEEE8021xSettings Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = ipsClass.IEEE8021xCredentialContext(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw an error if enumerationContext is missing', () => {
+      expect(() => { ipsClass.IEEE8021xCredentialContext(Methods.PULL, null) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
+    })
+  })
   describe('ips_AlarmClockOccurrence Tests', () => {
     const selector: Selector = {
       name: 'Name',
       value: 'Instance'
     }
+    it('should return a valid ips_AlarmClockOccurrence Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = ipsClass.AlarmClockOccurrence(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid ips_AlarmClockOccurrence Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = ipsClass.AlarmClockOccurrence(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid ips_AlarmClockOccurrence Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = ipsClass.AlarmClockOccurrence(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
     it('should create a valid ips_AlarmClockOccurrence Delete wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="Name">Instance</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
       const response = ipsClass.AlarmClockOccurrence(Methods.DELETE, null, selector)
@@ -90,50 +124,7 @@ describe('IPS Tests', () => {
     })
     it('should throw error if an unsupported method is called', () => {
       /* Not supporting GET or PUT */
-      expect(() => { castedIPSClass.AlarmClockOccurrence(Methods.GET) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-      expect(() => { castedIPSClass.AlarmClockOccurrence(Methods.PUT) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-    })
-  })
-  describe('ips_OptInService Tests', () => {
-    it('should create a valid ips_OptInService Get wsman message', () => {
-      const response = ipsClass.OptInService(Methods.GET)
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw error if an unsupported method is called', () => {
-      expect(() => { castedIPSClass.OptInService(Methods.REQUEST_POWER_STATE_CHANGE) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-    })
-    it('should create a valid ips_OptInService Put wsman message', () => {
-      const data: Models.OptInServiceResponse = {
-        IPS_OptInService: {
-          OptInCodeTimeout: 300
-        }
-      }
-      const response = ipsClass.OptInService(Methods.PUT, null, data)
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:IPS_OptInService xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService"><h:OptInCodeTimeout>300</h:OptInCodeTimeout></h:IPS_OptInService></Body></Envelope>`
-      expect(response).toEqual(correctResponse)
-    })
-    it('should create a valid ips_StartOptIn wsman message', () => {
-      const response = ipsClass.OptInService(Methods.START_OPT_IN)
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/StartOptIn</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:StartOptIn_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService" /></Body></Envelope>`
-      expect(response).toEqual(correctResponse)
-    })
-    it('should create a valid ips_SendOptInCode wsman message', () => {
-      const code = 1
-      const response = ipsClass.OptInService(Methods.SEND_OPT_IN_CODE, code)
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/SendOptInCode</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SendOptInCode_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService"><h:OptInCode>1</h:OptInCode></h:SendOptInCode_INPUT></Body></Envelope>`
-      expect(response).toEqual(correctResponse)
-    })
-    it('should create a valid ips_CancelOptIn wsman message', () => {
-      const response = ipsClass.OptInService(Methods.CANCEL_OPT_IN)
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/CancelOptIn</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:CancelOptIn_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService" /></Body></Envelope>`
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw error if optInServiceResponse is missing', () => {
-      expect(() => { ipsClass.OptInService(Methods.PUT, null, null) }).toThrow(WSManErrors.OPT_IN_SERVICE_RESPONSE)
-    })
-    it('should throw error if optInCode is missing', () => {
-      expect(() => { ipsClass.OptInService(Methods.SEND_OPT_IN_CODE, null, null) }).toThrow(WSManErrors.OPT_IN_CODE)
+      expect(() => { castedIPSClass.AlarmClockOccurrence(Methods.ADD_NEXT_CERT_IN_CHAIN) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('ips_HostBasedSetupService Tests', () => {
@@ -142,56 +133,71 @@ describe('IPS Tests', () => {
       const response = ipsClass.HostBasedSetupService(Methods.GET)
       expect(response).toEqual(correctResponse)
     })
+    it('should return a valid ips_HostBasedSetupService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = ipsClass.HostBasedSetupService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid ips_HostBasedSetupService Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = ipsClass.HostBasedSetupService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid ips_HostBasedSetupService Setup wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService/Setup</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:Setup_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService"><h:NetAdminPassEncryptionType>2</h:NetAdminPassEncryptionType><h:NetworkAdminPassword>bebb3497d69b544c732651365cc3462d</h:NetworkAdminPassword></h:Setup_INPUT></Body></Envelope>`
-      const response = ipsClass.HostBasedSetupService(Methods.SETUP, adminPassEncryptionType, adminPassword)
+      const response = ipsClass.HostBasedSetupService(Methods.SETUP, null, adminPassEncryptionType, adminPassword)
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid ips_HostBasedSetupService Admin Setup wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService/AdminSetup</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AdminSetup_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService"><h:NetAdminPassEncryptionType>2</h:NetAdminPassEncryptionType><h:NetworkAdminPassword>bebb3497d69b544c732651365cc3462d</h:NetworkAdminPassword><h:McNonce>ZxxE0cFy590zDBIR39q6QU6iuII=</h:McNonce><h:SigningAlgorithm>2</h:SigningAlgorithm><h:DigitalSignature>T0NvoR7RUkOpVULIcNL0VhpEK5rO3j5/TBpN82q1YgPM5sRBxqymu7fKBgAGGN49oD8xsqW4X0SWxjuB3q/TLHjNJJNxoHHlXZnb77HTwfXHp59E/TM10UvOX96qEgKU5Mp+8/IE9LnYxC1ajQostSRA/X+HA5F6kRctLiCK+ViWUCk4sAtPzHhhHSTB/98KDWuacPepScSpref532hpD2/g43nD3Wg0SjmOMExPLMMnijWE9KDkxE00+Bos28DD3Yclj4BMhkoXDw6k4EcTWKbGhtF/9meXXmSPwRmXEaWe8COIDrQks1mpyLblYu8yHHnUjhssdcCQHtAOu7t0RA==</h:DigitalSignature></h:AdminSetup_INPUT></Body></Envelope>`
-      const response = ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, adminPassEncryptionType, adminPassword, mcNonce, signingAlgorithm, digitalSignature)
+      const response = ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, adminPassword, mcNonce, signingAlgorithm, digitalSignature)
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid ips_HostBasedSetupService Add Next Cert in Chain wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService/AddNextCertInChain</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddNextCertInChain_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService"><h:NextCertificate>ExampleCertificate</h:NextCertificate><h:IsLeafCertificate>true</h:IsLeafCertificate><h:IsRootCertificate>false</h:IsRootCertificate></h:AddNextCertInChain_INPUT></Body></Envelope>`
-      const response = ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, 'ExampleCertificate', true, false)
+      const response = ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, 'ExampleCertificate', true, false)
       expect(response).toEqual(correctResponse)
     })
     it('should return null if adminPassEncryptionType in ips_HostBasedSetupService SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, null, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
     })
     it('should return null if adminPassword in ips_HostBasedSetupService SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, null, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
     })
     it('should return null if adminPassEncryptionType in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
     })
     it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
     })
     it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, adminPassEncryptionType, adminPassword, null) }).toThrow(WSManErrors.NONCE)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, adminPassword, null) }).toThrow(WSManErrors.NONCE)
     })
     it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, adminPassEncryptionType, adminPassword, mcNonce, null) }).toThrow(WSManErrors.SIGNING_ALGORITHM)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, adminPassword, mcNonce, null) }).toThrow(WSManErrors.SIGNING_ALGORITHM)
     })
     it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, adminPassEncryptionType, adminPassword, mcNonce, signingAlgorithm, null) }).toThrow(WSManErrors.DIGITAL_SIGNATURE)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, adminPassword, mcNonce, signingAlgorithm, null) }).toThrow(WSManErrors.DIGITAL_SIGNATURE)
     })
     it('should return null if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, false, true) }).toThrow(WSManErrors.CERTIFICATE_BLOB)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, null, false, true) }).toThrow(WSManErrors.CERTIFICATE_BLOB)
     })
     it('should return null if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, certificate, null, false) }).toThrow(WSManErrors.IS_LEAF)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, certificate, null, false) }).toThrow(WSManErrors.IS_LEAF)
     })
     it('should return null if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, certificate, false, null) }).toThrow(WSManErrors.IS_ROOT)
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, certificate, false, null) }).toThrow(WSManErrors.IS_ROOT)
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { castedIPSClass.HostBasedSetupService(Methods.REQUEST_POWER_STATE_CHANGE) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('ips_IEEE8021xSettings Tests', () => {
+    it('should return a valid ips_IEEE8021xSettings Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = ipsClass.IEEE8021xSettings(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid ips_IEEE8021xSettings Pull wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
       const response = ipsClass.IEEE8021xSettings(Methods.PULL, enumerationContext)
@@ -239,28 +245,65 @@ describe('IPS Tests', () => {
       expect(() => { ipsClass.IEEE8021xSettings(Methods.SET_CERTIFICATES) }).toThrow(WSManErrors.CERTIFICATE_BLOB)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { castedIPSClass.IEEE8021xSettings(Methods.GET) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { castedIPSClass.IEEE8021xSettings(Methods.ADD_NEXT_CERT_IN_CHAIN) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
     it('should throw error if missing ieee8021xSettings data', () => {
-      expect(() => { ipsClass.IEEE8021xSettings(Methods.PUT, null) }).toThrow(WSManErrors.IEEE8021X_SETTINGS)
+      expect(() => { ipsClass.IEEE8021xSettings(Methods.PUT, null) }).toThrow(WSManErrors.DATA)
     })
     it('should throw an error if enumerationContext is missing', () => {
       expect(() => { ipsClass.IEEE8021xSettings(Methods.PULL, null) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
   })
-  describe('ips_IEEE8021xCredentialContext Tests', () => {
-    it('should return a valid ips_IEEE8021xSettings Pull wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
-      const response = ipsClass.IEEE8021xCredentialContext(Methods.PULL, enumerationContext)
+  describe('ips_OptInService Tests', () => {
+    it('should create a valid ips_OptInService Get wsman message', () => {
+      const response = ipsClass.OptInService(Methods.GET)
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
       expect(response).toEqual(correctResponse)
     })
-    it('should return a valid ips_IEEE8021xSettings Enumerate wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
-      const response = ipsClass.IEEE8021xCredentialContext(Methods.ENUMERATE)
+    it('should return a valid ips_OptInService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = ipsClass.OptInService(Methods.PULL, enumerationContext)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw an error if enumerationContext is missing', () => {
-      expect(() => { ipsClass.IEEE8021xCredentialContext(Methods.PULL, null) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
+    it('should return a valid ips_OptInService Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = ipsClass.OptInService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { castedIPSClass.OptInService(Methods.REQUEST_POWER_STATE_CHANGE) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+    it('should create a valid ips_OptInService Put wsman message', () => {
+      const data: Models.OptInServiceResponse = {
+        IPS_OptInService: {
+          OptInCodeTimeout: 300
+        }
+      }
+      const response = ipsClass.OptInService(Methods.PUT, null, null, data)
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:IPS_OptInService xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService"><h:OptInCodeTimeout>300</h:OptInCodeTimeout></h:IPS_OptInService></Body></Envelope>`
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid ips_StartOptIn wsman message', () => {
+      const response = ipsClass.OptInService(Methods.START_OPT_IN)
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/StartOptIn</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:StartOptIn_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService" /></Body></Envelope>`
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid ips_SendOptInCode wsman message', () => {
+      const code = 1
+      const response = ipsClass.OptInService(Methods.SEND_OPT_IN_CODE, null, code)
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/SendOptInCode</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SendOptInCode_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService"><h:OptInCode>1</h:OptInCode></h:SendOptInCode_INPUT></Body></Envelope>`
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid ips_CancelOptIn wsman message', () => {
+      const response = ipsClass.OptInService(Methods.CANCEL_OPT_IN)
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/CancelOptIn</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:CancelOptIn_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService" /></Body></Envelope>`
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if optInServiceResponse is missing', () => {
+      expect(() => { ipsClass.OptInService(Methods.PUT, null, null) }).toThrow(WSManErrors.OPT_IN_SERVICE_RESPONSE)
+    })
+    it('should throw error if optInCode is missing', () => {
+      expect(() => { ipsClass.OptInService(Methods.SEND_OPT_IN_CODE, null, null) }).toThrow(WSManErrors.OPT_IN_CODE)
     })
   })
 })

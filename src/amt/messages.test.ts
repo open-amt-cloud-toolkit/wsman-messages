@@ -5,7 +5,7 @@
 
 import { Methods, Messages, Classes, Models, Types } from './'
 import { Selector, WSManErrors } from '../WSMan'
-import { CIM } from '../'
+import { AMT, CIM } from '../'
 
 describe('AMT Tests', () => {
   let messageId = 0
@@ -96,13 +96,149 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if amt.data is null', () => {
-      expect(() => { amtClass.switch({ method: Methods.PUT, class: Classes.AMT_ETHERNET_PORT_SETTINGS, data: null }) }).toThrow(WSManErrors.BODY)
+      expect(() => { amtClass.switch({ method: Methods.PUT, class: Classes.AMT_ETHERNET_PORT_SETTINGS, data: null }) }).toThrow(WSManErrors.DATA)
+    })
+    it('should throw error if amt.enumerationContext is null', () => {
+      expect(() => { amtClass.switch({ method: Methods.PULL, class: Classes.AMT_ETHERNET_PORT_SETTINGS, enumerationContext: null }) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
+    })
+    it('should throw error if amt.selector is null', () => {
+      expect(() => { amtClass.switch({ method: Methods.DELETE, class: Classes.AMT_ETHERNET_PORT_SETTINGS, selector: null }) }).toThrow(WSManErrors.SELECTOR)
+    })
+    it('should throw error if amt.requetedState is null', () => {
+      expect(() => { amtClass.switch({ method: Methods.REQUEST_STATE_CHANGE, class: Classes.AMT_ETHERNET_PORT_SETTINGS, requestedState: null }) }).toThrow(WSManErrors.REQUESTED_STATE)
+    })
+    it('should throw error if unsupported method is called', () => {
+      expect(() => { amtClass.switch({ method: Methods.ADD_ALARM, class: Classes.AMT_ETHERNET_PORT_SETTINGS }) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('IEEE8021xCredentialContext Tests', () => {
+    it('should return a valid amt_8021xCredentialContext GET wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.IEEE8021xCredentialContext(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_8021xCredentialContext ENUMERATE message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.IEEE8021xCredentialContext(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_8021xCredentialContext PULL message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.IEEE8021xCredentialContext(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.PUT as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('IEEE8021XProfile Tests', () => {
+    it('should return a valid amt_8021XProfile GET wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.IEEE8021xProfile(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_8021XProfile ENUMERATE message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.IEEE8021xProfile(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_8021XProfile PULL message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.IEEE8021xProfile(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_8021XProfile PUT message', () => {
+      const data: Models.IEEE8021xProfile = {
+        ElementName: 'test',
+        InstanceID: 'test',
+        Enabled: true,
+        ActiveInS0: true,
+        AuthenticationProtocol: 0,
+        RoamingIdentity: 'test',
+        Username: 'test',
+        Password: 'test',
+        Domain: 'test',
+        PxeTimeout: 0
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_8021XProfile xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile"><h:ElementName>test</h:ElementName><h:InstanceID>test</h:InstanceID><h:Enabled>true</h:Enabled><h:ActiveInS0>true</h:ActiveInS0><h:AuthenticationProtocol>0</h:AuthenticationProtocol><h:RoamingIdentity>test</h:RoamingIdentity><h:Username>test</h:Username><h:Password>test</h:Password><h:Domain>test</h:Domain><h:PxeTimeout>0</h:PxeTimeout></h:AMT_8021XProfile></Body></Envelope>`
+      const response = amtClass.IEEE8021xProfile(Methods.PUT, null, data)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if data is missing from PUT call', () => {
+      expect(() => { amtClass.IEEE8021xProfile(Methods.PUT) }).toThrow(WSManErrors.DATA)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.IEEE8021xProfile(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.IEEE8021xProfile(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('AlarmClockService Tests', () => {
+    it('should return a valid amt_AlarmClockService ADD_ALARM wsman message', () => {
+      const instanceID = 'Instance'
+      const elementName = 'Alarm instance name'
+      // Start time must be on the minute - seconds must be 00
+      const startTime = '2022-12-31T23:59:00Z'
+      // The interval is in minutes
+      const minutes = 59
+      const hours = 23
+      const days = 1
+      const interval = minutes + hours * 60 + days * 1440
+      const deleteOnCompletion = true
+      let correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService/AddAlarm</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header>`
+      correctResponse += '<Body><p:AddAlarm_INPUT xmlns:p="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService"><p:AlarmTemplate>'
+      correctResponse += `<s:InstanceID xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${instanceID}</s:InstanceID>`
+      correctResponse += `<s:ElementName xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${elementName}</s:ElementName>`
+      correctResponse += `<s:StartTime xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Datetime xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">${startTime}</p:Datetime></s:StartTime>`
+      correctResponse += `<s:Interval xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Interval xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">P${days}DT${hours}H${minutes}M</p:Interval></s:Interval>`
+      correctResponse += `<s:DeleteOnCompletion xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${String(deleteOnCompletion)}</s:DeleteOnCompletion>`
+      correctResponse += '</p:AlarmTemplate></p:AddAlarm_INPUT></Body></Envelope>'
+      const response = amtClass.AlarmClockService(Methods.ADD_ALARM, null, { InstanceID: instanceID, ElementName: elementName, StartTime: new Date(startTime), Interval: interval, DeleteOnCompletion: deleteOnCompletion })
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if data is missing from amt_AlarmClockService AddAlarm method', () => {
+      expect(() => { amtClass.AlarmClockService(Methods.ADD_ALARM, null) }).toThrow(WSManErrors.ADD_ALARM_DATA)
+    })
+    it('should return a valid amt_AlarmClockService GET message ', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.AlarmClockService(Methods.GET, null)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AlarmClockService ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.AlarmClockService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AlarmClockService PULL wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.AlarmClockService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.AlarmClockService(Methods.PUT as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.AlarmClockService(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('AuditLog Tests', () => {
+    it('should return a valid amt_AuditLog GET wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuditLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.AuditLog(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuditLog ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuditLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.AuditLog(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuditLog PULL wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuditLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.AuditLog(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid amt_AuditLog ReadRecords wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuditLog/ReadRecords</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuditLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:ReadRecords_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuditLog"><h:StartIndex>1</h:StartIndex></h:ReadRecords_INPUT></Body></Envelope>`
-      const response = amtClass.AuditLog(Methods.READ_RECORDS, 1)
+      const response = amtClass.AuditLog(Methods.READ_RECORDS, null, 1)
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_AuditLog ReadRecords wsman message even if startIndex is null', () => {
@@ -111,27 +247,38 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.AuditLog(Methods.GET as any, 1) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.AuditLog(Methods.CREATE as any, null, 1) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
-  describe('MessageLog Tests', () => {
-    it('should return a valid amt_MessageLog PositionToFirstRecords wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog/PositionToFirstRecord</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:PositionToFirstRecord_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog" /></Body></Envelope>`
-      const response = amtClass.MessageLog(Methods.POSITION_TO_FIRST_RECORD)
+  describe('AuthorizationService Tests', () => {
+    it('should return a valid amt_AuthorizationService GET wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.AuthorizationService(Methods.GET)
       expect(response).toEqual(correctResponse)
     })
-    it('should return a valid amt_MessageLog GetRecords wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog/GetRecords</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetRecords_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog"><h:IterationIdentifier>1</h:IterationIdentifier><h:MaxReadRecords>390</h:MaxReadRecords></h:GetRecords_INPUT></Body></Envelope>`
-      const response = amtClass.MessageLog(Methods.GET_RECORDS, 1)
+    it('should return a valid amt_AuthorizationService ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.AuthorizationService(Methods.ENUMERATE)
       expect(response).toEqual(correctResponse)
     })
-    it('should return a valid amt_MessageLog GetRecords wsman message even if identifier is null', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog/GetRecords</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetRecords_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog"><h:IterationIdentifier>1</h:IterationIdentifier><h:MaxReadRecords>390</h:MaxReadRecords></h:GetRecords_INPUT></Body></Envelope>`
-      const response = amtClass.MessageLog(Methods.GET_RECORDS, null)
+    it('should return a valid amt_AuthorizationService PULL wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.AuthorizationService(Methods.PULL, enumerationContext)
       expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService SET_ADMIN_ACL_ENTRY_EX wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/SetAdminAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>0</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetAdminAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Username>admin</h:Username><h:DigestPassword>P@ssw0rd</h:DigestPassword></h:SetAdminAclEntryEx_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService(Methods.SET_ADMIN_ACL_ENTRY_EX, null, 'admin', 'P@ssw0rd')
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if SET_ADMIN_ACL_ENTRY_EX is missing username', () => {
+      expect(() => { amtClass.AuthorizationService(Methods.SET_ADMIN_ACL_ENTRY_EX, null, null, 'test') }).toThrow(WSManErrors.USERNAME)
+    })
+    it('should throw error if SET_ADMIN_ACL_ENTRY_EX is missing digestPassword', () => {
+      expect(() => { amtClass.AuthorizationService(Methods.SET_ADMIN_ACL_ENTRY_EX, null, 'test', null) }).toThrow(WSManErrors.DIGEST_PASSWORD)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.MessageLog(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.AuthorizationService(Methods.CREATE as any, '', '') }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('BootCapabilities Tests', () => {
@@ -140,74 +287,92 @@ describe('AMT Tests', () => {
       const response = amtClass.BootCapabilities(Methods.GET)
       expect(response).toEqual(correctResponse)
     })
-  })
-  describe('RedirectionService Tests', () => {
-    it('should return a valid amt_RedirectionService Get wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
-      const boundCall = amtClass.RedirectionService.bind(this, Methods.GET)
-      const response = boundCall()
+    it('should return a valid amt_BootCapabilities ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootCapabilities</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.BootCapabilities(Methods.ENUMERATE)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if requestedState is null when method is REQUEST_STATE_CHANGE', () => {
-      expect(() => { amtClass.RedirectionService(Methods.REQUEST_STATE_CHANGE) }).toThrow(WSManErrors.REQUESTED_STATE)
-    })
-    it('should throw error if data is missing from PUT call', () => {
-      expect(() => { amtClass.RedirectionService(Methods.PUT) }).toThrow(WSManErrors.DATA)
-    })
-  })
-  describe('SetupAndConfigurationService Tests', () => {
-    it('should return a valid amt_SetupAndConfigurationService Get wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
-      const response = amtClass.SetupAndConfigurationService(Methods.GET)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid amt_SetupAndConfigurationService SetMEBxPassword wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/SetMEBxPassword</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:SetMEBxPassword_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"><r:Password>P@ssw0rd</r:Password></r:SetMEBxPassword_INPUT></Body></Envelope>`
-      const response = amtClass.SetupAndConfigurationService(Methods.SET_MEBX_PASSWORD, 'P@ssw0rd')
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw an error if password is null for SET_MEBX_PASSWORD', () => {
-      expect(() => { amtClass.SetupAndConfigurationService(Methods.SET_MEBX_PASSWORD, null) }).toThrow(WSManErrors.PASSWORD)
-    })
-    it('should return a valid amt_SetupAndConfigurationService Unprovision wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/Unprovision</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:Unprovision_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"><r:ProvisioningMode>1</r:ProvisioningMode></r:Unprovision_INPUT></Body></Envelope>`
-      const response = amtClass.SetupAndConfigurationService(Methods.UNPROVISION, null, 1)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid amt_SetupAndConfigurationService Unprovision wsman message even if provisioningMode is null', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/Unprovision</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:Unprovision_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"><r:ProvisioningMode>1</r:ProvisioningMode></r:Unprovision_INPUT></Body></Envelope>`
-      const response = amtClass.SetupAndConfigurationService(Methods.UNPROVISION, null, null)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid amt_SetupAndConfigurationService COMMIT_CHANGES wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/CommitChanges</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:CommitChanges_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"></h:CommitChanges_INPUT></Body></Envelope>`
-      const response = amtClass.SetupAndConfigurationService(Methods.COMMIT_CHANGES)
+    it('should return a valid amt_BootCapabilities PULL wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootCapabilities</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.BootCapabilities(Methods.PULL, enumerationContext)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.SetupAndConfigurationService(Methods.PULL as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.BootCapabilities(Methods.CREATE as any, '') }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
-  describe('GeneralSettings Tests', () => {
-    it('should return a valid amt_GeneralSettings Get wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
-      const response = amtClass.GeneralSettings(Methods.GET)
+  describe('BootSettingData Tests', () => {
+    it('should return a valid amt_BootSettingData Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.BootSettingData(Methods.GET)
       expect(response).toEqual(correctResponse)
     })
-    it('should return a valid amt_GeneralSettings PUT wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_GeneralSettings xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings"></h:AMT_GeneralSettings></Body></Envelope>`
-      const response = amtClass.GeneralSettings(Methods.PUT, {} as any)
+    it('should return a valid amt_BootCapabilities ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.BootSettingData(Methods.ENUMERATE)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if no data for PUT', () => {
-      expect(() => { amtClass.GeneralSettings(Methods.PUT, null) }).toThrow(WSManErrors.GENERAL_SETTINGS)
+    it('should return a valid AMT_BootSettingData PULL wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.BootSettingData(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_BootSettingData Put wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:AMT_BootSettingData xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootSettingData"><r:BIOSLastStatus>${bootSettingData.BIOSLastStatus[0]}</r:BIOSLastStatus><r:BIOSLastStatus>${bootSettingData.BIOSLastStatus[1]}</r:BIOSLastStatus><r:UEFIBootNumberOfParams>${bootSettingData.UEFIBootNumberOfParams[0]}</r:UEFIBootNumberOfParams><r:UEFIBootParametersArray>${bootSettingData.UEFIBootParametersArray[0]}</r:UEFIBootParametersArray><r:BIOSPause>${bootSettingData.BIOSPause}</r:BIOSPause><r:BIOSSetup>${bootSettingData.BIOSSetup}</r:BIOSSetup><r:BootMediaIndex>${bootSettingData.BootMediaIndex}</r:BootMediaIndex><r:ConfigurationDataReset>${bootSettingData.ConfigurationDataReset}</r:ConfigurationDataReset><r:ElementName>${bootSettingData.ElementName}</r:ElementName><r:EnforceSecureBoot>${bootSettingData.EnforceSecureBoot}</r:EnforceSecureBoot><r:FirmwareVerbosity>${bootSettingData.FirmwareVerbosity}</r:FirmwareVerbosity><r:ForcedProgressEvents>${bootSettingData.ForcedProgressEvents}</r:ForcedProgressEvents><r:IDERBootDevice>${bootSettingData.IDERBootDevice}</r:IDERBootDevice><r:InstanceID>${bootSettingData.InstanceID}</r:InstanceID><r:LockKeyboard>${bootSettingData.LockKeyboard}</r:LockKeyboard><r:LockPowerButton>${bootSettingData.LockPowerButton}</r:LockPowerButton><r:LockResetButton>${bootSettingData.LockResetButton}</r:LockResetButton><r:LockSleepButton>${bootSettingData.LockSleepButton}</r:LockSleepButton><r:OptionsCleared>${bootSettingData.OptionsCleared}</r:OptionsCleared><r:OwningEntity>${bootSettingData.OwningEntity}</r:OwningEntity><r:ReflashBIOS>${bootSettingData.ReflashBIOS}</r:ReflashBIOS><r:SecureErase>${bootSettingData.SecureErase}</r:SecureErase><r:UseIDER>${bootSettingData.UseIDER}</r:UseIDER><r:UseSOL>${bootSettingData.UseSOL}</r:UseSOL><r:UseSafeMode>${bootSettingData.UseSafeMode}</r:UseSafeMode><r:UserPasswordBypass>${bootSettingData.UserPasswordBypass}</r:UserPasswordBypass></r:AMT_BootSettingData></Body></Envelope>`
+      const response = amtClass.BootSettingData(Methods.PUT, null, bootSettingData)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if bootSettingData is missing or incomplete from amt_BootSettingData Put method', () => {
+      expect(() => { amtClass.BootSettingData(Methods.PUT) }).toThrow(WSManErrors.BOOT_SETTING_DATA)
+      expect(() => { amtClass.BootSettingData(Methods.PUT, null, { BIOSLastStatus: null, UEFIBootNumberOfParams: [], UEFIBootParametersArray: [] }) }).toThrow(WSManErrors.BOOT_SETTING_DATA)
+      expect(() => { amtClass.BootSettingData(Methods.PUT, null, { BIOSLastStatus: [], UEFIBootNumberOfParams: null, UEFIBootParametersArray: [] }) }).toThrow(WSManErrors.BOOT_SETTING_DATA)
+      expect(() => { amtClass.BootSettingData(Methods.PUT, null, { BIOSLastStatus: [], UEFIBootNumberOfParams: [], UEFIBootParametersArray: null }) }).toThrow(WSManErrors.BOOT_SETTING_DATA)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.GeneralSettings(Methods.PULL as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.BootSettingData(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('EnvironmentDetectionSettingData Tests', () => {
+    it('should return a valid amt_EnvironmentDetectionSettingData Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.EnvironmentDetectionSettingData(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_EnvironmentDetectionSettingData ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.EnvironmentDetectionSettingData(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_EnvironmentDetectionSettingData PULL wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.EnvironmentDetectionSettingData(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_EnvironmentDetectionSettingData Put wsman message', () => {
+      const environmentDetectionSettingData: Models.EnvironmentDetectionSettingData = {
+        InstanceID: 'Intel(r) AMT Environment Detection Settings',
+        DetectionAlgorithm: 0,
+        ElementName: 'Intel(r) AMT Environment Detection Settings',
+        DetectionStrings: ['dummy.com']
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">${environmentDetectionSettingData.InstanceID}</w:Selector></w:SelectorSet></Header><Body><r:AMT_EnvironmentDetectionSettingData xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData"><r:DetectionAlgorithm>${environmentDetectionSettingData.DetectionAlgorithm}</r:DetectionAlgorithm><r:ElementName>${environmentDetectionSettingData.ElementName}</r:ElementName><r:InstanceID>${environmentDetectionSettingData.InstanceID}</r:InstanceID><r:DetectionStrings>${environmentDetectionSettingData.DetectionStrings}</r:DetectionStrings></r:AMT_EnvironmentDetectionSettingData></Body></Envelope>`
+      const response = amtClass.EnvironmentDetectionSettingData(Methods.PUT, null, environmentDetectionSettingData)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if environmentDetectionSettingData is missing from amt_EnvironmentDetectionSettingData Pull request', () => {
+      expect(() => { amtClass.EnvironmentDetectionSettingData(Methods.PUT) }).toThrow(WSManErrors.ENVIRONMENT_DETECTION_SETTING_DATA)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.EnvironmentDetectionSettingData(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('EthernetPortSettings Tests', () => {
     it('should return a valid amt_EthernetPortSettings Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EthernetPortSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.EthernetPortSettings(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_EthernetPortSettings ENUMERATE wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EthernetPortSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
       const response = amtClass.EthernetPortSettings(Methods.ENUMERATE)
       expect(response).toEqual(correctResponse)
@@ -248,26 +413,45 @@ describe('AMT Tests', () => {
     it('should throw error if ethernetPortObject is missing from amt_EthernetPortSettings Pull request', () => {
       expect(() => { amtClass.EthernetPortSettings(Methods.PUT) }).toThrow(WSManErrors.ETHERNET_PORT_OBJECT)
     })
-    it('should throw error if enumerationContext is missing from PULL call', () => {
-      expect(() => { amtClass.EthernetPortSettings(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
-    })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { amtClass.EthernetPortSettings(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
-  describe('RemoteAccessPolicyRule Tests', () => {
-    it('should create a valid amt_RemoteAccessPolicyRule Delete wsman message', () => {
-      const selector: Selector = { name: 'PolicyRuleName', value: 'User Initiated' }
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="PolicyRuleName">User Initiated</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
-      const response = amtClass.RemoteAccessPolicyRule(Methods.DELETE, selector)
+  describe('GeneralSettings Tests', () => {
+    it('should return a valid amt_GeneralSettings Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.GeneralSettings(Methods.GET)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if selector is missing from amt_RemoteAccessPolicyRule Delete method', () => {
-      expect(() => { amtClass.RemoteAccessPolicyRule(Methods.DELETE) }).toThrow(WSManErrors.SELECTOR)
+    it('should return a valid amt_GeneralSettings ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.GeneralSettings(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_GeneralSettings Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.GeneralSettings(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_GeneralSettings PUT wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_GeneralSettings xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_GeneralSettings"></h:AMT_GeneralSettings></Body></Envelope>`
+      const response = amtClass.GeneralSettings(Methods.PUT, null, {} as any)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if no data for PUT', () => {
+      expect(() => { amtClass.GeneralSettings(Methods.PUT, null, null) }).toThrow(WSManErrors.GENERAL_SETTINGS)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.GeneralSettings(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('ManagementPresenceRemoteSAP Tests', () => {
     it('should return a valid amt_ManagementPresenceRemoteSAP Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.ManagementPresenceRemoteSAP(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_ManagementPresenceRemoteSAP ENUMERATE wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
       const response = amtClass.ManagementPresenceRemoteSAP(Methods.ENUMERATE)
       expect(response).toEqual(correctResponse)
@@ -277,24 +461,58 @@ describe('AMT Tests', () => {
       const response = amtClass.ManagementPresenceRemoteSAP(Methods.PULL, enumerationContext)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if enumerationContext is missing from PULL call', () => {
-      expect(() => { amtClass.ManagementPresenceRemoteSAP(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
-    })
     it('should create a valid amt_ManagementPresenceRemoteSAP Delete wsman message', () => {
       const selector: Selector = { name: 'Name', value: 'Intel(r) AMT:Management Presence Server 0' }
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="Name">Intel(r) AMT:Management Presence Server 0</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
       const response = amtClass.ManagementPresenceRemoteSAP(Methods.DELETE, null, selector)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if selector is missing from amt_ManagementPresenceRemoteSAP Delete method', () => {
-      expect(() => { amtClass.ManagementPresenceRemoteSAP(Methods.DELETE) }).toThrow(WSManErrors.SELECTOR)
-    })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { amtClass.ManagementPresenceRemoteSAP(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
+  describe('MessageLog Tests', () => {
+    it('should return a valid amt_MessageLog Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.MessageLog(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_MessageLog ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.MessageLog(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_MessageLog Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.MessageLog(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_MessageLog PositionToFirstRecords wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog/PositionToFirstRecord</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:PositionToFirstRecord_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog" /></Body></Envelope>`
+      const response = amtClass.MessageLog(Methods.POSITION_TO_FIRST_RECORD)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_MessageLog GetRecords wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog/GetRecords</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetRecords_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog"><h:IterationIdentifier>1</h:IterationIdentifier><h:MaxReadRecords>390</h:MaxReadRecords></h:GetRecords_INPUT></Body></Envelope>`
+      const response = amtClass.MessageLog(Methods.GET_RECORDS, null, 1)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_MessageLog GetRecords wsman message even if identifier is null', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog/GetRecords</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetRecords_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog"><h:IterationIdentifier>1</h:IterationIdentifier><h:MaxReadRecords>390</h:MaxReadRecords></h:GetRecords_INPUT></Body></Envelope>`
+      const response = amtClass.MessageLog(Methods.GET_RECORDS, null)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.MessageLog(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
   describe('PublicKeyCertificate Tests', () => {
     it('should return a valid amt_PublicKeyCertificate Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.PublicKeyCertificate(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_PublicKeyCertificate ENUMERATE wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
       const response = amtClass.PublicKeyCertificate(Methods.ENUMERATE)
       expect(response).toEqual(correctResponse)
@@ -304,71 +522,45 @@ describe('AMT Tests', () => {
       const response = amtClass.PublicKeyCertificate(Methods.PULL, enumerationContext)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if enumerationContext is missing from PULL call', () => {
-      expect(() => { amtClass.PublicKeyCertificate(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
-    })
     it('should create a valid amt_PublicKeyCertificate Delete wsman message', () => {
       const selector: Selector = { name: 'InstanceID', value: 'Intel(r) AMT Certificate: Handle: 0' }
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT Certificate: Handle: 0</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
       const response = amtClass.PublicKeyCertificate(Methods.DELETE, null, selector)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if selector is missing from amt_PublicKeyCertificate Delete method', () => {
-      expect(() => { amtClass.PublicKeyCertificate(Methods.DELETE) }).toThrow(WSManErrors.SELECTOR)
-    })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.PublicKeyCertificate(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-    })
-  })
-  describe('EnvironmentDetectionSettingData Tests', () => {
-    it('should return a valid amt_EnvironmentDetectionSettingData Get wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
-      const response = amtClass.EnvironmentDetectionSettingData(Methods.GET)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should create a valid amt_EnvironmentDetectionSettingData Put wsman message', () => {
-      const environmentDetectionSettingData: Models.EnvironmentDetectionSettingData = {
-        InstanceID: 'Intel(r) AMT Environment Detection Settings',
-        DetectionAlgorithm: 0,
-        ElementName: 'Intel(r) AMT Environment Detection Settings',
-        DetectionStrings: ['dummy.com']
-      }
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">${environmentDetectionSettingData.InstanceID}</w:Selector></w:SelectorSet></Header><Body><r:AMT_EnvironmentDetectionSettingData xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData"><r:DetectionAlgorithm>${environmentDetectionSettingData.DetectionAlgorithm}</r:DetectionAlgorithm><r:ElementName>${environmentDetectionSettingData.ElementName}</r:ElementName><r:InstanceID>${environmentDetectionSettingData.InstanceID}</r:InstanceID><r:DetectionStrings>${environmentDetectionSettingData.DetectionStrings}</r:DetectionStrings></r:AMT_EnvironmentDetectionSettingData></Body></Envelope>`
-      const response = amtClass.EnvironmentDetectionSettingData(Methods.PUT, environmentDetectionSettingData)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should handle if DetectionStrings is not an array', () => {
-      const environmentDetectionSettingData: any = {
-        InstanceID: 'Intel(r) AMT Environment Detection Settings',
-        DetectionAlgorithm: 0,
-        ElementName: 'Intel(r) AMT Environment Detection Settings',
-        DetectionStrings: 'dummy.com'
-      }
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">${environmentDetectionSettingData.InstanceID}</w:Selector></w:SelectorSet></Header><Body><r:AMT_EnvironmentDetectionSettingData xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_EnvironmentDetectionSettingData"><r:DetectionAlgorithm>${environmentDetectionSettingData.DetectionAlgorithm}</r:DetectionAlgorithm><r:ElementName>${environmentDetectionSettingData.ElementName}</r:ElementName><r:InstanceID>${environmentDetectionSettingData.InstanceID}</r:InstanceID><r:DetectionStrings>${environmentDetectionSettingData.DetectionStrings}</r:DetectionStrings></r:AMT_EnvironmentDetectionSettingData></Body></Envelope>`
-      const response = amtClass.EnvironmentDetectionSettingData(Methods.PUT, environmentDetectionSettingData)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw error if environmentDetectionSettingData is missing from amt_EnvironmentDetectionSettingData Pull request', () => {
-      expect(() => { amtClass.EnvironmentDetectionSettingData(Methods.PUT) }).toThrow(WSManErrors.ENVIRONMENT_DETECTION_SETTING_DATA)
-    })
-    it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.EnvironmentDetectionSettingData(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.PublicKeyCertificate(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('PublicKeyManagementService Tests', () => {
+    it('should return a valid amt_PublicKeyManagementService Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.PublicKeyManagementService(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_PublicKeyManagementService ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.PublicKeyManagementService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_PublicKeyManagementService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.PublicKeyManagementService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid amt_PublicKeyManagementService AddTrustedRootCertificate wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService/AddTrustedRootCertificate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddTrustedRootCertificate_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService"><h:CertificateBlob>${trustedRootCert}</h:CertificateBlob></h:AddTrustedRootCertificate_INPUT></Body></Envelope>`
-      const response = amtClass.PublicKeyManagementService(Methods.ADD_TRUSTED_ROOT_CERTIFICATE, { CertificateBlob: trustedRootCert })
+      const response = amtClass.PublicKeyManagementService(Methods.ADD_TRUSTED_ROOT_CERTIFICATE, null, { CertificateBlob: trustedRootCert })
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_PublicKeyManagementService GenerateKeyPair wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService/GenerateKeyPair</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GenerateKeyPair_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService"><h:KeyAlgorithm>0</h:KeyAlgorithm><h:KeyLength>2048</h:KeyLength></h:GenerateKeyPair_INPUT></Body></Envelope>`
-      const response = amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, { KeyAlgorithm: 0, KeyLength: 2048 })
+      const response = amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, null, { KeyAlgorithm: 0, KeyLength: 2048 })
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_PublicKeyManagementService AddCertificate wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService/AddCertificate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddCertificate_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService"><h:CertificateBlob>${trustedRootCert}</h:CertificateBlob></h:AddCertificate_INPUT></Body></Envelope>`
-      const response = amtClass.PublicKeyManagementService(Methods.ADD_CERTIFICATE, { CertificateBlob: trustedRootCert })
+      const response = amtClass.PublicKeyManagementService(Methods.ADD_CERTIFICATE, null, { CertificateBlob: trustedRootCert })
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_PublicKeyManagementService GeneratePKCS10RequestEx wsman message', () => {
@@ -378,7 +570,7 @@ describe('AMT Tests', () => {
         NullSignedCertificateRequest: 'reallylongcertificateteststring',
         SigningAlgorithm: 1
       }
-      const response = amtClass.PublicKeyManagementService(Methods.GENERATE_PKCS10_REQUEST_EX, pkcs10Request)
+      const response = amtClass.PublicKeyManagementService(Methods.GENERATE_PKCS10_REQUEST_EX, null, pkcs10Request)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if certificateBlob is missing from amt_PublicKeyManagementService methods', () => {
@@ -388,21 +580,9 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.PublicKeyManagementService(Methods.ADD_CERTIFICATE) }).toThrow(WSManErrors.CERTIFICATE_BLOB)
     })
     it('should throw error if GenerateKeyPair is missing from amt_PublicKeyManagementService methods', () => {
-      expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR) }).toThrow(WSManErrors.KEY_PAIR)
-    })
-    it('should throw error if KeyAlgorithm is null from amt_PublicKeyManagementService methods', () => {
-      const data: Models.GenerateKeyPair = {
-        KeyAlgorithm: null,
-        KeyLength: 8
-      }
-      expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, data) }).toThrow(WSManErrors.KEY_PAIR)
-    })
-    it('should throw error if KeyLength is null from amt_PublicKeyManagementService methods', () => {
-      const data: Models.GenerateKeyPair = {
-        KeyAlgorithm: 0,
-        KeyLength: null
-      }
-      expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, data) }).toThrow(WSManErrors.KEY_PAIR)
+      expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, null, null) }).toThrow(WSManErrors.KEY_PAIR)
+      expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, null, { KeyAlgorithm: null, KeyLength: 256 }) }).toThrow(WSManErrors.KEY_PAIR)
+      expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_KEY_PAIR, null, { KeyAlgorithm: 0, KeyLength: null }) }).toThrow(WSManErrors.KEY_PAIR)
     })
     it('should throw error if PKCS10Request is missing from amt_PublicKeyManagementService methods', () => {
       expect(() => { amtClass.PublicKeyManagementService(Methods.GENERATE_PKCS10_REQUEST_EX) }).toThrow(WSManErrors.PKCS10Request)
@@ -411,10 +591,190 @@ describe('AMT Tests', () => {
       expect(() => { amtClass.PublicKeyManagementService(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
+  describe('PublicPrivateKeyPair Tests', () => {
+    const selector: Selector = {
+      name: 'InstanceID',
+      value: 'Intel(r) AMT Key: Handle: 0'
+    }
+    it('should return a valid PublicPrivateKeyPair Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicPrivateKeyPair</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.PublicPrivateKeyPair(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid PublicPrivateKeyPair ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicPrivateKeyPair</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.PublicPrivateKeyPair(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid PublicPrivateKeyPair Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicPrivateKeyPair</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.PublicPrivateKeyPair(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid PublicPrivateKeyPair DELETE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicPrivateKeyPair</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT Key: Handle: 0</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
+      const response = amtClass.PublicPrivateKeyPair(Methods.DELETE, null, selector)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.PublicPrivateKeyPair(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('RedirectionService Tests', () => {
+    it('should return a valid amt_RedirectionService Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.RedirectionService(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_RedirectionService ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.RedirectionService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RedirectionService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.RedirectionService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_BootSettingData Put wsman message', () => {
+      const test: AMT.Models.RedirectionService = {
+        Name: 'test',
+        CreationClassName: 'test',
+        SystemName: 'test',
+        SystemCreationClassName: 'test',
+        AccessLog: 'test',
+        ElementName: 'test',
+        EnabledState: 32768,
+        ListenerEnabled: true
+      }
+      const data: AMT.Models.RedirectionResponse = {
+        AMT_RedirectionService: test
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_RedirectionService xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService"><h:Name>test</h:Name><h:CreationClassName>test</h:CreationClassName><h:SystemName>test</h:SystemName><h:SystemCreationClassName>test</h:SystemCreationClassName><h:AccessLog>test</h:AccessLog><h:ElementName>test</h:ElementName><h:EnabledState>32768</h:EnabledState><h:ListenerEnabled>true</h:ListenerEnabled></h:AMT_RedirectionService></Body></Envelope>`
+      const response = amtClass.RedirectionService(Methods.PUT, null, null, data)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_BootSettingData REQUEST_STATE_CHANGE wsman message', () => {
+      const requestedState = 32771
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RedirectionService"><r:RequestedState>32771</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>`
+      const response = amtClass.RedirectionService(Methods.REQUEST_STATE_CHANGE, null, requestedState)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.RedirectionService(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('RemoteAccessPolicyAppliesToMPS Tests', () => {
+    it('should return a valid amt_RemoteAccessPolicyAppliesToMPS ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_RemoteAccessPolicyAppliesToMPS DELETE wsman message', () => {
+      const selector: Selector = {
+        name: 'Name',
+        value: 'Instance'
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="Name">Instance</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.DELETE, null, null, selector)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_RemoteAccessPolicyAppliesToMPS GET wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RemoteAccessPolicyAppliesToMPS PULL wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>AC070000-0000-0000-0000-000000000000</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RemoteAccessPolicyAppliesToMPS PUT wsman message', () => {
+      const remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS = {
+        ManagedElement: null,
+        PolicySet: null,
+        MpsType: 2,
+        OrderOfAccess: 0
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_RemoteAccessPolicyAppliesToMPS xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS"><h:ManagedElement></h:ManagedElement><h:PolicySet></h:PolicySet><h:MpsType>2</h:MpsType><h:OrderOfAccess>0</h:OrderOfAccess></h:AMT_RemoteAccessPolicyAppliesToMPS></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.PUT, null, remoteAccessPolicyAppliesToMPS)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RemoteAccessPolicyAppliesToMPS CREATE wsman message', () => {
+      const remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS = {
+        ManagedElement: null,
+        PolicySet: null,
+        MpsType: 2,
+        OrderOfAccess: 0
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Create</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_RemoteAccessPolicyAppliesToMPS xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS"><h:ManagedElement></h:ManagedElement><h:PolicySet></h:PolicySet><h:MpsType>2</h:MpsType><h:OrderOfAccess>0</h:OrderOfAccess></h:AMT_RemoteAccessPolicyAppliesToMPS></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.CREATE, null, remoteAccessPolicyAppliesToMPS)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RemoteAccessPolicyAppliesToMPS PUT wsman message', () => {
+      const selector: Selector = {
+        name: 'Name',
+        value: 'Instance'
+      }
+      const remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS = {
+        ManagedElement: null,
+        PolicySet: null,
+        MpsType: 2,
+        OrderOfAccess: 0
+      }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_RemoteAccessPolicyAppliesToMPS xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS"><h:ManagedElement></h:ManagedElement><h:PolicySet></h:PolicySet><h:MpsType>2</h:MpsType><h:OrderOfAccess>0</h:OrderOfAccess></h:AMT_RemoteAccessPolicyAppliesToMPS></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.PUT, null, remoteAccessPolicyAppliesToMPS)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.RemoteAccessPolicyAppliesToMPS(Methods.ADD_MPS as any, null, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('RemoteAccessPolicyRule Tests', () => {
+    it('should return a valid amt_RemoteAccessPolicyRule Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyRule(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_RemoteAccessPolicyRule ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyRule(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RemoteAccessPolicyRule Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyRule(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RemoteAccessPolicyRule Delete wsman message', () => {
+      const selector: Selector = { name: 'PolicyRuleName', value: 'User Initiated' }
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="PolicyRuleName">User Initiated</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
+      const response = amtClass.RemoteAccessPolicyRule(Methods.DELETE, null, selector)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw error if an unsupported method is called', () => {
+      expect(() => { amtClass.RemoteAccessPolicyRule(Methods.CREATE as any, null, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
   describe('RemoteAccessService Tests', () => {
+    it('should return a valid amt_RemoteAccessService Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.RemoteAccessService(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_RemoteAccessService ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.RemoteAccessService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_RemoteAccessService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.RemoteAccessService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid amt_RemoteAccessService addMpsServer wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService/AddMpServer</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:AddMpServer_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService"><r:AccessInfo>${mpsServer.AccessInfo}</r:AccessInfo><r:InfoFormat>${mpsServer.InfoFormat}</r:InfoFormat><r:Port>${mpsServer.Port}</r:Port><r:AuthMethod>${mpsServer.AuthMethod}</r:AuthMethod><r:Username>${mpsServer.Username}</r:Username><r:Password>${mpsServer.Password}</r:Password><r:CN>${mpsServer.CommonName}</r:CN></r:AddMpServer_INPUT></Body></Envelope>`
-      const response = amtClass.RemoteAccessService(Methods.ADD_MPS, mpsServer)
+      const response = amtClass.RemoteAccessService(Methods.ADD_MPS, null, mpsServer)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if mpServer is missing from amt_RemoteAccessService addMpsServer methods', () => {
@@ -422,10 +782,10 @@ describe('AMT Tests', () => {
     })
     it('should throw error if remoteAccessPolicyRule is missing from amt_RemoteAccessService AddRemoteAccessPolicyRule methods', () => {
       const selector: Selector = { name: 'Name', value: 'Intel(r) AMT:Management Presence Server 0' }
-      expect(() => { amtClass.RemoteAccessService(Methods.ADD_REMOTE_ACCESS_POLICY_RULE, null, null, selector) }).toThrow(WSManErrors.REMOTE_ACCESS_POLICY_RULE)
+      expect(() => { amtClass.RemoteAccessService(Methods.ADD_REMOTE_ACCESS_POLICY_RULE, null, null, null, selector) }).toThrow(WSManErrors.REMOTE_ACCESS_POLICY_RULE)
     })
     it('should throw error if selector is missing from amt_RemoteAccessService AddRemoteAccessPolicyRule methods', () => {
-      expect(() => { amtClass.RemoteAccessService(Methods.ADD_REMOTE_ACCESS_POLICY_RULE, null, remoteAccessPolicyRule) }).toThrow(WSManErrors.SELECTOR)
+      expect(() => { amtClass.RemoteAccessService(Methods.ADD_REMOTE_ACCESS_POLICY_RULE, null, null, remoteAccessPolicyRule) }).toThrow(WSManErrors.SELECTOR)
     })
     it('should return a valid amt_RemoteAccessPolicyRule wsman message', () => {
       const remoteAccessPolicyRule: Models.RemoteAccessPolicyRule = {
@@ -438,53 +798,77 @@ describe('AMT Tests', () => {
         value: 'true'
       }
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService/AddRemoteAccessPolicyRule</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:AddRemoteAccessPolicyRule_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessService"><r:Trigger>${remoteAccessPolicyRule.Trigger}</r:Trigger><r:TunnelLifeTime>${remoteAccessPolicyRule.TunnelLifeTime}</r:TunnelLifeTime><r:ExtendedData>${remoteAccessPolicyRule.ExtendedData}</r:ExtendedData><r:MpServer><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="${selector.name}">${selector.value}</Selector></SelectorSet></ReferenceParameters></r:MpServer></r:AddRemoteAccessPolicyRule_INPUT></Body></Envelope>`
-      const response = amtClass.RemoteAccessService(Methods.ADD_REMOTE_ACCESS_POLICY_RULE, null, remoteAccessPolicyRule, selector)
+      const response = amtClass.RemoteAccessService(Methods.ADD_REMOTE_ACCESS_POLICY_RULE, null, null, remoteAccessPolicyRule, selector)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { amtClass.RemoteAccessService(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
-  describe('UserInitiatedConnectionService Tests', () => {
-    it('should return a valid amt_UserInitiatedConnectionService AddTrustedRootCertificate wsman message', () => {
-      const requestedState = 32771
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService"><r:RequestedState>${requestedState}</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>`
-      const response = amtClass.UserInitiatedConnectionService(Methods.REQUEST_STATE_CHANGE, requestedState)
+  describe('SetupAndConfigurationService Tests', () => {
+    it('should return a valid amt_SetupAndConfigurationService Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.SetupAndConfigurationService(Methods.GET)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if requestedState is missing from amt_UserInitiatedConnectionService RequestStateChange methods', () => {
-      expect(() => { amtClass.UserInitiatedConnectionService(Methods.REQUEST_STATE_CHANGE) }).toThrow(WSManErrors.REQUESTED_STATE)
-    })
-  })
-  describe('BootSettingData Tests', () => {
-    it('should return a valid amt_BootSettingData Get wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
-      const response = amtClass.BootSettingData(Methods.GET)
+    it('should return a valid amt_SetupAndConfigurationService ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.SetupAndConfigurationService(Methods.ENUMERATE)
       expect(response).toEqual(correctResponse)
     })
-    it('should return a valid amt_BootSettingData Put wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:AMT_BootSettingData xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_BootSettingData"><r:BIOSLastStatus>${bootSettingData.BIOSLastStatus[0]}</r:BIOSLastStatus><r:BIOSLastStatus>${bootSettingData.BIOSLastStatus[1]}</r:BIOSLastStatus><r:UEFIBootNumberOfParams>${bootSettingData.UEFIBootNumberOfParams[0]}</r:UEFIBootNumberOfParams><r:UEFIBootParametersArray>${bootSettingData.UEFIBootParametersArray[0]}</r:UEFIBootParametersArray><r:BIOSPause>${bootSettingData.BIOSPause}</r:BIOSPause><r:BIOSSetup>${bootSettingData.BIOSSetup}</r:BIOSSetup><r:BootMediaIndex>${bootSettingData.BootMediaIndex}</r:BootMediaIndex><r:ConfigurationDataReset>${bootSettingData.ConfigurationDataReset}</r:ConfigurationDataReset><r:ElementName>${bootSettingData.ElementName}</r:ElementName><r:EnforceSecureBoot>${bootSettingData.EnforceSecureBoot}</r:EnforceSecureBoot><r:FirmwareVerbosity>${bootSettingData.FirmwareVerbosity}</r:FirmwareVerbosity><r:ForcedProgressEvents>${bootSettingData.ForcedProgressEvents}</r:ForcedProgressEvents><r:IDERBootDevice>${bootSettingData.IDERBootDevice}</r:IDERBootDevice><r:InstanceID>${bootSettingData.InstanceID}</r:InstanceID><r:LockKeyboard>${bootSettingData.LockKeyboard}</r:LockKeyboard><r:LockPowerButton>${bootSettingData.LockPowerButton}</r:LockPowerButton><r:LockResetButton>${bootSettingData.LockResetButton}</r:LockResetButton><r:LockSleepButton>${bootSettingData.LockSleepButton}</r:LockSleepButton><r:OptionsCleared>${bootSettingData.OptionsCleared}</r:OptionsCleared><r:OwningEntity>${bootSettingData.OwningEntity}</r:OwningEntity><r:ReflashBIOS>${bootSettingData.ReflashBIOS}</r:ReflashBIOS><r:SecureErase>${bootSettingData.SecureErase}</r:SecureErase><r:UseIDER>${bootSettingData.UseIDER}</r:UseIDER><r:UseSOL>${bootSettingData.UseSOL}</r:UseSOL><r:UseSafeMode>${bootSettingData.UseSafeMode}</r:UseSafeMode><r:UserPasswordBypass>${bootSettingData.UserPasswordBypass}</r:UserPasswordBypass></r:AMT_BootSettingData></Body></Envelope>`
-      const response = amtClass.BootSettingData(Methods.PUT, bootSettingData)
+    it('should return a valid amt_SetupAndConfigurationService GetUuid wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/GetUuid</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetUuid xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService" /></Body></Envelope>`
+      const response = amtClass.SetupAndConfigurationService(Methods.GET_UUID)
       expect(response).toEqual(correctResponse)
     })
-    it('should throw error if bootSettingData is missing from amt_BootSettingData Put method', () => {
-      expect(() => { amtClass.BootSettingData(Methods.PUT) }).toThrow(WSManErrors.BOOT_SETTING_DATA)
+    it('should create a valid amt_SetupAndConfigurationService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.SetupAndConfigurationService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_SetupAndConfigurationService SetMEBxPassword wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/SetMEBxPassword</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:SetMEBxPassword_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"><r:Password>P@ssw0rd</r:Password></r:SetMEBxPassword_INPUT></Body></Envelope>`
+      const response = amtClass.SetupAndConfigurationService(Methods.SET_MEBX_PASSWORD, null, 'P@ssw0rd')
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw an error if password is null for SET_MEBX_PASSWORD', () => {
+      expect(() => { amtClass.SetupAndConfigurationService(Methods.SET_MEBX_PASSWORD, null, null) }).toThrow(WSManErrors.PASSWORD)
+    })
+    it('should return a valid amt_SetupAndConfigurationService Unprovision wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/Unprovision</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:Unprovision_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"><r:ProvisioningMode>1</r:ProvisioningMode></r:Unprovision_INPUT></Body></Envelope>`
+      const response = amtClass.SetupAndConfigurationService(Methods.UNPROVISION, null, null, 1)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_SetupAndConfigurationService Unprovision wsman message even if provisioningMode is null', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/Unprovision</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:Unprovision_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"><r:ProvisioningMode>1</r:ProvisioningMode></r:Unprovision_INPUT></Body></Envelope>`
+      const response = amtClass.SetupAndConfigurationService(Methods.UNPROVISION, null, null)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_SetupAndConfigurationService COMMIT_CHANGES wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/CommitChanges</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:CommitChanges_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"></h:CommitChanges_INPUT></Body></Envelope>`
+      const response = amtClass.SetupAndConfigurationService(Methods.COMMIT_CHANGES)
+      expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.BootSettingData(Methods.SET_BOOT_CONFIG_ROLE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-    })
-  })
-  describe('AuthorizationService Tests', () => {
-    it('should return a valid amt_AuthorizationService SET_ADMIN_ACL_ENTRY_EX wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/SetAdminAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>0</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetAdminAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Username>admin</h:Username><h:DigestPassword>P@ssw0rd</h:DigestPassword></h:SetAdminAclEntryEx_INPUT></Body></Envelope>`
-      const response = amtClass.AuthorizationService(Methods.SET_ADMIN_ACL_ENTRY_EX, 'admin', 'P@ssw0rd')
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.AuthorizationService(Methods.GET as any, '', '') }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.SetupAndConfigurationService(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('TimeSynchronizationService Tests', () => {
+    it('should return a valid amt_TimeSynchronizationService Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.TimeSynchronizationService(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_TimeSynchronizationService ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.TimeSynchronizationService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_TimeSynchronizationService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.TimeSynchronizationService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid amt_TimeSynchronizationService GET_LOW_ACCURACY_TIME_SYNCH wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/GetLowAccuracyTimeSynch</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService</w:ResourceURI><a:MessageID>0</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetLowAccuracyTimeSynch_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService" /></Body></Envelope>`
       const response = amtClass.TimeSynchronizationService(Methods.GET_LOW_ACCURACY_TIME_SYNCH)
@@ -492,11 +876,11 @@ describe('AMT Tests', () => {
     })
     it('should return a valid amt_TimeSynchronizationService SET_HIGH_ACCURACY_TIME_SYNCH wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/SetHighAccuracyTimeSynch</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService</w:ResourceURI><a:MessageID>0</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetHighAccuracyTimeSynch_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService"><h:Ta0>1644240911</h:Ta0><h:Tm1>1644240943</h:Tm1><h:Tm2>1644240943</h:Tm2></h:SetHighAccuracyTimeSynch_INPUT></Body></Envelope>`
-      const response = amtClass.TimeSynchronizationService(Methods.SET_HIGH_ACCURACY_TIME_SYNCH, 1644240911, 1644240943, 1644240943)
+      const response = amtClass.TimeSynchronizationService(Methods.SET_HIGH_ACCURACY_TIME_SYNCH, null, 1644240911, 1644240943, 1644240943)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.TimeSynchronizationService(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.TimeSynchronizationService(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('TLSCredentialContext Tests', () => {
@@ -534,6 +918,11 @@ describe('AMT Tests', () => {
       name: tlsCredentialContext.ElementInContext.ReferenceParameters.SelectorSet.Selector.$.Name,
       value: tlsCredentialContext.ElementInContext.ReferenceParameters.SelectorSet.Selector._
     }
+    it('should return a valid TLSCredentialContext Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.TLSCredentialContext(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid TLSCredentialContext CREATE wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Create</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_TLSCredentialContext xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSCredentialContext"><h:ElementInContext><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</w:ResourceURI><w:SelectorSet><w:Selector><h:_>Intel(r) AMT Certificate: Handle: 1</h:_><h:$><h:Name>InstanceID</h:Name></h:$></w:Selector></w:SelectorSet></a:ReferenceParameters></h:ElementInContext><h:ElementProvidingContext><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSProtocolEndpointCollection</w:ResourceURI><w:SelectorSet><w:Selector><h:_>TLSProtocolEndpoint Instances Collection</h:_><h:$><h:Name>ElementName</h:Name></h:$></w:Selector></w:SelectorSet></a:ReferenceParameters></h:ElementProvidingContext></h:AMT_TLSCredentialContext></Body></Envelope>`
       const response = amtClass.TLSCredentialContext(Methods.CREATE, null, tlsCredentialContext, null)
@@ -544,25 +933,29 @@ describe('AMT Tests', () => {
       const response = amtClass.TLSCredentialContext(Methods.ENUMERATE)
       expect(response).toEqual(correctResponse)
     })
+    it('should create a valid TLSCredentialContext Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.TLSCredentialContext(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid TLSCredentialContext DELETE wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT Certificate: Handle: 1</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
       const response = amtClass.TLSCredentialContext(Methods.DELETE, null, null, selector)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.TLSCredentialContext(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.TLSCredentialContext(Methods.ADD_ALARM as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
     it('should throw error if tlsCredentialContext is null when CREATE is called', () => {
       expect(() => { amtClass.TLSCredentialContext(Methods.CREATE, null, null) }).toThrow(WSManErrors.TLS_CREDENTIAL_CONTEXT)
     })
-    it('should throw error if enumerationContext is missing from PULL call', () => {
-      expect(() => { amtClass.TLSCredentialContext(Methods.PULL, null) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
-    })
-    it('should throw error if selector is null when DELETE is called', () => {
-      expect(() => { amtClass.TLSCredentialContext(Methods.DELETE, null, null, null) }).toThrow(WSManErrors.SELECTOR)
-    })
   })
   describe('TLSSettingData Tests', () => {
+    it('should return a valid TLSSettingData Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.TLSSettingData(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
     it('should return a valid TLSSettingData PUT wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT 802.3 TLS Settings</w:Selector></w:SelectorSet></Header><Body><h:AMT_TLSSettingData xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TLSSettingData"><h:InstanceID>Intel(r) AMT 802.3 TLS Settings</h:InstanceID></h:AMT_TLSSettingData></Body></Envelope>`
       const response = amtClass.TLSSettingData(Methods.PUT, null, { InstanceID: 'Intel(r) AMT 802.3 TLS Settings' } as any)
@@ -579,26 +972,33 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.TLSSettingData(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.TLSSettingData(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
-  describe('PublicPrivateKeyPair Tests', () => {
-    const selector: Selector = {
-      name: 'InstanceID',
-      value: 'Intel(r) AMT Key: Handle: 0'
-    }
-    it('should return a valid PublicPrivateKeyPair ENUMERATE wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicPrivateKeyPair</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
-      const response = amtClass.PublicPrivateKeyPair(Methods.ENUMERATE)
+  describe('UserInitiatedConnectionService Tests', () => {
+    it('should return a valid amt_UserInitiatedConnectionService Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.UserInitiatedConnectionService(Methods.GET)
       expect(response).toEqual(correctResponse)
     })
-    it('should return a valid PublicPrivateKeyPair DELETE wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicPrivateKeyPair</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT Key: Handle: 0</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
-      const response = amtClass.PublicPrivateKeyPair(Methods.DELETE, null, selector)
+    it('should return a valid amt_UserInitiatedConnectionService ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.UserInitiatedConnectionService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_UserInitiatedConnectionService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.UserInitiatedConnectionService(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_UserInitiatedConnectionService AddTrustedRootCertificate wsman message', () => {
+      const requestedState = 32771
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:RequestStateChange_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_UserInitiatedConnectionService"><r:RequestedState>${requestedState}</r:RequestedState></r:RequestStateChange_INPUT></Body></Envelope>`
+      const response = amtClass.UserInitiatedConnectionService(Methods.REQUEST_STATE_CHANGE, null, requestedState)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.PublicPrivateKeyPair(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.UserInitiatedConnectionService(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
   describe('WiFiPortConfigurationService Tests', () => {
@@ -615,19 +1015,29 @@ describe('AMT Tests', () => {
       Priority: 1,
       PSKPassPhrase: 'p\'ass<>&"code'
     }
-    it('should return a valid ADD_WIFI_SETTINGS wsman message', () => {
+    it('should return a valid amt_WiFiPortConfigurationService ADD_WIFI_SETTINGS wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService/AddWiFiSettings</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><r:AddWiFiSettings_INPUT xmlns:r="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><r:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name="${selector.name}">${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></r:WiFiEndpoint><r:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><q:ElementName>${wifiEndpointSettings.ElementName}</q:ElementName><q:InstanceID>${wifiEndpointSettings.InstanceID}</q:InstanceID><q:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</q:AuthenticationMethod><q:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</q:EncryptionMethod><q:SSID>${wifiEndpointSettings.SSID}</q:SSID><q:Priority>${wifiEndpointSettings.Priority}</q:Priority><q:PSKPassPhrase>p&apos;ass&lt;&gt;&amp;&quot;code</q:PSKPassPhrase></r:WiFiEndpointSettingsInput></r:AddWiFiSettings_INPUT></Body></Envelope>`
-      const response = amtClass.WiFiPortConfigurationService(Methods.ADD_WIFI_SETTINGS, wifiEndpointSettings, selector)
+      const response = amtClass.WiFiPortConfigurationService(Methods.ADD_WIFI_SETTINGS, null, wifiEndpointSettings, selector)
       expect(response).toEqual(correctResponse)
     })
-    it('should return a valid PUT message ', () => {
+    it('should return a valid amt_WiFiPortConfigurationService PUT message ', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="Name">WiFi Endpoint 0</w:Selector></w:SelectorSet></Header><Body><h:AMT_WiFiPortConfigurationService xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><h:localProfileSynchronizationEnabled>1</h:localProfileSynchronizationEnabled></h:AMT_WiFiPortConfigurationService></Body></Envelope>`
-      const response = amtClass.WiFiPortConfigurationService(Methods.PUT, { localProfileSynchronizationEnabled: 1 }, selector)
+      const response = amtClass.WiFiPortConfigurationService(Methods.PUT, null, { localProfileSynchronizationEnabled: 1 }, selector)
       expect(response).toEqual(correctResponse)
     })
-    it('should return a valid GET message ', () => {
+    it('should return a valid amt_WiFiPortConfigurationService GET message ', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
       const response = amtClass.WiFiPortConfigurationService(Methods.GET, null, null)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_WiFiPortConfigurationService ENUMERATE wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.WiFiPortConfigurationService(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should create a valid amt_WiFiPortConfigurationService Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.WiFiPortConfigurationService(Methods.PULL, enumerationContext)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if data is missing from PUT call', () => {
@@ -635,14 +1045,14 @@ describe('AMT Tests', () => {
         name: 'name',
         value: 'value'
       }
-      expect(() => { amtClass.WiFiPortConfigurationService(Methods.PUT, null, selector) }).toThrow(WSManErrors.DATA)
+      expect(() => { amtClass.WiFiPortConfigurationService(Methods.PUT, null, null, selector) }).toThrow(WSManErrors.DATA)
     })
     it('should throw error if data is missing from ADD_WIFI_SETTINGS call', () => {
       const selector: Selector = {
         name: 'name',
         value: 'value'
       }
-      expect(() => { amtClass.WiFiPortConfigurationService(Methods.ADD_WIFI_SETTINGS, null, selector) }).toThrow(WSManErrors.DATA)
+      expect(() => { amtClass.WiFiPortConfigurationService(Methods.ADD_WIFI_SETTINGS, null, null, selector) }).toThrow(WSManErrors.DATA)
     })
     it('should throw error if selector is missing from ADD_WIFI_SETTINGS call', () => {
       const data: CIM.Models.WiFiEndpointSettings = {
@@ -660,164 +1070,14 @@ describe('AMT Tests', () => {
         PSKValue: 0,
         SSID: 'ssid'
       }
-      expect(() => { amtClass.WiFiPortConfigurationService(Methods.ADD_WIFI_SETTINGS, data, null) }).toThrow(WSManErrors.SELECTOR)
+      expect(() => { amtClass.WiFiPortConfigurationService(Methods.ADD_WIFI_SETTINGS, null, data, null) }).toThrow(WSManErrors.SELECTOR)
+    })
+    it('should throow error if Selector or Data are missing from Put call', () => {
+      expect(() => { amtClass.WiFiPortConfigurationService(Methods.PUT, null, null, { name: 'test', value: 'test' }) }).toThrow(WSManErrors.DATA)
+      expect(() => { amtClass.WiFiPortConfigurationService(Methods.PUT, null, { name: 'test' }, null) }).toThrow(WSManErrors.SELECTOR)
     })
     it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.WiFiPortConfigurationService(Methods.ENUMERATE as any, null, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-    })
-  })
-  describe('RemoteAccessPolicyAppliesToMPS Tests', () => {
-    it('should return a valid amt_RemoteAccessPolicyAppliesToMPS ENUMERATE wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
-      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.ENUMERATE)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid amt_RemoteAccessPolicyAppliesToMPS DELETE wsman message', () => {
-      const selector: Selector = {
-        name: 'Name',
-        value: 'Instance'
-      }
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="Name">Instance</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
-      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.DELETE, null, null, null, selector)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid amt_RemoteAccessPolicyAppliesToMPS GET wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
-      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.GET)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should create a valid amt_RemoteAccessPolicyAppliesToMPS PULL wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>AC070000-0000-0000-0000-000000000000</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
-      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.PULL, enumerationContext)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should create a valid amt_RemoteAccessPolicyAppliesToMPS PUT wsman message', () => {
-      const remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS = {
-        ManagedElement: null,
-        PolicySet: null,
-        MpsType: 2,
-        OrderOfAccess: 0
-      }
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_RemoteAccessPolicyAppliesToMPS xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS"><h:ManagedElement></h:ManagedElement><h:PolicySet></h:PolicySet><h:MpsType>2</h:MpsType><h:OrderOfAccess>0</h:OrderOfAccess></h:AMT_RemoteAccessPolicyAppliesToMPS></Body></Envelope>`
-      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.PUT, null, remoteAccessPolicyAppliesToMPS)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should create a valid amt_RemoteAccessPolicyAppliesToMPS PUT wsman message', () => {
-      const selector: Selector = {
-        name: 'Name',
-        value: 'Instance'
-      }
-      const remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS = {
-        ManagedElement: null,
-        PolicySet: null,
-        MpsType: 2,
-        OrderOfAccess: 0
-      }
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_RemoteAccessPolicyAppliesToMPS xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyAppliesToMPS"><h:ManagedElement></h:ManagedElement><h:PolicySet></h:PolicySet><h:MpsType>2</h:MpsType><h:OrderOfAccess>0</h:OrderOfAccess></h:AMT_RemoteAccessPolicyAppliesToMPS></Body></Envelope>`
-      const response = amtClass.RemoteAccessPolicyAppliesToMPS(Methods.PUT, null, remoteAccessPolicyAppliesToMPS)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.RemoteAccessPolicyAppliesToMPS(Methods.ADD_MPS as any, null, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-    })
-  })
-  describe('AlarmClockService Tests', () => {
-    it('should return a valid amt_AlarmClockService ADD_ALARM wsman message', () => {
-      const instanceID = 'Instance'
-      const elementName = 'Alarm instance name'
-      // Start time must be on the minute - seconds must be 00
-      const startTime = '2022-12-31T23:59:00Z'
-      // The interval is in minutes
-      const minutes = 59
-      const hours = 23
-      const days = 1
-      const interval = minutes + hours * 60 + days * 1440
-      const deleteOnCompletion = true
-      let correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService/AddAlarm</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header>`
-      correctResponse += '<Body><p:AddAlarm_INPUT xmlns:p="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService"><p:AlarmTemplate>'
-      correctResponse += `<s:InstanceID xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${instanceID}</s:InstanceID>`
-      correctResponse += `<s:ElementName xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${elementName}</s:ElementName>`
-      correctResponse += `<s:StartTime xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Datetime xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">${startTime}</p:Datetime></s:StartTime>`
-      correctResponse += `<s:Interval xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Interval xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">P${days}DT${hours}H${minutes}M</p:Interval></s:Interval>`
-      correctResponse += `<s:DeleteOnCompletion xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${String(deleteOnCompletion)}</s:DeleteOnCompletion>`
-      correctResponse += '</p:AlarmTemplate></p:AddAlarm_INPUT></Body></Envelope>'
-      const response = amtClass.AlarmClockService(Methods.ADD_ALARM, { InstanceID: instanceID, ElementName: elementName, StartTime: new Date(startTime), Interval: interval, DeleteOnCompletion: deleteOnCompletion })
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw error if data is missing from amt_AlarmClockService AddAlarm method', () => {
-      expect(() => { amtClass.AlarmClockService(Methods.ADD_ALARM, null) }).toThrow(WSManErrors.ADD_ALARM_DATA)
-    })
-    it('should return a valid GET message ', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
-      const response = amtClass.AlarmClockService(Methods.GET, null)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.AlarmClockService(Methods.PUT as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-      expect(() => { amtClass.AlarmClockService(Methods.ENUMERATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-      expect(() => { amtClass.AlarmClockService(Methods.PULL as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-      expect(() => { amtClass.AlarmClockService(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-    })
-  })
-  describe('IEEE8021xCredentialContext Tests', () => {
-    it('should return a valid amt_8021xCredentialContext ENUMERATE message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
-      const response = amtClass.IEEE8021xCredentialContext(Methods.ENUMERATE)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid amt_8021xCredentialContext PULL message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
-      const response = amtClass.IEEE8021xCredentialContext(Methods.PULL, enumerationContext)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw error if enumerationContext is missing from PULL call', () => {
-      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
-    })
-    it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.PUT as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-      expect(() => { amtClass.IEEE8021xCredentialContext(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-    })
-  })
-  describe('IEEE8021XProfile Tests', () => {
-    it('should return a valid amt_8021XProfile ENUMERATE message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
-      const response = amtClass.IEEE8021xProfile(Methods.ENUMERATE)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid amt_8021XProfile PULL message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
-      const response = amtClass.IEEE8021xProfile(Methods.PULL, enumerationContext)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid amt_8021XProfile PUT message', () => {
-      const data: Models.IEEE8021xProfile = {
-        ElementName: 'test',
-        InstanceID: 'test',
-        Enabled: true,
-        ActiveInS0: true,
-        AuthenticationProtocol: 0,
-        RoamingIdentity: 'test',
-        Username: 'test',
-        Password: 'test',
-        Domain: 'test',
-        PxeTimeout: 0
-      }
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_8021XProfile xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_8021XProfile"><h:ElementName>test</h:ElementName><h:InstanceID>test</h:InstanceID><h:Enabled>true</h:Enabled><h:ActiveInS0>true</h:ActiveInS0><h:AuthenticationProtocol>0</h:AuthenticationProtocol><h:RoamingIdentity>test</h:RoamingIdentity><h:Username>test</h:Username><h:Password>test</h:Password><h:Domain>test</h:Domain><h:PxeTimeout>0</h:PxeTimeout></h:AMT_8021XProfile></Body></Envelope>`
-      const response = amtClass.IEEE8021xProfile(Methods.PUT, null, data)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw error if enumerationContext is missing from PULL call', () => {
-      expect(() => { amtClass.IEEE8021xProfile(Methods.PULL) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
-    })
-    it('should throw error if data is missing from PUT call', () => {
-      expect(() => { amtClass.IEEE8021xProfile(Methods.PUT) }).toThrow(WSManErrors.DATA)
-    })
-    it('should throw error if an unsupported method is called', () => {
-      expect(() => { amtClass.IEEE8021xProfile(Methods.DELETE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-      expect(() => { amtClass.IEEE8021xProfile(Methods.GET as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
-      expect(() => { amtClass.IEEE8021xProfile(Methods.CREATE as any) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+      expect(() => { amtClass.WiFiPortConfigurationService(Methods.CREATE as any, null, null) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
   })
 })

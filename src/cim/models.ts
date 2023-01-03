@@ -269,7 +269,7 @@ export namespace Models {
 
   export interface CredentialManagementService extends AuthenticationService {
     // InstanceID is an optional property that may be used to opaquely and uniquely identify an instance of this class within the scope of the instantiating Namespace . . .
-    InstanceID: string // MaxLen=256
+    InstanceID?: string // MaxLen=256
   }
 
   export interface Credential extends ManagedElement {
