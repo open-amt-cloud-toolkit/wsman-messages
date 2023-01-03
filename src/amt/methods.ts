@@ -28,5 +28,6 @@ export enum Methods {
   GENERATE_KEY_PAIR = 'GenerateKeyPair',
   ADD_WIFI_SETTINGS = 'AddWiFiSettings',
   ADD_ALARM = 'AddAlarm',
-  GENERATE_PKCS10_REQUEST_EX = 'GeneratePKCS10RequestEx'
+  GENERATE_PKCS10_REQUEST_EX = 'GeneratePKCS10RequestEx',
+  GET_UUID = 'GetUuid'
 }
