@@ -12,7 +12,6 @@ export namespace Models {
     Description?: string // MaxLen=256
     ElementName?: string // MaxLen=256
   }
-
   export interface ManagedSystemElement extends ManagedElement {
     InstallDate?: Date
     Name?: string // MaxLen=1024
@@ -21,7 +20,6 @@ export namespace Models {
     Status?: string // ValueMap={OK, Error, Degraded, Unknown, Pred Fail, Starting, Stopping, Service, Stressed, NonRecover, No Contact, Lost Comm, Stopped} MaxLen=10
     HealthState?: Types.ManagedSystemElement.HealthState // ValueMap={0, 5, 10, 15, 20, 25, 30, .., 32768..65535} Values={Unknown, OK, Degraded/Warning, Minor failure, Major failure, Critical failure, Non-recoverable error, DMTF Reserved, Vendor Specific}
   }
-
   export interface PhysicalElement extends ManagedSystemElement {
     Tag?: string // MaxLen=256
     CreationClassName?: string // MaxLen=256
@@ -38,14 +36,12 @@ export namespace Models {
     UserTracking?: string // MaxLen=256
     CanBeFRUed?: boolean
   }
-
   export interface PhysicalComponent extends PhysicalElement {
     RemovalConditions?: Types.PhysicalComponent.RemovalConditions // ValueMap={0, 2, 3, 4} Values={Unknown, Not Applicable, Removable when off, Removable when on or off}
     Removable?: boolean
     Replaceable?: boolean
     HotSwappable?: boolean
   }
-
   export interface Chip extends PhysicalComponent {
     Tag?: string // MaxLen=65
     CreationClassName?: string // MaxLen=10
@@ -54,7 +50,6 @@ export namespace Models {
     Version?: string // MaxLen=64
     CanBeFRUed?: boolean
   }
-
   export interface PhysicalMemory extends Chip {
     FormFactor?: number
     MemoryType?: Types.PhysicalMemory.MemoryType // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35..32567, 32568..65535} Values={Unknown, Other, DRAM, Synchronous DRAM, Cache DRAM, EDO, EDRAM, VRAM, SRAM, RAM, ROM, Flash, EEPROM, FEPROM, EPROM, CDRAM, 3DRAM, SDRAM, SGRAM, RDRAM, DDR, DDR-2, BRAM, FB-DIMM, DDR3, FBD2, DDR4, LPDDR, LPDDR2, LPDDR3, LPDDR4, Logical non-volatile device, HBM (High Bandwidth Memory), HBM2 (High Bandwidth Memory Generation 2), DDR5, LPDDR5, DMTF Reserved, Vendor Reserved}
@@ -65,13 +60,10 @@ export namespace Models {
     IsSpeedInMhz?: boolean
     MaxMemorySpeed?: number // Units=MegaHertz
   }
-
   export interface PhysicalPackage extends PhysicalElement {
     PackageType?: Types.PhysicalPackage.PackageType // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17} Values={Unknown, Other, Rack, Chassis/Frame, Cross Connect/Backplane, Container/Frame Slot, Power Supply, Fan, Sensor, Module/Card, Port/Connector, Battery, Processor, Memory, Power Source/Generator, Storage Media Package (e.g., Disk or Tape Drive), Blade, Blade Expansion}
   }
-
   export interface Card extends PhysicalPackage { }
-
   export interface PhysicalFrame extends PhysicalPackage {
     VendorCompatibilityStrings?: string[] // MaxLen=256
     OtherPackageType?: string // MaxLen=256
@@ -93,13 +85,10 @@ export namespace Models {
     BreachDescription?: string // MaxLen=256
     IsLocked?: boolean
   }
-
   export interface Chassis extends PhysicalFrame {
     ChassisPackageType?: Types.Chassis.ChassisPackageType // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, .., 0x8000..0xFFFF} Values={Unknown, Other, SMBIOS Reserved, Desktop, Low Profile Desktop, Pizza Box, Mini Tower, Tower, Portable, LapTop, Notebook, Hand Held, Docking Station, All in One, Sub Notebook, Space-Saving, Lunch Box, Main System Chassis, Expansion Chassis, SubChassis, Bus Expansion Chassis, Peripheral Chassis, Storage Chassis, SMBIOS Reserved, Sealed-Case PC, SMBIOS Reserved, CompactPCI, AdvancedTCA, Blade Enclosure, SMBIOS Reserved, Tablet, Convertible, Detachable, IoT Gateway, Embedded PC, Mini PC, Stick PC, DMTF Reserved, Vendor Reserved}
   }
-
   export interface LogicalElement extends ManagedSystemElement { }
-
   export interface SoftwareElement extends LogicalElement {
     Version?: string // MaxLen=64
     SoftwareElementState?: Types.SoftwareElement.SoftwareElementState // ValueMap={0, 1, 2, 3} Values={Deployable, Installable, Executable, Running}
@@ -113,12 +102,10 @@ export namespace Models {
     IdentificationCode?: string // MaxLen=64
     LanguageEdition?: string // MaxLen=32
   }
-
   export interface BIOSElement extends SoftwareElement {
     PrimaryBIOS?: boolean
     ReleaseDate?: Date
   }
-
   export interface Job extends LogicalElement {
     InstanceId?: string // MaxLen=256
     CommunicationStatus?: Types.Job.CommunicationStatus // ValueMap={0, 1, 2, 3, 4, .., 0x8000..} Values={Unknown, Not Available, Communication OK, Lost Communication, No Contact, DMTF Reserved, Vendor Reserved}
@@ -146,14 +133,12 @@ export namespace Models {
     RecoveryAction?: Types.Job.RecoveryAction // ValueMap={0, 1, 2, 3, 4, 5} Values={Unknown, Other, Do Not Continue, Continue With Next Job, Re-run Job, Run Recovery Job}
     OtherRecoveryAction?: string // MaxLen=256
   }
-
   export interface ConcreteJob extends Job {
     UntilTime?: Date
     JobState?: Types.ConcreteJob.JobState // ValueMap={2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13..32767, 32768..65535} Values={New, Starting, Running, Suspended, Shutting Down, Completed, Terminated, Killed, Exception, Service, Query Pending, DMTF Reserved, Vendor Reserved}
     TimeOfLastStateChange?: Date
     TimeBeforeRemoval?: Date
   }
-
   export interface EnabledLogicalElement extends LogicalElement {
     EnabledState?: Types.EnabledLogicalElement.EnabledState // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11..32767, 32768..65535} Values={Unknown, Other, Enabled, Disabled, Shutting Down, Not Applicable, Enabled but Offline, In Test, Deferred, Quiesce, Starting, DMTF Reserved, Vendor Reserved}
     OtherEnabledState?: string // MaxLen=256
@@ -161,7 +146,6 @@ export namespace Models {
     EnabledDefault?: Types.EnabledLogicalElement.EnabledDefault // ValueMap={2, 3, 5, 6, 7, 9, .., 32768..65535} Values={Enabled, Disabled, Not Applicable, Enabled but Offline, No Default, Quiesce, DMTF Reserved, Vendor Reserved}
     TimeOfLastStateChange?: Date
   }
-
   export interface LogicalDevice extends EnabledLogicalElement {
     SystemCreationClassName?: string // MaxLen=256
     SystemName?: string // MaxLen=256
@@ -181,7 +165,6 @@ export namespace Models {
     AdditionalAvailability?: Types.LogicalDevice.AdditionalAvailability // ValueMap={1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21} Values={Other, Unknown, Running/Full Power, Warning, In Test, Not Applicable, Power Off, Off Line, Off Duty, Degraded, Not Installed, Install Error, Power Save - Unknown, Power Save - Low Power Mode, Power Save - Standby, Power Cycle, Power Save - Warning, Paused, Not Ready, Not Configured, Quiesced}
     MaxQuiesceTime?: number // Units=MilliSeconds
   }
-
   export interface Processor extends LogicalDevice {
     Role?: string // MaxLen=65
     Family?: number
@@ -193,13 +176,11 @@ export namespace Models {
     CPUStatus?: Types.Processor.CPUStatus // ValueMap={0, 1, 2, 3, 4, 7} Values={Unknown, CPU Enabled, CPU Disabled by User, CPU Disabled By BIOS (POST Error), CPU Is Idle, Other}
     ExternalBusClockSpeed?: number // Units=MegaHertz
   }
-
   export interface MediaAccessDevice extends LogicalDevice {
     Capabilities?: Types.MediaAccessDevice.Capabilities // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} Values={Unknown, Other, Sequential Access, Random Access, Supports Writing, Encryption, Compression, Supports Removeable Media, Manual Cleaning, Automatic Cleaning, SMART Notification, Supports Dual Sided Media, Predismount Eject Not Required} ArrayType=Indexed
     MaxMediaSize?: number
     Security?: Types.MediaAccessDevice.Security // ValueMap={1, 2, 3, 4, 5, 6, 7} Values={Other, Unknown, None, Read Only, Locked Out, Boot Bypass, Boot Bypass and Read Only}
   }
-
   export interface Service extends EnabledLogicalElement {
     SystemCreationClassName?: string // MaxLen=256
     SystemName?: string // MaxLen=256
@@ -209,25 +190,19 @@ export namespace Models {
     StartMode?: string // ValueMap={Automatic, Manual} MaxLen=10
     Started?: boolean
   }
-
   export interface SecurityService extends Service { }
-
   export interface SettingData extends ManagedElement {
     InstanceID?: string // MaxLen=256
   }
-
   // To do: Fix the typing on Dependent and Antecedent
   export interface Dependency {
     Antecedent: any
     Dependent: any
   }
-
   export interface SystemPackaging extends Dependency { }
-
   export interface ComputerSystemPackage extends SystemPackaging {
     PlatformGuid?: string // MaxLen=40
   }
-
   export interface LogicalPort extends LogicalDevice {
     Speed?: number // Units=Bits per Second
     MaxSpeed?: number // Units=Bits per Second
@@ -236,7 +211,6 @@ export namespace Models {
     PortType?: Types.LogicalPort.PortType // ValueMap={0, 1, 2, 3..15999, 16000..65535} Values={Unknown, Other, Not Applicable, DMTF Reserved, Vendor Reserved}
     OtherPortType?: string // MaxLen=256
   }
-
   export interface NetworkPort extends LogicalPort {
     PortNumber?: number
     LinkTechnology?: Types.NetworkPort.LinkTechnology // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} Values={Unknown, Other, Ethernet, IB, FC, FDDI, ATM, Token Ring, Frame Relay, Infrared, BlueTooth, Wireless LAN}
@@ -248,42 +222,40 @@ export namespace Models {
     SupportedMaximumTransmissionUnit?: number // Units=Bytes
     ActiveMaximumTransmissionUnit?: number // Units=Bytes
   }
-
   export interface EthernetPort extends NetworkPort { }
-
   export interface BootSettingData extends SettingData {
     OwningEntity?: string // MaxLen=256
   }
-
   export interface Collection extends ManagedElement { }
-
   export interface Role extends Collection {
     CreationClassName?: string // MaxLen=12
     Name?: string // MaxLen=64
     CommonName?: string // MaxLen=256
     RoleCharacteristics?: Types.Role.RoleCharacteristics // ValueMap={2, 3, .., 32000..65535} Values={Static, Opaque, DMTF Reserved, Vendor Specific}
   }
-
   export interface AuthenticationService extends SecurityService {
   }
-
   export interface CredentialManagementService extends AuthenticationService {
     // InstanceID is an optional property that may be used to opaquely and uniquely identify an instance of this class within the scope of the instantiating Namespace . . .
     InstanceID?: string // MaxLen=256
   }
-
   export interface Credential extends ManagedElement {
     Issued?: Date // The date and time when the credential was issued.  Default is current time
     Expires?: Date // The date and time when the credential expires (and is not appropriate for use for authentication/ authorization).  Default is '99991231235959.999999+999'
   }
-
+  export interface SharedCredential extends Credential {
+    InstanceID: string // Within the scope of the instantiating Namespace, InstanceID opaquely and uniquely identifies an instance of this class . . .
+    RemoteID?: string // RemoteID is the name by which the principal is known at the remote secret key authentication service.
+    Secret?: string // The secret known by the principal.
+    Algorithm?: string // The transformation algorithm, if any, used to protect passwords before use in the protocol . . .
+    Protocol?: string // The protocol with which the SharedCredential is used.
+  }
   export interface CredentialContext {
     // A Credential whose context is defined.
     ElementInContext: Credential
     // The ManagedElement that provides context or scope for the Credential.
     ElementProvidingContext: ManagedElement
   }
-
   export interface ServiceAvailableToElement {
     ServiceProvided: {
       Address: string
@@ -304,14 +276,12 @@ export namespace Models {
       }
     }
   }
-
   export interface AssociatedPowerManagementService extends ServiceAvailableToElement {
     CIM_AssociatedPowerManagementService: {
       AvailableRequestedPowerStates: string[]
       PowerState: string
     } & ServiceAvailableToElement
   }
-
   export interface SoftwareIdentity extends LogicalElement {
     CIM_SoftwareIdentity: Array<
       {
@@ -321,14 +291,12 @@ export namespace Models {
       } & LogicalElement
     >
   }
-
   export interface Log extends EnabledLogicalElement {
     MaxNumberOfRecords: number
     CurrentNumberOfRecords: number
     OverwritePolicy: Types.Log.OverwritePolicy // ValueMap={0, 2, 7, .., 32768..65535} Values={Unknown, Wraps When Full, Never Overwrites, DMTF Reserved, Vendor Reserved}
     LogState: Types.Log.LogState // ValueMap={0, 2, 3, 4, .., 32768..65535} Values={Unknown, Normal, Erasing, Not Applicable, DMTF Reserved, Vendor Reserved}
   }
-
   export interface MessageLog extends Log {
     CreationClassName: string // MaxLen=256
     Capabilities: Types.MessageLog.Capabilities // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10} Values={Unknown, Other, Write Record Supported, Delete Record Supported, Can Move Backward in Log, Freeze Log Supported, Clear Log Supported, Supports Addressing by Ordinal Record Number, Variable Length Records Supported, Variable Formats for Records, Can Flag Records for Overwrite} ArrayType=Indexed
@@ -348,7 +316,6 @@ export namespace Models {
     IsFrozen: boolean
     CharacterSet: Types.MessageLog.CharacterSet // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11} Values={Unknown, Other, ASCII, Unicode, ISO2022, ISO8859, Extended UNIX Code, UTF-8, UCS-2, Bitmapped Data, OctetString, Defined by Individual Records}
   }
-
   export interface KVMRedirectionSAP {
     Name: string // MaxLen=40
     CreationClassName: string // MaxLen=25
@@ -359,15 +326,12 @@ export namespace Models {
     RequestedState: Types.KVMRedirectionSAP.RequestedState // ValueMap={0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, .., 32768..65535} Values={Unknown, Enabled, Disabled, Shut Down, No Change, Offline, Test, Deferred, Quiesce, Reboot, Reset, Not Applicable, DMTF Reserved, Vendor Reserved}
     KVMProtocol: Types.KVMRedirectionSAP.KVMProtocol // ValueMap={0, 1, 2, 3, 4, 5..32767, 32768..65535} Values={Unknown, Other, Raw, RDP, VNC-RFB, DMTF Reserved, Vendor Specified}
   }
-
   export interface KVMRedirectionSAPResponse {
     CIM_KVMRedirectionSAP: KVMRedirectionSAP
   }
-
   export interface PowerActionResponse {
     RequestPowerStateChange_OUTPUT: Common.Models.ReturnValue
   }
-
   export interface WiFiEndpointSettings extends SettingData {
     ElementName: string
     InstanceID: string
@@ -381,14 +345,11 @@ export namespace Models {
     PSKValue?: number // OctetString
     PSKPassPhrase?: string // Min Length 8 Max Length 63
   }
-
   export interface NetworkPortConfigurationService extends Service { }
-
   export interface Policy extends ManagedElement {
     CommonName: string
     PolicyKeywords: string[]
   }
-
   export interface PolicySet extends Policy {
     PolicyDecisionStrategy: Types.PolicySet.PolicyDecisionStrategy // ValueMap={1, 2} Values={First Matching, All}
     PolicyRoles: string[] // MaxLen=256
@@ -398,7 +359,6 @@ export namespace Models {
     PolicySet: PolicySet
     ManagedElement: ManagedElement
   }
-
   export interface IEEE8021xSettings extends SettingData {
     AuthenticationProtocol: Types.IEEE8021xSettings.AuthenticationProtocol // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ..} Values={EAP-TLS, EAP-TTLS/MSCHAPv2, PEAPv0/EAP-MSCHAPv2, PEAPv1/EAP-GTC, EAP-FAST/MSCHAPv2, EAP-FAST/GTC, EAP-MD5, EAP-PSK, EAP-SIM, EAP-AKA, EAP-FAST/TLS, DMTF Reserved} MappingStrings={RFC4017.IETF, RFC2716.IETF, draft-ietf-pppext-eap-ttls.IETF, draft-kamath-pppext-peapv0.IETF, draft-josefsson-pppext-eap-tls-eap, RFC4851.IETF, RFC3748.IETF, RFC4764.IETF, RFC4186.IETF, RFC4187.IETF}
     RoamingIdentity: string // Max Length 80

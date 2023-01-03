@@ -61,26 +61,6 @@ describe('IPS Tests', () => {
       expect(() => { ipsClass.switch({ method: Methods.DELETE, class: Classes.IPS_OPT_IN_SERVICE }) }).toThrow(WSManErrors.SELECTOR)
     })
   })
-  describe('ips_IEEE8021xCredentialContext Tests', () => {
-    it('should return a valid ips_IEEE8021xCredentialContext Get wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
-      const response = ipsClass.IEEE8021xCredentialContext(Methods.GET)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid ips_IEEE8021xSettings Pull wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
-      const response = ipsClass.IEEE8021xCredentialContext(Methods.PULL, enumerationContext)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should return a valid ips_IEEE8021xSettings Enumerate wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
-      const response = ipsClass.IEEE8021xCredentialContext(Methods.ENUMERATE)
-      expect(response).toEqual(correctResponse)
-    })
-    it('should throw an error if enumerationContext is missing', () => {
-      expect(() => { ipsClass.IEEE8021xCredentialContext(Methods.PULL, null) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
-    })
-  })
   describe('ips_AlarmClockOccurrence Tests', () => {
     const selector: Selector = {
       name: 'Name',
@@ -190,6 +170,26 @@ describe('IPS Tests', () => {
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { castedIPSClass.HostBasedSetupService(Methods.REQUEST_POWER_STATE_CHANGE) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
+    })
+  })
+  describe('ips_IEEE8021xCredentialContext Tests', () => {
+    it('should return a valid ips_IEEE8021xCredentialContext Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = ipsClass.IEEE8021xCredentialContext(Methods.GET)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid ips_IEEE8021xSettings Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = ipsClass.IEEE8021xCredentialContext(Methods.PULL, enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid ips_IEEE8021xSettings Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_8021xCredentialContext</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = ipsClass.IEEE8021xCredentialContext(Methods.ENUMERATE)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw an error if enumerationContext is missing', () => {
+      expect(() => { ipsClass.IEEE8021xCredentialContext(Methods.PULL, null) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
   })
   describe('ips_IEEE8021xSettings Tests', () => {

@@ -22,6 +22,12 @@ export namespace Types {
      */
     export type SigningAlgorithm = 0 | 1 | 2
   }
+  export namespace IEEE8021xSettings {
+    /**
+     * Enabled:2 | Disabled:3 | Enabled Without Certificates:6
+     */
+    export type Enabled = 2 | 3 | 6
+  }
   export namespace OptInService {
     /**
      * None:0 | KVM:1 | All:4294967295
@@ -35,12 +41,5 @@ export namespace Types {
      * FALSE:0 | TRUE:1
      */
     export type CanModifyOptInPolicy = 0 | 1
-  }
-
-  export namespace IEEE8021xSettings {
-    /**
-     * Enabled:2 | Disabled:3 | Enabled Without Certificates:6
-     */
-    export type Enabled = 2 | 3 | 6
   }
 }

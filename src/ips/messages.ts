@@ -77,18 +77,6 @@ export class Messages {
   }
 
   /**
-   * Accesses a representation of IEEE8021xCredentialContext
-   * @method GET - Gets the representation of IEEE8021xCredentialContext
-   * @method PULL - Requires enumerationContext.  Pulls instances of IEEE8021xCredentialContext, following an Enumerate operation.
-   * @method ENUMERATE - Enumerates the instances of IEEE8021xCredentialContext
-   * @param enumerationContext string returned from an ENUMERATE call.
-   * @returns string
-   */
-  IEEE8021xCredentialContext = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method: method, class: Classes.IPS_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext })
-  }
-
-  /**
    * Accesses a representation of AlarmClockOccurrence.
    * @method GET - Gets the representation of AlarmClockOccurrence
    * @method PULL - Requires enumerationContext.  Pulls instances of AlarmClockOccurrence, following an Enumerate operation.
@@ -99,7 +87,7 @@ export class Messages {
    * @returns string
    */
   AlarmClockOccurrence = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => {
-    return this.switch({ method: method, class: Classes.IPS_ALARM_CLOCK_OCCURRENCE, enumerationContext: enumerationContext, selector: selector })
+    return this.switch({ method, class: Classes.IPS_ALARM_CLOCK_OCCURRENCE, enumerationContext, selector })
   }
 
   /**
@@ -135,7 +123,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.IPS_HOST_BASED_SETUP_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.IPS_HOST_BASED_SETUP_SERVICE, enumerationContext })
       case Methods.SETUP: {
         if (adminPassEncryptionType == null) { throw new Error(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE) }
         if (adminPassword == null) { throw new Error(WSManErrors.ADMIN_PASSWORD) }
@@ -180,6 +168,18 @@ export class Messages {
   }
 
   /**
+     * Accesses a representation of IEEE8021xCredentialContext
+     * @method GET - Gets the representation of IEEE8021xCredentialContext
+     * @method PULL - Requires enumerationContext.  Pulls instances of IEEE8021xCredentialContext, following an Enumerate operation.
+     * @method ENUMERATE - Enumerates the instances of IEEE8021xCredentialContext
+     * @param enumerationContext string returned from an ENUMERATE call.
+     * @returns string
+     */
+  IEEE8021xCredentialContext = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
+    return this.switch({ method: method, class: Classes.IPS_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext })
+  }
+
+  /**
    * Accesses a representation of IEEE8021xSettings
    * @method GET - Gets the representation of IEEE8021xSettings
    * @method PULL - Requires enumerationContext.  Pulls instances of IEEE8021xSettings, following an Enumerate operation.
@@ -198,7 +198,7 @@ export class Messages {
       case Methods.PULL:
       case Methods.ENUMERATE:
       case Methods.PUT:
-        return this.switch({ method: method, class: Classes.IPS_IEEE8021X_SETTINGS, enumerationContext: enumerationContext, data: ieee8021xSettings })
+        return this.switch({ method, class: Classes.IPS_IEEE8021X_SETTINGS, enumerationContext, data: ieee8021xSettings })
       case Methods.SET_CERTIFICATES: {
         if (serverCertificateIssuer == null || clientCertificate == null) { throw new Error(WSManErrors.CERTIFICATE_BLOB) }
         const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_CERTIFICATES, this.resourceUriBase, Classes.IPS_IEEE8021X_SETTINGS)
@@ -232,7 +232,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.IPS_OPT_IN_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.IPS_OPT_IN_SERVICE, enumerationContext })
       case Methods.PUT:
         if (optInServiceResponse != null) {
           const key = Object.keys(optInServiceResponse)[0]

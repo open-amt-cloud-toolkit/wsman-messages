@@ -10,31 +10,22 @@ export namespace Types {
      */
     export type SignatureMechanism = 0
   }
-
-  export namespace GeneralSettings {
+  export namespace BootSettingData {
     /**
-     * 0 = IPv4 | 1 = IPv6
+     * 0 = System default | 1 = Quiet - minimal screen activity | 2 = Verbose - all messages appear on the screen | 3 = Screen blank - no messages appear on the screen
      */
-    export type PreferredAddressFamily = 0 | 1
+    export type FirmwareVerbosity = 0 | 1 | 2 | 3
     /**
-     * 0 = Disabled | 1 = Enabled
+     * 0 = Floppy Boot | 1 = CD Boot
      */
-    export type AMTNetworkEnabled = 0 | 1
-    /**
-     * 0 = Default | 1 = Enhanced | 2 = Extreme
-     */
-    export type PrivacyLevel = 0 | 1 | 2
-    /**
-     * 0 = AC | 1 = DC
-     */
-    export type PowerSource = 0 | 1
-    /**
-     * 0=Disabled | 1=Enabled. Default: Enabled.
-     * Available in Release 15.0 and later releases.
-     */
-    export type ThunderboltDockEnabled = 0 | 1
+    export type IDERBootDevice = 0 | 1
   }
-
+  export namespace EnvironmentDetectionSettingData {
+    /**
+     * 0 = Local Domains | 1 = Remote URLs
+     */
+    export type DetectionAlgorithm = 0 | 1
+  }
   export namespace EthernetPortSettings {
     /**
      * 1 = available on S0 AC | 14 = available on Sx AC | 16 = available on S0 DC | 224 = available on Sx DC
@@ -66,7 +57,57 @@ export namespace Types {
      */
     export type PhysicalNicMedium = 0 | 1
   }
-
+  export namespace EVENT_DATA {
+    /**
+     * 0 = unspecified | 1 = Monitor | 2 = Information | 4 = OK | 8 = Non-critical condition | 16 = Critical condition | 32 = Non-recoverable condition
+     */
+    export type EventSeverity = 0 | 1 | 2 | 4 | 8 | 16 | 32
+  }
+  export namespace GeneralSettings {
+    /**
+     * 0 = IPv4 | 1 = IPv6
+     */
+    export type PreferredAddressFamily = 0 | 1
+    /**
+     * 0 = Disabled | 1 = Enabled
+     */
+    export type AMTNetworkEnabled = 0 | 1
+    /**
+     * 0 = Default | 1 = Enhanced | 2 = Extreme
+     */
+    export type PrivacyLevel = 0 | 1 | 2
+    /**
+     * 0 = AC | 1 = DC
+     */
+    export type PowerSource = 0 | 1
+    /**
+     * 0=Disabled | 1=Enabled. Default: Enabled.
+     * Available in Release 15.0 and later releases.
+     */
+    export type ThunderboltDockEnabled = 0 | 1
+  }
+  export namespace GenerateKeyPair {
+    /**
+     * 0 = RSA
+     */
+    export type KeyAlgorithm = 0
+  }
+  export namespace GeneratePKCS10RequestEx {
+    /**
+     * 0 = SHA1-RSA | 1 = SHA256-RSA
+     */
+    export type SigningAlgorithm = 0 | 1
+  }
+  export namespace IEEE8021xProfile {
+    /**
+     * 0 = TLS | 1 = TTLS_MSCHAPv2 | 2 = PEAP_MSCHAPv2 | 3 = EAP_GTC | 4 = EAPFAST_MSCHAPv2 | 5 = EAPFAST_GTC | 6 = EAPFAST_TLS
+     */
+    export type AuthenticationProtocol = 0 | 1 | 2 | 3 | 4 | 5 | 6
+    /**
+     * 0 = FullName | 1 = DomainSuffix
+     */
+    export type ServerCertificateNameComparison = 0 | 1
+  }
   export namespace MPServer {
     /**
      * 3 = IPv4 Address | 4 = IPv6 Address | 201 = FQDN
@@ -77,46 +118,6 @@ export namespace Types {
      */
     export type AuthMethod = 1 | 2
   }
-
-  export namespace RemoteAccessPolicyRule {
-    /**
-     * 0 = User Initiated | 1 = Alert | 2 = Periodic | 3 = Home Provisioning
-     */
-    export type Trigger = 0 | 1 | 2 | 3
-  }
-
-  export namespace SystemDefensePolicy {
-    /**
-     * 0 = Off | 1 = EventOnMatch | 2 = Count | 3 = Counting + EventOnMatch | 4 = On without Counting or EventOnMatch
-     */
-    export type AntiSpoofingSupport = 0 | 1 | 2 | 3 | 4
-  }
-
-  export namespace EnvironmentDetectionSettingData {
-    /**
-     * 0 = Local Domains | 1 = Remote URLs
-     */
-    export type DetectionAlgorithm = 0 | 1
-  }
-
-  export namespace BootSettingData {
-    /**
-     * 0 = System default | 1 = Quiet - minimal screen activity | 2 = Verbose - all messages appear on the screen | 3 = Screen blank - no messages appear on the screen
-     */
-    export type FirmwareVerbosity = 0 | 1 | 2 | 3
-    /**
-     * 0 = Floppy Boot | 1 = CD Boot
-     */
-    export type IDERBootDevice = 0 | 1
-  }
-
-  export namespace EVENT_DATA {
-    /**
-     * 0 = unspecified | 1 = Monitor | 2 = Information | 4 = OK | 8 = Non-critical condition | 16 = Critical condition | 32 = Non-recoverable condition
-     */
-    export type EventSeverity = 0 | 1 | 2 | 4 | 8 | 16 | 32
-  }
-
   export namespace RedirectionService {
     /**
      * 0 = Unknown | 1 = Other | 2 = Enabled | 3 = Disabled | 4 = Shutting Down | 5 = Not Applicable | 6 = Enabled but Offline | 7 = In Test | 8 = Deferred | 9 = Quiesce | 10 = Starting | 32768 = IDER and SOL are disabled |  32769 = IDER is enabled and SOL is disabled | 32770 = SOL is enabled and IDER is disabled | 32771 = IDER and SOL are enabled
@@ -127,21 +128,36 @@ export namespace Types {
      */
     export type RequestedState = 32768 | 32769 | 32770 | 32771
   }
-
-  export namespace GenerateKeyPair {
+  export namespace RemoteAccessPolicyAppliesToMPS {
     /**
-     * 0 = RSA
+     * 0 = External MPS | 1 = Internal MPS | 2 = Both
      */
-    export type KeyAlgorithm = 0
+    export type MpsType = 0 | 1 | 2
   }
-
-  export namespace GeneratePKCS10RequestEx {
+  export namespace RemoteAccessPolicyRule {
     /**
-     * 0 = SHA1-RSA | 1 = SHA256-RSA
+     * 0 = User Initiated | 1 = Alert | 2 = Periodic | 3 = Home Provisioning
      */
-    export type SigningAlgorithm = 0 | 1
+    export type Trigger = 0 | 1 | 2 | 3
   }
-
+  export namespace SetupAndConfigurationService {
+    /**
+     * 1 = Admin Control Mode | 4 = Client Control Mode
+     */
+    export type ProvisioningMode = 1 | 4
+  }
+  export namespace SystemDefensePolicy {
+    /**
+     * 0 = Off | 1 = EventOnMatch | 2 = Count | 3 = Counting + EventOnMatch | 4 = On without Counting or EventOnMatch
+     */
+    export type AntiSpoofingSupport = 0 | 1 | 2 | 3 | 4
+  }
+  export namespace UserInitiatedConnectionService {
+    /**
+     * 32768 = All Interfaces disabled | 32769 = BIOS Interface enabled | 32770 = OS Interface enabled | 32771 = BIOS and OS Interfaces enabled
+     */
+    export type RequestedState = 32768 | 32769 | 32770 | 32771
+  }
   export namespace WiFiPortConfigurationService {
     /**
      * 0 = Unknown | 2 = Enabled | 3 = Disabled | 4 = Shut Down | 5 = No Change | 6 = Offline | 7 = Test | 8 = Deferred | 9 = Quiesce | 10 = Reboot | 11 = Reset | 12 = Not Applicable
@@ -167,37 +183,5 @@ export namespace Types {
      * 0 = Enable | 1 = Disable
      */
     export type UEFIWiFiProfileShareEnabled = 0 | 1
-  }
-
-  export namespace RemoteAccessPolicyAppliesToMPS {
-    /**
-     * 0 = External MPS | 1 = Internal MPS | 2 = Both
-     */
-    export type MpsType = 0 | 1 | 2
-  }
-
-  export namespace UserInitiatedConnectionService {
-    /**
-     * 32768 = All Interfaces disabled | 32769 = BIOS Interface enabled | 32770 = OS Interface enabled | 32771 = BIOS and OS Interfaces enabled
-     */
-    export type RequestedState = 32768 | 32769 | 32770 | 32771
-  }
-
-  export namespace SetupAndConfigurationService {
-    /**
-     * 1 = Admin Control Mode | 4 = Client Control Mode
-     */
-    export type ProvisioningMode = 1 | 4
-  }
-
-  export namespace IEEE8021xProfile {
-    /**
-     * 0 = TLS | 1 = TTLS_MSCHAPv2 | 2 = PEAP_MSCHAPv2 | 3 = EAP_GTC | 4 = EAPFAST_MSCHAPv2 | 5 = EAPFAST_GTC | 6 = EAPFAST_TLS
-     */
-    export type AuthenticationProtocol = 0 | 1 | 2 | 3 | 4 | 5 | 6
-    /**
-     * 0 = FullName | 1 = DomainSuffix
-     */
-    export type ServerCertificateNameComparison = 0 | 1
   }
 }

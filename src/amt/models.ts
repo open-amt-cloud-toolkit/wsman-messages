@@ -18,7 +18,6 @@ export namespace Models {
     LengthOfCertificates?: number[]
     Certificates?: number[]
   }
-
   export interface GeneralSettings extends CIM.Models.SettingData {
     NetworkInterfaceEnabled?: boolean
     DigestRealm?: string
@@ -43,11 +42,9 @@ export namespace Models {
     ThunderboltDockEnabled?: Types.GeneralSettings.ThunderboltDockEnabled
     OemID?: number
   }
-
   export interface GeneralSettingsResponse {
     AMT_GeneralSettings: GeneralSettings
   }
-
   export interface EthernetPortSettings extends CIM.Models.SettingData {
     VLANTag?: number
     SharedMAC?: boolean
@@ -70,7 +67,6 @@ export namespace Models {
     PhysicalConnectionType?: Types.EthernetPortSettings.PhysicalConnectionType // ValueMap={"0", "1", "2", "3", "4.."} Values={"Integrated LAN NIC", "Discrete LAN NIC", "LAN via a Thunderbolt dock", "Wireless LAN", "Reserved"}
     PhysicalNicMedium?: Types.EthernetPortSettings.PhysicalNicMedium // ValueMap={"0", "1", "2.."} Values={"SMBUS", "PCIe", "Reserved"}
   }
-
   export interface MPServer {
     AccessInfo?: string // MaxLen=256
     InfoFormat?: Types.MPServer.InfoFormat // ValueMap={3, 4, 201} Values={IPv4 Address, IPv6 Address, FQDN}
@@ -80,13 +76,11 @@ export namespace Models {
     Password?: string
     CommonName?: string
   }
-
   export interface RemoteAccessPolicyRule {
     Trigger?: Types.RemoteAccessPolicyRule.Trigger
     TunnelLifeTime?: number
     ExtendedData?: string
   }
-
   export interface SystemDefensePolicy extends CIM.Models.ManagedElement {
     PolicyName?: string
     PolicyPrecedence?: number
@@ -99,13 +93,11 @@ export namespace Models {
     RxDefaultMatchEvent?: boolean
     RxDefaultCount?: boolean
   }
-
   export interface EnvironmentDetectionSettingData extends CIM.Models.SettingData {
     DetectionAlgorithm?: Types.EnvironmentDetectionSettingData.DetectionAlgorithm
     DetectionStrings?: string[]
     DetectionIPv6LocalPrefixes?: string[]
   }
-
   export interface BootCapabilities extends CIM.Models.ManagedElement {
     AMT_BootCapabilities: {
       // The user friendly name for this instance of Capabilities . . .
@@ -170,7 +162,6 @@ export namespace Models {
       PlatformErase: number
     }
   }
-
   export interface BootSettingData extends CIM.Models.BootSettingData {
     UseSOL?: boolean
     UseSafeMode?: boolean
@@ -204,7 +195,6 @@ export namespace Models {
   export interface BootSettingDataResponse {
     AMT_BootSettingData: BootSettingData
   }
-
   export interface SetupAndConfigurationService extends CIM.Models.CredentialManagementService {
     AMT_SetupAndConfigurationService: {
       CreationClassName: string
@@ -221,9 +211,7 @@ export namespace Models {
       ZeroTouchConfigurationEnabled: string
     }
   }
-
   export interface MessageLog extends CIM.Models.MessageLog { }
-
   // Event Log Records have no header and the record data is combined of 21 binary bytes which could be read as EVENT_DATA
   export interface EVENT_DATA {
     DeviceAddress?: number
@@ -246,7 +234,6 @@ export namespace Models {
       ReturnValue: string
     }
   }
-
   export interface RedirectionService {
     // The Name property uniquely identifies the Service and provides an indication of the functionality that is managed . . .
     Name: string
@@ -265,7 +252,6 @@ export namespace Models {
     // EnabledState is an integer enumeration that indicates the enabled and disabled states of an element . . .
     EnabledState: Types.RedirectionService.EnabledState // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11..32767, 32768, 32769, 32770, 32771, 32772..65535} Values={Unknown, Other, Enabled, Disabled, Shutting Down, Not Applicable, Enabled but Offline, In Test, Deferred, Quiesce, Starting, DMTF Reserved, IDER and SOL are disabled, IDER is enabled and SOL is disabled, SOL is enabled and IDER is disabled, IDER and SOL are enabled, Vendor Reserved}
   }
-
   export interface RedirectionResponse {
     AMT_RedirectionService: RedirectionService
   }
@@ -313,7 +299,6 @@ export namespace Models {
       }
     }
   }
-
   export interface TLSSettingData extends CIM.Models.SettingData {
     MutualAuthentication: boolean
     // Adminstrator-settable property that determines whether or not mutual authentication is used at the TLS layer is used on the associated service access point . . .
@@ -326,7 +311,7 @@ export namespace Models {
     NonSecureConnectionsSupported: boolean
     // If the value of this read-only field is True, the value of AcceptNonSecureConnections can be changed. Note that this class and field can be accessed locally as well as remotely.
   }
-
+  export interface MPSUsernamePassword extends CIM.Models.SharedCredential { }
   export interface GenerateKeyPair {
     KeyAlgorithm: Types.GenerateKeyPair.KeyAlgorithm
     KeyLength: number
@@ -334,13 +319,11 @@ export namespace Models {
   export interface AddCertificate {
     CertificateBlob: string
   }
-
   export interface PKCS10Request {
     KeyPair: string
     SigningAlgorithm: Types.GeneratePKCS10RequestEx.SigningAlgorithm
     NullSignedCertificateRequest: string
   }
-
   export interface WiFiPortConfigurationService extends CIM.Models.NetworkPortConfigurationService {
     RequestedState: Types.WiFiPortConfigurationService.RequestedState // ValueMap={0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, .., 32768..65535} Values={Unknown, Enabled, Disabled, Shut Down, No Change, Offline, Test, Deferred, Quiesce, Reboot, Reset, Not Applicable, DMTF Reserved, Vendor Reserved}
     EnabledState: Types.WiFiPortConfigurationService.EnabledState // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11..32767, 32768..65535} Values={Unknown, Other, Enabled, Disabled, Shutting Down, Not Applicable, Enabled but Offline, In Test, Deferred, Quiesce, Starting, DMTF Reserved, Vendor Reserved}
@@ -355,14 +338,11 @@ export namespace Models {
     NoHostCsmeSoftwarePolicy: Types.WiFiPortConfigurationService.NoHostCsmeSoftwarePolicy // ValueMap={0, 1, 2} Values={NoHostCsmeSoftwareRelaxedPolicy, NoHostCsmeSoftwareAggressivePolicy, Reserved}
     UEFIWiFiProfileShareEnabled: Types.WiFiPortConfigurationService.UEFIWiFiProfileShareEnabled // 1: Enable 0: Disable
   }
-
   export interface RemoteAccessPolicyAppliesToMPS extends CIM.Models.PolicySetAppliesToElement {
     OrderOfAccess: number
     MpsType: Types.RemoteAccessPolicyAppliesToMPS.MpsType // ValueMap={0, 1, 2} Values={External MPS, Internal MPS, Both}
   }
-
   export interface AlarmClockService extends CIM.Models.Service { }
-
   export interface IEEE8021xProfile extends CIM.Models.SettingData {
     ElementName: string
     InstanceID: string

@@ -77,7 +77,7 @@ export class Messages {
    * @returns string
    */
   BIOSElement = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_BIOS_ELEMENT, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_BIOS_ELEMENT, enumerationContext })
   }
 
   /**
@@ -95,7 +95,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method, class: Classes.CIM_BOOT_CONFIG_SETTING, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.CIM_BOOT_CONFIG_SETTING, enumerationContext })
       case Methods.CHANGE_BOOT_ORDER: { // TODO: Example used was incomplete, per AMT SDK there is more work on body required for robust support
         const header = this.wsmanMessageCreator.createHeader(Actions.CHANGE_BOOT_ORDER, `${this.resourceUriBase}${Classes.CIM_BOOT_CONFIG_SETTING}`)
         const body = this.wsmanMessageCreator.createBody('ChangeBootOrder_INPUT', this.resourceUriBase, 'CIM_BootConfigSetting', { Source: source })
@@ -127,7 +127,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method, class: Classes.CIM_BOOT_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.CIM_BOOT_SERVICE, enumerationContext })
       case Methods.SET_BOOT_CONFIG_ROLE: {
         if (bootSource == null) { throw new Error(WSManErrors.SELECTOR) }
         if (role == null) { throw new Error(WSManErrors.ROLE) }
@@ -149,7 +149,7 @@ export class Messages {
    * @returns string
    */
   Card = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_CARD, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_CARD, enumerationContext })
   }
 
   /**
@@ -161,7 +161,7 @@ export class Messages {
    * @returns string
    */
   Chassis = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_CHASSIS, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_CHASSIS, enumerationContext })
   }
 
   /**
@@ -173,7 +173,7 @@ export class Messages {
    * @returns string
    */
   Chip = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_CHIP, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_CHIP, enumerationContext })
   }
 
   /**
@@ -184,7 +184,7 @@ export class Messages {
      * @returns string
      */
   ComputerSystemPackage = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_COMPUTER_SYSTEM_PACKAGE, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_COMPUTER_SYSTEM_PACKAGE, enumerationContext })
   }
 
   /**
@@ -196,7 +196,7 @@ export class Messages {
    * @returns string
    */
   IEEE8021xSettings = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_IEEE8021X_SETTINGS, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_IEEE8021X_SETTINGS, enumerationContext })
   }
 
   /**
@@ -212,7 +212,7 @@ export class Messages {
      * @returns string
      */
   KVMRedirectionSAP = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE | Methods.REQUEST_STATE_CHANGE, enumerationContext?: string, requestedState?: Types.KVMRedirectionSAP.RequestedStateInputs): string => {
-    return this.switch({ method, class: Classes.CIM_KVM_REDIRECTION_SAP, enumerationContext: enumerationContext, requestedState: requestedState })
+    return this.switch({ method, class: Classes.CIM_KVM_REDIRECTION_SAP, enumerationContext, requestedState })
   }
 
   /**
@@ -224,7 +224,7 @@ export class Messages {
    * @returns string
    */
   MediaAccessDevice = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_MEDIA_ACCESS_DEVICE, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_MEDIA_ACCESS_DEVICE, enumerationContext })
   }
 
   /**
@@ -236,7 +236,7 @@ export class Messages {
    * @returns string
    */
   PhysicalMemory = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_PHYSICAL_MEMORY, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_PHYSICAL_MEMORY, enumerationContext })
   }
 
   /**
@@ -248,7 +248,7 @@ export class Messages {
    * @returns string
    */
   PhysicalPackage = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_PHYSICAL_PACKAGE, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_PHYSICAL_PACKAGE, enumerationContext })
   }
 
   /**
@@ -274,7 +274,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method, class: Classes.CIM_POWER_MANAGEMENT_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.CIM_POWER_MANAGEMENT_SERVICE, enumerationContext })
       case 'RequestPowerStateChange': {
         if (powerState == null) { throw new Error(WSManErrors.REQUESTED_POWER_STATE_CHANGE) }
         const header = this.wsmanMessageCreator.createHeader(Actions.REQUEST_POWER_STATE_CHANGE, `${this.resourceUriBase}${Classes.CIM_POWER_MANAGEMENT_SERVICE}`)
@@ -295,7 +295,7 @@ export class Messages {
    * @returns string
    */
   Processor = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_PROCESSOR, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_PROCESSOR, enumerationContext })
   }
 
   /**
@@ -307,7 +307,7 @@ export class Messages {
    * @returns string
    */
   ServiceAvailableToElement = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.SERVICE_AVAILABLE_TO_ELEMENT, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.SERVICE_AVAILABLE_TO_ELEMENT, enumerationContext })
   }
 
   /**
@@ -319,7 +319,7 @@ export class Messages {
    * @returns string
    */
   SoftwareIdentity = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_SOFTWARE_IDENTITY, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_SOFTWARE_IDENTITY, enumerationContext })
   }
 
   /**
@@ -331,7 +331,7 @@ export class Messages {
    * @returns string
    */
   SystemPackaging = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_SYSTEM_PACKAGING, enumerationContext: enumerationContext })
+    return this.switch({ method, class: Classes.CIM_SYSTEM_PACKAGING, enumerationContext })
   }
 
   /**
@@ -349,9 +349,9 @@ export class Messages {
       case Methods.GET:
       case Methods.PULL:
       case Methods.ENUMERATE:
-        return this.switch({ method, class: Classes.CIM_WIFI_ENDPOINT_SETTINGS, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.CIM_WIFI_ENDPOINT_SETTINGS, enumerationContext })
       case Methods.DELETE:
-        return this.switch({ method, class: Classes.CIM_WIFI_ENDPOINT_SETTINGS, selector: selector })
+        return this.switch({ method, class: Classes.CIM_WIFI_ENDPOINT_SETTINGS, selector })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -370,6 +370,6 @@ export class Messages {
    * @returns string
    */
   WiFiPort = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE | Methods.REQUEST_STATE_CHANGE, enumerationContext?: string, requestedState?: Types.WiFiPort.RequestedState): string => {
-    return this.switch({ method, class: Classes.CIM_WIFI_PORT, enumerationContext: enumerationContext, requestedState: requestedState })
+    return this.switch({ method, class: Classes.CIM_WIFI_PORT, enumerationContext, requestedState })
   }
 }
