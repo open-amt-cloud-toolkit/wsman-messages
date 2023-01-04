@@ -640,7 +640,7 @@ export class Messages {
    * @method PULL - Requires enumerationContext.  Pulls instances of RemoteAccessCapabilities, following an Enumerate operation.
    * @method ENUMERATE - Enumerates the instances of RemoteAccessCapabilities.
    * @param enumerationContext string returned from an ENUMERATE call.
-   * @param selector Selector Object.
+   * @param selector Selector Object
    * @returns string
    */
   RemoteAccessPolicyRule = (method: Methods.DELETE | Methods.GET | Methods.ENUMERATE | Methods.PULL, enumerationContext?: string, selector?: Selector): string => {
