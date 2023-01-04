@@ -95,7 +95,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL: {
-        return this.switch({ method: method, class: Classes.AMT_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext })
       }
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
@@ -116,7 +116,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL: {
-        return this.switch({ method: method, class: Classes.AMT_IEEE8021X_PROFILE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_IEEE8021X_PROFILE, enumerationContext })
       }
       case Methods.PUT: {
         if (data == null) { throw new Error(WSManErrors.DATA) }
@@ -145,7 +145,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method, class: Classes.AMT_ALARM_CLOCK_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_ALARM_CLOCK_SERVICE, enumerationContext })
       case Methods.ADD_ALARM: {
         if (data == null) { throw new Error(WSManErrors.ADD_ALARM_DATA) }
         const header = this.wsmanMessageCreator.createHeader(Actions.ADD_ALARM, `${this.resourceUriBase}${Classes.AMT_ALARM_CLOCK_SERVICE}`)
@@ -187,7 +187,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method, class: Classes.AMT_AUDIT_LOG, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_AUDIT_LOG, enumerationContext })
       case Methods.READ_RECORDS:
         if (startIndex == null) { startIndex = 1 }
         header = this.wsmanMessageCreator.createHeader(Actions.READ_RECORDS, `${this.resourceUriBase}${Classes.AMT_AUDIT_LOG}`)
@@ -216,7 +216,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method, class: Classes.AMT_AUTHORIZATION_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_AUTHORIZATION_SERVICE, enumerationContext })
       case Methods.SET_ADMIN_ACL_ENTRY_EX: {
         if (username == null) { throw new Error(WSManErrors.USERNAME) }
         if (digestPassword == null) { throw new Error(WSManErrors.DIGEST_PASSWORD) }
@@ -245,7 +245,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_BOOT_CAPABILITIES, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_BOOT_CAPABILITIES, enumerationContext })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -266,7 +266,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_BOOT_SETTING_DATA, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_BOOT_SETTING_DATA, enumerationContext })
       case Methods.PUT: {
         if (bootSettingData == null || bootSettingData.BIOSLastStatus == null || bootSettingData.UEFIBootNumberOfParams == null || bootSettingData.UEFIBootParametersArray == null) { throw new Error(WSManErrors.BOOT_SETTING_DATA) }
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_BOOT_SETTING_DATA}`)
@@ -303,7 +303,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA, enumerationContext })
       case Methods.PUT: {
         if (environmentDetectionSettingData == null) { throw new Error(WSManErrors.ENVIRONMENT_DETECTION_SETTING_DATA) }
         const selector: Selector = { name: 'InstanceID', value: environmentDetectionSettingData.InstanceID }
@@ -334,7 +334,7 @@ export class Messages {
       case Methods.GET:
       case Methods.PULL:
       case Methods.ENUMERATE:
-        return this.switch({ method: method, class: Classes.AMT_ETHERNET_PORT_SETTINGS, enumerationContext })
+        return this.switch({ method, class: Classes.AMT_ETHERNET_PORT_SETTINGS, enumerationContext })
       case Methods.PUT: {
         if (ethernetPortObject == null) { throw new Error(WSManErrors.ETHERNET_PORT_OBJECT) }
         const selector: Selector = { name: 'InstanceID', value: ethernetPortObject.InstanceID }
@@ -365,13 +365,32 @@ export class Messages {
       case Methods.GET:
       case Methods.PULL:
       case Methods.ENUMERATE:
-        return this.switch({ method: method, class: Classes.AMT_GENERAL_SETTINGS, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_GENERAL_SETTINGS, enumerationContext })
       case Methods.PUT: {
         if (generalSettings == null) throw new Error(WSManErrors.GENERAL_SETTINGS)
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_GENERAL_SETTINGS}`)
         const body = this.wsmanMessageCreator.createBody('AMT_GeneralSettings', this.resourceUriBase, Classes.AMT_GENERAL_SETTINGS, generalSettings)
         return this.wsmanMessageCreator.createXml(header, body)
       }
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  /**
+   * Accesses a representation of the KerberosSettingData.
+   * @method GET - Retrieves a representation of the KerberosSettingData.
+   * @method PULL - Requires enumerationContext.  Pulls instances of KerberosSettingData, following an Enumerate operation.
+   * @method ENUMERATE - Enumerates the instances of KerberosSettingData.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @returns string
+   */
+  KerberosSettingData = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
+    switch (method) {
+      case Methods.GET:
+      case Methods.PULL:
+      case Methods.ENUMERATE:
+        return this.switch({ method: method, class: Classes.AMT_KERBEROS_SETTING_DATA, enumerationContext: enumerationContext })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -392,10 +411,10 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL: {
-        return this.switch({ method: method, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, enumerationContext })
       }
       case Methods.DELETE:
-        return this.switch({ method: method, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, selector: selector })
+        return this.switch({ method, class: Classes.AMT_MANAGEMENT_PRESENCE_REMOTE_SAP, selector })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -418,7 +437,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL: {
-        return this.switch({ method: method, class: Classes.AMT_MESSAGE_LOG, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_MESSAGE_LOG, enumerationContext })
       }
       case Methods.POSITION_TO_FIRST_RECORD:
         header = this.wsmanMessageCreator.createHeader(Actions.POSITION_TO_FIRSTRECORD, `${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}`)
@@ -429,6 +448,33 @@ export class Messages {
         header = this.wsmanMessageCreator.createHeader(Actions.GET_RECORDS, `${this.resourceUriBase}${Classes.AMT_MESSAGE_LOG}`)
         body = this.wsmanMessageCreator.createBody('GetRecords_INPUT', this.resourceUriBase, Classes.AMT_MESSAGE_LOG, { IterationIdentifier: identifier, MaxReadRecords: 390 })
         return this.wsmanMessageCreator.createXml(header, body)
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  /**
+   * Accesses a representation of MPSUsernamePassword.
+   * @method GET - Retrieves a representation of MPSUsernamePassword.
+   * @method PUT - Requires MPSUsernamePassword.  Changes properties of MPSUsernamePassword.
+   * @method PULL - Requires enumerationContext.  Pulls instances of MPSUsernamePassword, following an Enumerate operation.
+   * @method ENUMERATE - Enumerates the instances of MPSUsernamePassword.
+   * @param enumerationContext string returned from an ENUMERATE call.
+   * @param data MPSUsernamePassword Object.
+   * @returns string
+   */
+  MPSUsernamePassword = (method: Methods.GET | Methods.ENUMERATE | Methods.PULL | Methods.PUT, enumerationContext?: string, data?: Models.MPSUsernamePassword): string => {
+    switch (method) {
+      case Methods.GET:
+      case Methods.PULL:
+      case Methods.ENUMERATE:
+        return this.switch({ method: method, class: Classes.AMT_MPS_USERNAME_PASSWORD, enumerationContext: enumerationContext })
+      case Methods.PUT: {
+        if (data == null) throw new Error(WSManErrors.DATA)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_MPS_USERNAME_PASSWORD}`)
+        const body = this.wsmanMessageCreator.createBody(Classes.AMT_MPS_USERNAME_PASSWORD, this.resourceUriBase, Classes.AMT_MPS_USERNAME_PASSWORD, data)
+        return this.wsmanMessageCreator.createXml(header, body)
+      }
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -449,10 +495,10 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL: {
-        return this.switch({ method: method, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, enumerationContext })
       }
       case Methods.DELETE:
-        return this.switch({ method: method, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, selector: selector })
+        return this.switch({ method, class: Classes.AMT_PUBLIC_KEY_CERTIFICATE, selector })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -475,7 +521,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL: {
-        return this.switch({ method: method, class: Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_PUBLIC_KEY_MANAGEMENT_SERVICE, enumerationContext })
       }
       case Methods.GENERATE_KEY_PAIR: {
         if ((data as Models.GenerateKeyPair)?.KeyAlgorithm == null || (data as Models.GenerateKeyPair)?.KeyLength == null) throw new Error(WSManErrors.KEY_PAIR)
@@ -520,9 +566,9 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method, class: Classes.AMT_PUBLIC_PRIVATE_KEY_PAIR, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_PUBLIC_PRIVATE_KEY_PAIR, enumerationContext })
       case Methods.DELETE:
-        return this.switch({ method: method, class: Classes.AMT_PUBLIC_PRIVATE_KEY_PAIR, selector: selector })
+        return this.switch({ method, class: Classes.AMT_PUBLIC_PRIVATE_KEY_PAIR, selector })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -544,11 +590,11 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_REDIRECTION_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_REDIRECTION_SERVICE, enumerationContext })
       case Methods.REQUEST_STATE_CHANGE:
-        return this.switch({ method: method, class: Classes.AMT_REDIRECTION_SERVICE, requestedState: requestedState })
+        return this.switch({ method, class: Classes.AMT_REDIRECTION_SERVICE, requestedState })
       case Methods.PUT:
-        return this.switch({ method: method, class: Classes.AMT_REDIRECTION_SERVICE, data: data })
+        return this.switch({ method, class: Classes.AMT_REDIRECTION_SERVICE, data: data })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -572,9 +618,9 @@ export class Messages {
       case Methods.ENUMERATE:
       case Methods.GET:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, enumerationContext })
       case Methods.DELETE:
-        return this.switch({ method: method, class: Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, selector: selector })
+        return this.switch({ method, class: Classes.AMT_REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, selector })
       case Methods.CREATE:
       case Methods.PUT: {
         const action = (method === Methods.PUT ? Actions.PUT : Actions.CREATE)
@@ -602,9 +648,28 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_REMOTE_ACCESS_POLICY_RULE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_REMOTE_ACCESS_POLICY_RULE, enumerationContext })
       case Methods.DELETE:
-        return this.switch({ method: method, class: Classes.AMT_REMOTE_ACCESS_POLICY_RULE, selector: selector })
+        return this.switch({ method, class: Classes.AMT_REMOTE_ACCESS_POLICY_RULE, selector })
+      default:
+        throw new Error(WSManErrors.UNSUPPORTED_METHOD)
+    }
+  }
+
+  /**
+    * Accesses a representation of RemoteAccessCapabilities.
+    * @method GET - Retrieves a representation of RemoteAccessCapabilities.
+    * @method PULL - Requires enumerationContext.  Pulls instances of RemoteAccessCapabilities, following an Enumerate operation.
+    * @method ENUMERATE - Enumerates the instances of RemoteAccessCapabilities.
+    * @param enumerationContext string returned from an ENUMERATE call.
+    * @returns string
+    */
+  RemoteAccessCapabilities = (method: Methods.GET | Methods.ENUMERATE | Methods.PULL, enumerationContext?: string): string => {
+    switch (method) {
+      case Methods.GET:
+      case Methods.ENUMERATE:
+      case Methods.PULL:
+        return this.switch({ method: method, class: Classes.AMT_REMOTE_ACCESS_CAPABILITIES, enumerationContext: enumerationContext })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -628,7 +693,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_REMOTE_ACCESS_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_REMOTE_ACCESS_SERVICE, enumerationContext })
       case Methods.ADD_MPS: {
         if (mpServer == null) { throw new Error(WSManErrors.MP_SERVER) }
         const header = this.wsmanMessageCreator.createHeader(Actions.ADD_MPS, `${this.resourceUriBase}${Classes.AMT_REMOTE_ACCESS_SERVICE}`)
@@ -675,7 +740,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE, enumerationContext })
       case Methods.UNPROVISION:
         if (provisioningMode == null) { provisioningMode = 1 }
         header = this.wsmanMessageCreator.createHeader(Actions.UNPROVISION, `${this.resourceUriBase}${Classes.AMT_SETUP_AND_CONFIGURATION_SERVICE}`)
@@ -713,7 +778,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_TIME_SYNCHRONIZATION_SERVICE, enumerationContext })
+        return this.switch({ method, class: Classes.AMT_TIME_SYNCHRONIZATION_SERVICE, enumerationContext })
       case Methods.GET_LOW_ACCURACY_TIME_SYNCH: {
         const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_LOW_ACCURACY_TIME_SYNCH, `${this.resourceUriBase}${Classes.AMT_TIME_SYNCHRONIZATION_SERVICE}`)
         const body: string = this.wsmanMessageCreator.createBody('GetLowAccuracyTimeSynch_INPUT', this.resourceUriBase, Classes.AMT_TIME_SYNCHRONIZATION_SERVICE)
@@ -749,7 +814,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_TLS_CREDENTIAL_CONTEXT, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_TLS_CREDENTIAL_CONTEXT, enumerationContext })
       case Methods.CREATE: {
         if (tlsCredentialContext == null) { throw new Error(WSManErrors.TLS_CREDENTIAL_CONTEXT) }
         const header = this.wsmanMessageCreator.createHeader(Actions.CREATE, `${this.resourceUriBase}${Classes.AMT_TLS_CREDENTIAL_CONTEXT}`)
@@ -757,7 +822,7 @@ export class Messages {
         return this.wsmanMessageCreator.createXml(header, body)
       }
       case Methods.DELETE:
-        return this.switch({ method: method, class: Classes.AMT_TLS_CREDENTIAL_CONTEXT, selector: selector })
+        return this.switch({ method, class: Classes.AMT_TLS_CREDENTIAL_CONTEXT, selector })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -777,7 +842,7 @@ export class Messages {
       case Methods.GET:
       case Methods.PULL:
       case Methods.ENUMERATE:
-        return this.switch({ method: method, class: Classes.AMT_TLS_SETTING_DATA, enumerationContext })
+        return this.switch({ method, class: Classes.AMT_TLS_SETTING_DATA, enumerationContext })
       case Methods.PUT: {
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_TLS_SETTING_DATA}`, null, null, { name: 'InstanceID', value: tlsSettingData.InstanceID })
         const body = this.wsmanMessageCreator.createBody('AMT_TLSSettingData', this.resourceUriBase, Classes.AMT_TLS_SETTING_DATA, tlsSettingData)
@@ -803,9 +868,9 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_USER_INITIATED_CONNECTION_SERVICE, enumerationContext })
+        return this.switch({ method, class: Classes.AMT_USER_INITIATED_CONNECTION_SERVICE, enumerationContext })
       case Methods.REQUEST_STATE_CHANGE:
-        return this.switch({ method: method, class: Classes.AMT_USER_INITIATED_CONNECTION_SERVICE, requestedState: requestedState })
+        return this.switch({ method, class: Classes.AMT_USER_INITIATED_CONNECTION_SERVICE, requestedState })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }

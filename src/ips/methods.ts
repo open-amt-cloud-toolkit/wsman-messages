@@ -4,17 +4,17 @@
 **********************************************************************/
 
 export enum Methods {
+  ADD_NEXT_CERT_IN_CHAIN = 'AddNextCertInChain',
+  ADMIN_SETUP = 'AdminSetup',
+  CANCEL_OPT_IN = 'CancelOptIn',
+  DELETE = 'Delete',
+  ENUMERATE = 'Enumerate',
   GET = 'Get',
   PULL = 'Pull',
-  ENUMERATE = 'Enumerate',
   PUT = 'Put',
-  DELETE = 'Delete',
-  SETUP = 'Setup',
-  ADMIN_SETUP = 'AdminSetup',
-  START_OPT_IN = 'StartOptIn',
-  CANCEL_OPT_IN = 'CancelOptIn',
-  SEND_OPT_IN_CODE = 'SendOptInCode',
   REQUEST_POWER_STATE_CHANGE = 'RequestPowerStateChange',
-  ADD_NEXT_CERT_IN_CHAIN = 'AddNextCertInChain',
-  SET_CERTIFICATES = 'SetCertificates'
+  SEND_OPT_IN_CODE = 'SendOptInCode',
+  SET_CERTIFICATES = 'SetCertificates',
+  SETUP = 'Setup',
+  START_OPT_IN = 'StartOptIn'
 }
