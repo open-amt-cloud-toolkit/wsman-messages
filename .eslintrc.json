@@ -6,6 +6,7 @@
         "jest": true
     },
     "extends": [
+        "eslint:recommended",
         "standard"
     ],
     "ignorePatterns": [
@@ -23,6 +24,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "object-shorthand": 2,
         "@typescript-eslint/strict-boolean-expressions": 0,
         "@typescript-eslint/restrict-template-expressions": 0,
         "@typescript-eslint/no-dynamic-delete": 0,

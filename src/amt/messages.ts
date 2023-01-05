@@ -548,7 +548,7 @@ export class Messages {
       case Methods.REQUEST_STATE_CHANGE:
         return this.switch({ method, class: Classes.AMT_REDIRECTION_SERVICE, requestedState })
       case Methods.PUT:
-        return this.switch({ method, class: Classes.AMT_REDIRECTION_SERVICE, data: data })
+        return this.switch({ method, class: Classes.AMT_REDIRECTION_SERVICE, data })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }

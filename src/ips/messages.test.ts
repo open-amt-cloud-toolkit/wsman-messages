@@ -45,7 +45,7 @@ describe('IPS Tests', () => {
         value: 'test'
       }
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="test">test</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
-      const response = ipsClass.switch({ method: Methods.DELETE, class: Classes.IPS_ALARM_CLOCK_OCCURRENCE, selector: selector })
+      const response = ipsClass.switch({ method: Methods.DELETE, class: Classes.IPS_ALARM_CLOCK_OCCURRENCE, selector })
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if missing data when PUT is called on switch', () => {
