@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  **********************************************************************/
 
-import { Common } from '../'
-import { Types } from './types'
+import type { Common } from '../'
+import type { Types } from './types'
 
 export namespace Models {
   export interface ManagedElement {
@@ -314,11 +314,11 @@ export namespace Models {
 
   export interface SoftwareIdentity extends LogicalElement {
     CIM_SoftwareIdentity: Array<
-      {
-        InstanceID: string
-        VersionString: string
-        IsEntity: boolean
-      } & LogicalElement
+    {
+      InstanceID: string
+      VersionString: string
+      IsEntity: boolean
+    } & LogicalElement
     >
   }
 

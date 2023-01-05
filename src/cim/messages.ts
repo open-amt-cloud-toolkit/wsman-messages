@@ -3,9 +3,11 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
+import { WSManMessageCreator, WSManErrors } from '../WSMan'
 import { REQUEST_STATE_CHANGE } from './actions'
-import { Classes, Methods, Actions, Types } from './'
-import { WSManMessageCreator, WSManErrors, Selector } from '../WSMan'
+import { Classes, Methods, Actions } from './'
+import type { Selector } from '../WSMan'
+import type { Types } from './'
 
 interface CIMCall {
   method: Methods
@@ -37,14 +39,14 @@ export class Messages {
   }
 
   private readonly delete = (action: Actions, amtClass: Classes, selector: Selector): string => {
-    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, null, null, selector)
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, undefined, undefined, selector)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.DELETE)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly requestStateChange = (action: string, amtClass: Classes, requestedState: number): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`)
-    const body = this.wsmanMessageCreator.createCommonBody(Methods.REQUEST_STATE_CHANGE, null, `${this.resourceUriBase}${amtClass}`, requestedState)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.REQUEST_STATE_CHANGE, undefined, `${this.resourceUriBase}${amtClass}`, requestedState)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -76,9 +78,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  BIOSElement = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_BIOS_ELEMENT, enumerationContext })
-  }
+  BIOSElement = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_BIOS_ELEMENT, enumerationContext })
 
   /**
    * Accesses a representation of BootConfigSetting.
@@ -148,9 +148,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  Card = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_CARD, enumerationContext })
-  }
+  Card = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_CARD, enumerationContext })
 
   /**
    * Accesses a representation of Chassis.
@@ -160,9 +158,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  Chassis = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_CHASSIS, enumerationContext })
-  }
+  Chassis = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_CHASSIS, enumerationContext })
 
   /**
    * Accesses a representation of Chip.
@@ -172,9 +168,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  Chip = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_CHIP, enumerationContext })
-  }
+  Chip = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_CHIP, enumerationContext })
 
   /**
      * Accesses a representation of ComputerSystemPackage.
@@ -183,9 +177,7 @@ export class Messages {
      * @method ENUMERATE - Enumerates the instances of ComputerSystemPackage
      * @returns string
      */
-  ComputerSystemPackage = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_COMPUTER_SYSTEM_PACKAGE, enumerationContext })
-  }
+  ComputerSystemPackage = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_COMPUTER_SYSTEM_PACKAGE, enumerationContext })
 
   /**
    * Accesses a representation of IEEE8021xSettings.
@@ -195,9 +187,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  IEEE8021xSettings = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_IEEE8021X_SETTINGS, enumerationContext })
-  }
+  IEEE8021xSettings = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_IEEE8021X_SETTINGS, enumerationContext })
 
   /**
      * Accesses a representation of KVMRedirectionSAP.
@@ -211,9 +201,7 @@ export class Messages {
      * @remarks Values={Enabled, Disabled, Shut Down, Offline, Test, Defer, Quiesce, Reboot, Reset, DMTF Reserved, Vendor Reserved}
      * @returns string
      */
-  KVMRedirectionSAP = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE | Methods.REQUEST_STATE_CHANGE, enumerationContext?: string, requestedState?: Types.KVMRedirectionSAP.RequestedStateInputs): string => {
-    return this.switch({ method, class: Classes.CIM_KVM_REDIRECTION_SAP, enumerationContext, requestedState })
-  }
+  KVMRedirectionSAP = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE | Methods.REQUEST_STATE_CHANGE, enumerationContext?: string, requestedState?: Types.KVMRedirectionSAP.RequestedStateInputs): string => this.switch({ method, class: Classes.CIM_KVM_REDIRECTION_SAP, enumerationContext, requestedState })
 
   /**
    * Accesses a representation of MediaAccessDevice.
@@ -223,9 +211,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  MediaAccessDevice = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_MEDIA_ACCESS_DEVICE, enumerationContext })
-  }
+  MediaAccessDevice = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_MEDIA_ACCESS_DEVICE, enumerationContext })
 
   /**
    * Accesses a representation of PhysicalMemory.
@@ -235,9 +221,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  PhysicalMemory = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_PHYSICAL_MEMORY, enumerationContext })
-  }
+  PhysicalMemory = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_PHYSICAL_MEMORY, enumerationContext })
 
   /**
    * Accesses a representation of PhysicalPackage.
@@ -247,9 +231,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  PhysicalPackage = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_PHYSICAL_PACKAGE, enumerationContext })
-  }
+  PhysicalPackage = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_PHYSICAL_PACKAGE, enumerationContext })
 
   /**
    * Accesses a representation of PowerManagementService.
@@ -294,9 +276,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  Processor = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_PROCESSOR, enumerationContext })
-  }
+  Processor = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_PROCESSOR, enumerationContext })
 
   /**
    * Accesses a representation of ServiceAvailableToElement.
@@ -306,9 +286,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  ServiceAvailableToElement = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.SERVICE_AVAILABLE_TO_ELEMENT, enumerationContext })
-  }
+  ServiceAvailableToElement = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.SERVICE_AVAILABLE_TO_ELEMENT, enumerationContext })
 
   /**
    * Accesses a representation of SoftwareIdentity.
@@ -318,9 +296,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  SoftwareIdentity = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_SOFTWARE_IDENTITY, enumerationContext })
-  }
+  SoftwareIdentity = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_SOFTWARE_IDENTITY, enumerationContext })
 
   /**
    * Accesses a representation of SystemPackaging.
@@ -330,9 +306,7 @@ export class Messages {
    * @param enumerationContext string returned from an ENUMERATE call.
    * @returns string
    */
-  SystemPackaging = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.CIM_SYSTEM_PACKAGING, enumerationContext })
-  }
+  SystemPackaging = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.CIM_SYSTEM_PACKAGING, enumerationContext })
 
   /**
    * Accesses a representation of WiFiEndpointSettings.
@@ -369,7 +343,5 @@ export class Messages {
    * @remarks Values={Enabled, Disabled, Shut Down, Offline, Test, Defer, Quiesce, Reboot, Reset, DMTF Reserved, Vendor Reserved}
    * @returns string
    */
-  WiFiPort = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE | Methods.REQUEST_STATE_CHANGE, enumerationContext?: string, requestedState?: Types.WiFiPort.RequestedState): string => {
-    return this.switch({ method, class: Classes.CIM_WIFI_PORT, enumerationContext, requestedState })
-  }
+  WiFiPort = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE | Methods.REQUEST_STATE_CHANGE, enumerationContext?: string, requestedState?: Types.WiFiPort.RequestedState): string => this.switch({ method, class: Classes.CIM_WIFI_PORT, enumerationContext, requestedState })
 }

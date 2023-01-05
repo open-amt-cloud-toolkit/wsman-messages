@@ -7,7 +7,7 @@
     },
     "extends": [
         "eslint:recommended",
-        "standard"
+        "standard-with-typescript"
     ],
     "ignorePatterns": [
         "**/*.js",
@@ -24,7 +24,34 @@
         "@typescript-eslint"
     ],
     "rules": {
+        "import/order": [
+            "error",
+            {
+                "groups": [
+                    "builtin",
+                    "external",
+                    "parent",
+                    "sibling",
+                    "index",
+                    "object",
+                    "type"
+                ],
+                "pathGroups": [
+                    {
+                        "pattern": "@/**/**",
+                        "group": "parent",
+                        "position": "before"
+                    }
+                ],
+                "alphabetize": {
+                    "order": "asc"
+                }
+            }
+        ],
+        "@typescript-eslint/no-namespace": 0,
+        "arrow-body-style": 2,
         "object-shorthand": 2,
+        "@typescript-eslint/consistent-type-imports": 2,
         "@typescript-eslint/strict-boolean-expressions": 0,
         "@typescript-eslint/restrict-template-expressions": 0,
         "@typescript-eslint/no-dynamic-delete": 0,

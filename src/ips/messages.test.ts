@@ -3,9 +3,11 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { Messages, Methods, Models, Classes } from './'
-import { WSManErrors, Selector } from '../WSMan'
-import { AMT } from '../'
+import { WSManErrors } from '../WSMan'
+import { Messages, Methods, Classes } from './'
+import type { AMT } from '../'
+import type { Selector } from '../WSMan'
+import type { Models } from './'
 
 const castedIPSClass = new Messages() as any
 
@@ -78,7 +80,7 @@ describe('IPS Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should throw an error if enumerationContext is missing', () => {
-      expect(() => { ipsClass.IEEE8021xCredentialContext(Methods.PULL, null) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
+      expect(() => { ipsClass.IEEE8021xCredentialContext(Methods.PULL, undefined) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
   })
   describe('ips_AlarmClockOccurrence Tests', () => {
@@ -103,7 +105,7 @@ describe('IPS Tests', () => {
     })
     it('should create a valid ips_AlarmClockOccurrence Delete wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout><w:SelectorSet><w:Selector Name="Name">Instance</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
-      const response = ipsClass.AlarmClockOccurrence(Methods.DELETE, null, selector)
+      const response = ipsClass.AlarmClockOccurrence(Methods.DELETE, undefined, selector)
       expect(response).toEqual(correctResponse)
     })
     it('should create a valid ips_AlarmClockOccurrence Pull wsman message', () => {
@@ -145,48 +147,48 @@ describe('IPS Tests', () => {
     })
     it('should return a valid ips_HostBasedSetupService Setup wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService/Setup</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:Setup_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService"><h:NetAdminPassEncryptionType>2</h:NetAdminPassEncryptionType><h:NetworkAdminPassword>bebb3497d69b544c732651365cc3462d</h:NetworkAdminPassword></h:Setup_INPUT></Body></Envelope>`
-      const response = ipsClass.HostBasedSetupService(Methods.SETUP, null, adminPassEncryptionType, adminPassword)
+      const response = ipsClass.HostBasedSetupService(Methods.SETUP, undefined, adminPassEncryptionType, adminPassword)
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid ips_HostBasedSetupService Admin Setup wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService/AdminSetup</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AdminSetup_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService"><h:NetAdminPassEncryptionType>2</h:NetAdminPassEncryptionType><h:NetworkAdminPassword>bebb3497d69b544c732651365cc3462d</h:NetworkAdminPassword><h:McNonce>ZxxE0cFy590zDBIR39q6QU6iuII=</h:McNonce><h:SigningAlgorithm>2</h:SigningAlgorithm><h:DigitalSignature>T0NvoR7RUkOpVULIcNL0VhpEK5rO3j5/TBpN82q1YgPM5sRBxqymu7fKBgAGGN49oD8xsqW4X0SWxjuB3q/TLHjNJJNxoHHlXZnb77HTwfXHp59E/TM10UvOX96qEgKU5Mp+8/IE9LnYxC1ajQostSRA/X+HA5F6kRctLiCK+ViWUCk4sAtPzHhhHSTB/98KDWuacPepScSpref532hpD2/g43nD3Wg0SjmOMExPLMMnijWE9KDkxE00+Bos28DD3Yclj4BMhkoXDw6k4EcTWKbGhtF/9meXXmSPwRmXEaWe8COIDrQks1mpyLblYu8yHHnUjhssdcCQHtAOu7t0RA==</h:DigitalSignature></h:AdminSetup_INPUT></Body></Envelope>`
-      const response = ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, adminPassword, mcNonce, signingAlgorithm, digitalSignature)
+      const response = ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, undefined, adminPassEncryptionType, adminPassword, mcNonce, signingAlgorithm, digitalSignature)
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid ips_HostBasedSetupService Add Next Cert in Chain wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService/AddNextCertInChain</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddNextCertInChain_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_HostBasedSetupService"><h:NextCertificate>ExampleCertificate</h:NextCertificate><h:IsLeafCertificate>true</h:IsLeafCertificate><h:IsRootCertificate>false</h:IsRootCertificate></h:AddNextCertInChain_INPUT></Body></Envelope>`
-      const response = ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, 'ExampleCertificate', true, false)
+      const response = ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, undefined, undefined, undefined, undefined, undefined, undefined, 'ExampleCertificate', true, false)
       expect(response).toEqual(correctResponse)
     })
-    it('should return null if adminPassEncryptionType in ips_HostBasedSetupService SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, null, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
+    it('should throw error if adminPassEncryptionType in ips_HostBasedSetupService SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, undefined, undefined, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, null, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
+    it('should throw error if adminPassword in ips_HostBasedSetupService SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.SETUP, undefined, adminPassEncryptionType, undefined) }).toThrow(WSManErrors.ADMIN_PASSWORD)
     })
-    it('should return null if adminPassEncryptionType in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, null, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
+    it('should throw error if adminPassEncryptionType in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, undefined, undefined, adminPassword) }).toThrow(WSManErrors.ADMIN_PASS_ENCRYPTION_TYPE)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, null) }).toThrow(WSManErrors.ADMIN_PASSWORD)
+    it('should throw error if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, undefined, adminPassEncryptionType, undefined) }).toThrow(WSManErrors.ADMIN_PASSWORD)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, adminPassword, null) }).toThrow(WSManErrors.NONCE)
+    it('should throw error if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, undefined, adminPassEncryptionType, adminPassword, undefined) }).toThrow(WSManErrors.NONCE)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, adminPassword, mcNonce, null) }).toThrow(WSManErrors.SIGNING_ALGORITHM)
+    it('should throw error if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, undefined, adminPassEncryptionType, adminPassword, mcNonce, undefined) }).toThrow(WSManErrors.SIGNING_ALGORITHM)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, null, adminPassEncryptionType, adminPassword, mcNonce, signingAlgorithm, null) }).toThrow(WSManErrors.DIGITAL_SIGNATURE)
+    it('should throw error if adminPassword in ips_HostBasedSetupService ADMIN_SETUP is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADMIN_SETUP, undefined, adminPassEncryptionType, adminPassword, mcNonce, signingAlgorithm, undefined) }).toThrow(WSManErrors.DIGITAL_SIGNATURE)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, null, false, true) }).toThrow(WSManErrors.CERTIFICATE_BLOB)
+    it('should throw error if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, undefined, undefined, undefined, undefined, undefined, undefined, undefined, false, true) }).toThrow(WSManErrors.CERTIFICATE_BLOB)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, certificate, null, false) }).toThrow(WSManErrors.IS_LEAF)
+    it('should throw error if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, undefined, undefined, undefined, undefined, undefined, undefined, certificate, undefined, false) }).toThrow(WSManErrors.IS_LEAF)
     })
-    it('should return null if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
-      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, null, null, null, null, null, null, certificate, false, null) }).toThrow(WSManErrors.IS_ROOT)
+    it('should throw error if adminPassword in ips_HostBasedSetupService ADD_NEXT_CERT_IN_CHAIN is missing', () => {
+      expect(() => { ipsClass.HostBasedSetupService(Methods.ADD_NEXT_CERT_IN_CHAIN, undefined, undefined, undefined, undefined, undefined, undefined, certificate, false, undefined) }).toThrow(WSManErrors.IS_ROOT)
     })
     it('should throw error if an unsupported method is called', () => {
       expect(() => { castedIPSClass.HostBasedSetupService(Methods.REQUEST_POWER_STATE_CHANGE) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
@@ -215,7 +217,7 @@ describe('IPS Tests', () => {
         RoamingIdentity: 'testdomain/testname'
       }
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:IPS_IEEE8021xSettings xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings"><h:Enabled>2</h:Enabled><h:AuthenticationProtocol>0</h:AuthenticationProtocol><h:RoamingIdentity>testdomain/testname</h:RoamingIdentity></h:IPS_IEEE8021xSettings></Body></Envelope>`
-      const response = ipsClass.IEEE8021xSettings(Methods.PUT, null, ieee8021xSettings)
+      const response = ipsClass.IEEE8021xSettings(Methods.PUT, undefined, ieee8021xSettings)
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid ips_IEEE8021xSettings SetCertificates wsman message', () => {
@@ -238,7 +240,7 @@ describe('IPS Tests', () => {
         X509Certificate: 'certificateblob'
       }
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings/SetCertificates</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>IPS_IEEE8021xSettings</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetCertificates xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings"><h:ServerCertificateIssuer><h:ElementName>publicKeyCertificate</h:ElementName><h:InstanceID>abc</h:InstanceID><h:Issuer>serverTest</h:Issuer><h:ReadOnlyCertificate>true</h:ReadOnlyCertificate><h:Subject>serverTest</h:Subject><h:TrustedRootCertficate>true</h:TrustedRootCertficate><h:X509Certificate>certificateblob</h:X509Certificate></h:ServerCertificateIssuer><h:ClientCertificate><h:ElementName>publicKeyCertificate</h:ElementName><h:InstanceID>abc</h:InstanceID><h:Issuer>clientTest</h:Issuer><h:ReadOnlyCertificate>true</h:ReadOnlyCertificate><h:Subject>clientTest</h:Subject><h:TrustedRootCertficate>false</h:TrustedRootCertficate><h:X509Certificate>certificateblob</h:X509Certificate></h:ClientCertificate></h:SetCertificates></Body></Envelope>`
-      const response = ipsClass.IEEE8021xSettings(Methods.SET_CERTIFICATES, null, null, serverCertificateIssuer, clientCertificate)
+      const response = ipsClass.IEEE8021xSettings(Methods.SET_CERTIFICATES, undefined, undefined, serverCertificateIssuer, clientCertificate)
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if certificate data is missing', () => {
@@ -248,10 +250,10 @@ describe('IPS Tests', () => {
       expect(() => { castedIPSClass.IEEE8021xSettings(Methods.ADD_NEXT_CERT_IN_CHAIN) }).toThrow(WSManErrors.UNSUPPORTED_METHOD)
     })
     it('should throw error if missing ieee8021xSettings data', () => {
-      expect(() => { ipsClass.IEEE8021xSettings(Methods.PUT, null) }).toThrow(WSManErrors.DATA)
+      expect(() => { ipsClass.IEEE8021xSettings(Methods.PUT, undefined) }).toThrow(WSManErrors.DATA)
     })
     it('should throw an error if enumerationContext is missing', () => {
-      expect(() => { ipsClass.IEEE8021xSettings(Methods.PULL, null) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
+      expect(() => { ipsClass.IEEE8021xSettings(Methods.PULL, undefined) }).toThrow(WSManErrors.ENUMERATION_CONTEXT)
     })
   })
   describe('ips_OptInService Tests', () => {
@@ -279,7 +281,7 @@ describe('IPS Tests', () => {
           OptInCodeTimeout: 300
         }
       }
-      const response = ipsClass.OptInService(Methods.PUT, null, null, data)
+      const response = ipsClass.OptInService(Methods.PUT, undefined, undefined, data)
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:IPS_OptInService xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService"><h:OptInCodeTimeout>300</h:OptInCodeTimeout></h:IPS_OptInService></Body></Envelope>`
       expect(response).toEqual(correctResponse)
     })
@@ -290,7 +292,7 @@ describe('IPS Tests', () => {
     })
     it('should create a valid ips_SendOptInCode wsman message', () => {
       const code = 1
-      const response = ipsClass.OptInService(Methods.SEND_OPT_IN_CODE, null, code)
+      const response = ipsClass.OptInService(Methods.SEND_OPT_IN_CODE, undefined, code)
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService/SendOptInCode</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SendOptInCode_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_OptInService"><h:OptInCode>1</h:OptInCode></h:SendOptInCode_INPUT></Body></Envelope>`
       expect(response).toEqual(correctResponse)
     })
@@ -300,10 +302,10 @@ describe('IPS Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should throw error if optInServiceResponse is missing', () => {
-      expect(() => { ipsClass.OptInService(Methods.PUT, null, null) }).toThrow(WSManErrors.OPT_IN_SERVICE_RESPONSE)
+      expect(() => { ipsClass.OptInService(Methods.PUT, undefined, undefined) }).toThrow(WSManErrors.OPT_IN_SERVICE_RESPONSE)
     })
     it('should throw error if optInCode is missing', () => {
-      expect(() => { ipsClass.OptInService(Methods.SEND_OPT_IN_CODE, null, null) }).toThrow(WSManErrors.OPT_IN_CODE)
+      expect(() => { ipsClass.OptInService(Methods.SEND_OPT_IN_CODE, undefined, undefined) }).toThrow(WSManErrors.OPT_IN_CODE)
     })
   })
 })
