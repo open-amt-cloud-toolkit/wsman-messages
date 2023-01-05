@@ -1,7 +1,7 @@
 import { Actions } from './actions'
-import { Messages } from './messages'
 import { Classes } from './classes'
+import { Messages } from './messages'
 import { Methods } from './methods'
-import { Types } from './types'
 import { Models } from './models'
+import { Types } from './types'
 export { Methods, Actions, Classes, Messages, Types, Models }

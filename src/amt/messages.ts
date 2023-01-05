@@ -3,10 +3,12 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { Selector, WSManMessageCreator, WSManErrors } from '../WSMan'
+import { WSManMessageCreator, WSManErrors } from '../WSMan'
 import { REQUEST_STATE_CHANGE } from './actions'
-import { Classes, Methods, Actions, Models, Types } from './'
-import { CIM, IPS } from '../'
+import { Classes, Methods, Actions } from './'
+import type { CIM, IPS } from '../'
+import type { Selector } from '../WSMan'
+import type { Models, Types } from './'
 
 type AllActions = Actions
 
@@ -49,14 +51,14 @@ export class Messages {
   }
 
   private readonly delete = (action: AllActions, amtClass: Classes, selector: Selector): string => {
-    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, null, null, selector)
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`, undefined, undefined, selector)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.DELETE)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly requestStateChange = (action: string, amtClass: Classes, requestedState: number): string => {
     const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${amtClass}`)
-    const body = this.wsmanMessageCreator.createCommonBody(Methods.REQUEST_STATE_CHANGE, null, `${this.resourceUriBase}${amtClass}`, requestedState)
+    const body = this.wsmanMessageCreator.createCommonBody(Methods.REQUEST_STATE_CHANGE, undefined, `${this.resourceUriBase}${amtClass}`, requestedState)
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -307,11 +309,13 @@ export class Messages {
       case Methods.PUT: {
         if (environmentDetectionSettingData == null) { throw new Error(WSManErrors.ENVIRONMENT_DETECTION_SETTING_DATA) }
         const selector: Selector = { name: 'InstanceID', value: environmentDetectionSettingData.InstanceID }
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}`, null, null, selector)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}`, undefined, undefined, selector)
         let body = `<Body><r:AMT_EnvironmentDetectionSettingData xmlns:r="${this.resourceUriBase}${Classes.AMT_ENVIRONMENT_DETECTION_SETTING_DATA}"><r:DetectionAlgorithm>${environmentDetectionSettingData.DetectionAlgorithm}</r:DetectionAlgorithm><r:ElementName>${environmentDetectionSettingData.ElementName}</r:ElementName><r:InstanceID>${environmentDetectionSettingData.InstanceID}</r:InstanceID>`
-        environmentDetectionSettingData.DetectionStrings.forEach(function (item) {
-          body += `<r:DetectionStrings>${item}</r:DetectionStrings>`
-        })
+        if (environmentDetectionSettingData.DetectionStrings && environmentDetectionSettingData.DetectionStrings.length > 0) {
+          environmentDetectionSettingData.DetectionStrings.forEach(function (item) {
+            body += `<r:DetectionStrings>${item}</r:DetectionStrings>`
+          })
+        }
         body += '</r:AMT_EnvironmentDetectionSettingData></Body>'
         return this.wsmanMessageCreator.createXml(header, body)
       }
@@ -338,7 +342,7 @@ export class Messages {
       case Methods.PUT: {
         if (ethernetPortObject == null) { throw new Error(WSManErrors.ETHERNET_PORT_OBJECT) }
         const selector: Selector = { name: 'InstanceID', value: ethernetPortObject.InstanceID }
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}`, null, null, selector)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_ETHERNET_PORT_SETTINGS}`, undefined, undefined, selector)
         // AMT doesn't accept XML with null values, remove properties with null values before creating body
         Object.keys(ethernetPortObject).forEach(key => {
           if (ethernetPortObject[key] == null) {
@@ -744,7 +748,7 @@ export class Messages {
    * @param selector Selector Object.
    * @returns string
    */
-  TLSCredentialContext = (method: Methods.ENUMERATE | Methods.PULL | Methods.CREATE | Methods.DELETE | Methods.GET, enumerationContext?: string, tlsCredentialContext?: Models.TLSCredentialContext, selector?: Selector) => {
+  TLSCredentialContext = (method: Methods.ENUMERATE | Methods.PULL | Methods.CREATE | Methods.DELETE | Methods.GET, enumerationContext?: string, tlsCredentialContext?: Models.TLSCredentialContext, selector?: Selector): string => {
     switch (method) {
       case Methods.GET:
       case Methods.ENUMERATE:
@@ -772,14 +776,15 @@ export class Messages {
    * @param tlsSettingData TLSSettingData Object.
    * @returns string
    */
-  TLSSettingData = (method: Methods.ENUMERATE | Methods.PULL | Methods.PUT | Methods.GET, enumerationContext?: string, tlsSettingData?: Models.TLSSettingData) => {
+  TLSSettingData = (method: Methods.ENUMERATE | Methods.PULL | Methods.PUT | Methods.GET, enumerationContext?: string, tlsSettingData?: Models.TLSSettingData): string => {
     switch (method) {
       case Methods.GET:
       case Methods.PULL:
       case Methods.ENUMERATE:
         return this.switch({ method, class: Classes.AMT_TLS_SETTING_DATA, enumerationContext })
       case Methods.PUT: {
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_TLS_SETTING_DATA}`, null, null, { name: 'InstanceID', value: tlsSettingData.InstanceID })
+        if (!tlsSettingData?.InstanceID) { throw new Error(WSManErrors.InstanceID) }
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_TLS_SETTING_DATA}`, undefined, undefined, { name: 'InstanceID', value: tlsSettingData?.InstanceID })
         const body = this.wsmanMessageCreator.createBody('AMT_TLSSettingData', this.resourceUriBase, Classes.AMT_TLS_SETTING_DATA, tlsSettingData)
         return this.wsmanMessageCreator.createXml(header, body)
       }
@@ -830,7 +835,7 @@ export class Messages {
       case Methods.PUT: {
         if (selector == null) { throw new Error(WSManErrors.SELECTOR) }
         if (data == null) { throw new Error(WSManErrors.DATA) }
-        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE}`, null, null, selector)
+        const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE}`, undefined, undefined, selector)
         const body = this.wsmanMessageCreator.createBody(Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, this.resourceUriBase, Classes.AMT_WIFI_PORT_CONFIGURATION_SERVICE, data)
         return this.wsmanMessageCreator.createXml(header, body)
       }
