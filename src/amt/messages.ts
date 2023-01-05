@@ -390,7 +390,7 @@ export class Messages {
       case Methods.GET:
       case Methods.PULL:
       case Methods.ENUMERATE:
-        return this.switch({ method: method, class: Classes.AMT_KERBEROS_SETTING_DATA, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_KERBEROS_SETTING_DATA, enumerationContext })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }
@@ -468,7 +468,7 @@ export class Messages {
       case Methods.GET:
       case Methods.PULL:
       case Methods.ENUMERATE:
-        return this.switch({ method: method, class: Classes.AMT_MPS_USERNAME_PASSWORD, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_MPS_USERNAME_PASSWORD, enumerationContext })
       case Methods.PUT: {
         if (data == null) throw new Error(WSManErrors.DATA)
         const header = this.wsmanMessageCreator.createHeader(Actions.PUT, `${this.resourceUriBase}${Classes.AMT_MPS_USERNAME_PASSWORD}`)
@@ -669,7 +669,7 @@ export class Messages {
       case Methods.GET:
       case Methods.ENUMERATE:
       case Methods.PULL:
-        return this.switch({ method: method, class: Classes.AMT_REMOTE_ACCESS_CAPABILITIES, enumerationContext: enumerationContext })
+        return this.switch({ method, class: Classes.AMT_REMOTE_ACCESS_CAPABILITIES, enumerationContext })
       default:
         throw new Error(WSManErrors.UNSUPPORTED_METHOD)
     }

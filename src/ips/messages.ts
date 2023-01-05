@@ -176,7 +176,7 @@ export class Messages {
      * @returns string
      */
   IEEE8021xCredentialContext = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method: method, class: Classes.IPS_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext })
+    return this.switch({ method, class: Classes.IPS_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext })
   }
 
   /**
