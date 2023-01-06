@@ -30,6 +30,6 @@ export enum Actions {
   SET_MEBX_PASSWORD = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/SetMEBxPassword',
   UNPROVISION = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/Unprovision'
 }
-const REQUEST_STATE_CHANGE = (className: string): string => { return `http://intel.com/wbem/wscim/1/amt-schema/1/${className}/RequestStateChange` }
+const REQUEST_STATE_CHANGE = (className: string): string => `http://intel.com/wbem/wscim/1/amt-schema/1/${className}/RequestStateChange`
 
 export { REQUEST_STATE_CHANGE }

@@ -3,9 +3,11 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { WSManErrors, WSManMessageCreator, Selector } from '../WSMan'
-import { Actions, Methods, Classes, Models, Types } from './'
-import { AMT } from '../'
+import { WSManErrors, WSManMessageCreator } from '../WSMan'
+import { Actions, Methods, Classes } from './'
+import type { AMT } from '../'
+import type { Selector } from '../WSMan'
+import type { Models, Types } from './'
 
 type AllActions = Actions
 
@@ -44,14 +46,13 @@ export class Messages {
     const header: string = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`)
     let body = 'NULL'
     if (data) {
-      const key = Object.keys(data)[0]
       body = this.wsmanMessageCreator.createBody(ipsClass, this.resourceUriBase, ipsClass, data)
     }
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   private readonly delete = (action: Actions, ipsClass: Classes, selector: Selector): string => {
-    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`, null, null, selector)
+    const header = this.wsmanMessageCreator.createHeader(action, `${this.resourceUriBase}${ipsClass}`, undefined, undefined, selector)
     const body = this.wsmanMessageCreator.createCommonBody(Methods.DELETE)
     return this.wsmanMessageCreator.createXml(header, body)
   }
@@ -86,9 +87,7 @@ export class Messages {
    * @param selector Selector Object.
    * @returns string
    */
-  AlarmClockOccurrence = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => {
-    return this.switch({ method, class: Classes.IPS_ALARM_CLOCK_OCCURRENCE, enumerationContext, selector })
-  }
+  AlarmClockOccurrence = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE | Methods.DELETE, enumerationContext?: string, selector?: Selector): string => this.switch({ method, class: Classes.IPS_ALARM_CLOCK_OCCURRENCE, enumerationContext, selector })
 
   /**
    * Accesses a representation of HostBasedSetupService.
@@ -175,9 +174,7 @@ export class Messages {
      * @param enumerationContext string returned from an ENUMERATE call.
      * @returns string
      */
-  IEEE8021xCredentialContext = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => {
-    return this.switch({ method, class: Classes.IPS_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext })
-  }
+  IEEE8021xCredentialContext = (method: Methods.GET | Methods.PULL | Methods.ENUMERATE, enumerationContext?: string): string => this.switch({ method, class: Classes.IPS_IEEE8021X_CREDENTIAL_CONTEXT, enumerationContext })
 
   /**
    * Accesses a representation of IEEE8021xSettings

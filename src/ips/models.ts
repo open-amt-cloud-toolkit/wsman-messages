@@ -3,8 +3,8 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { CIM, Common } from '../'
-import { Types } from './types'
+import type { CIM, Common } from '../'
+import type { Types } from './types'
 
 export namespace Models {
   export interface AlarmClockOccurrence extends CIM.Models.ManagedElement {

@@ -3,8 +3,8 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { CIM } from '../'
-import { Types } from './types'
+import type { CIM } from '../'
+import type { Types } from './types'
 
 export namespace Models {
   export interface AMTAuthenticateObject {
@@ -270,12 +270,12 @@ export namespace Models {
   export interface TLSCredentialContext {//  extends CIM.Models.CredentialContext{
     // A certificate whose context is defined.
     ElementInContext: {
-      Address: string,
+      Address: string
       ReferenceParameters: {
-        ResourceURI: string,
+        ResourceURI: string
         SelectorSet: {
           Selector: {
-            _: string,
+            _: string
             $: {
               Name: string
             }
@@ -285,12 +285,12 @@ export namespace Models {
     }
     // The TLSProtocolEndpointCollection that provides context or scope for the Credential.
     ElementProvidingContext: {
-      Address: string,
+      Address: string
       ReferenceParameters: {
-        ResourceURI: string,
+        ResourceURI: string
         SelectorSet: {
           Selector: {
-            _: string,
+            _: string
             $: {
               Name: string
             }
@@ -355,7 +355,7 @@ export namespace Models {
     Username?: string
     Password?: string
     Domain?: string
-    ProtectedAccessCredential?: Array<number>
+    ProtectedAccessCredential?: number[]
     PACPassword?: string
     ClientCertificate?: string
     ServerCertificateIssue?: string

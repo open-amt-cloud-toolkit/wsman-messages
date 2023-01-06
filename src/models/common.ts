@@ -105,7 +105,7 @@ export const enum AMT_REDIRECTION_SERVICE_ENABLE_STATE {
   DmftReserved = 11
 }
 
-export interface ReturnValue{
+export interface ReturnValue {
   ReturnValue: number
   ReturnValueStr?: string
 }

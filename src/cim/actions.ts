@@ -13,6 +13,6 @@ export enum Actions {
   REQUEST_POWER_STATE_CHANGE = 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService/RequestPowerStateChange',
   SET_BOOT_CONFIG_ROLE = 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootService/SetBootConfigRole'
 }
-const REQUEST_STATE_CHANGE = (className: string): string => { return `http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/${className}/RequestStateChange` }
+const REQUEST_STATE_CHANGE = (className: string): string => `http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/${className}/RequestStateChange`
 
 export { REQUEST_STATE_CHANGE }

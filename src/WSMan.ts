@@ -6,8 +6,8 @@
 import { Methods } from './cim'
 
 export interface Selector {
-  name: string
-  value: string
+  name: string | undefined
+  value: string | undefined
 }
 
 export enum WSManErrors {
@@ -47,7 +47,8 @@ export enum WSManErrors {
   PASSWORD = 'missing password',
   PKCS10Request = 'missing PKCS10Request',
   USERNAME = 'missing username',
-  DIGEST_PASSWORD = 'missing digestPassword'
+  DIGEST_PASSWORD = 'missing digestPassword',
+  InstanceID = 'missing InstanceID'
 }
 
 export class WSManMessageCreator {
@@ -251,7 +252,7 @@ export class WSManMessageCreator {
    * @param prefix string
    * @returns void
    */
-  prependObjectKey (data: object, key: string, prefix: string) {
+  prependObjectKey (data: object, key: string, prefix: string): void {
     data[prefix + key] = data[key]
     if (typeof data[key] === 'object') {
       this.processBody(data[key])
