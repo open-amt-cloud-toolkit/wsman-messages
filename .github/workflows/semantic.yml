@@ -8,14 +8,14 @@ jobs:
     name: Validate PR and Commits
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v4
+      - uses: wagoid/commitlint-github-action@416045160973f9fff174ac6698412cfe7181c3f3 # v4.1.15
         with:
           configFile: .github/commitlint.config.js
       - name: Install Dependencies
         run: npm install @commitlint/config-conventional
-      - uses: JulienKode/pull-request-name-linter-action@v0.5.0
+      - uses: JulienKode/pull-request-name-linter-action@8c05fb989d9f156ce61e33754f9802c9d3cffa58 # v0.5.0
         with:
           configuration-path: ./.github/commitlint.config.js
