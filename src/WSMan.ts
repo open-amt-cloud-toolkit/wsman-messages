@@ -133,7 +133,7 @@ export class WSManMessageCreator {
    * @method RequestStateChange Methods.REQUEST_STATE_CHANGE
    * @returns string
    */
-  createCommonBody = (method: string, enumerationContext?: string, input?: string, requestedState?: Number): string => {
+  createCommonBody = (method: string, enumerationContext?: string, input?: string, requestedState?: number): string => {
     let str = '<Body>'
     switch (method) {
       case Methods.PULL:
