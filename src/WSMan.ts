@@ -167,6 +167,7 @@ export class WSManMessageCreator {
      * @returns string
      */
     RequestStateChange: (input: string, requestedState: number): string => `<Body><h:RequestStateChange_INPUT xmlns:h="${input}"><h:RequestedState>${requestedState.toString()}</h:RequestedState></h:RequestStateChange_INPUT></Body>`
+
   }
 
   /**

@@ -24,9 +24,9 @@ jobs:
         node-version: [14.x, 16.x, 18.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
@@ -35,7 +35,7 @@ jobs:
     - run: npm run compile --if-present
     - run: npm test
     - name: Test Report
-      uses: dorny/test-reporter@v1
+      uses: dorny/test-reporter@e9fa2f582c0ebbe2e263fd18fad744d52e0b0203 # v1
       continue-on-error: true
       if: success() || failure()    # run this step even if previous step failed
       with:
@@ -43,12 +43,12 @@ jobs:
         path: junit.xml       # Path to test results
         reporter: jest-junit  # Format of test results
         fail-on-error: 'false'
-    - uses: codecov/codecov-action@v1.0.14
+    - uses: codecov/codecov-action@7d5dfa54903bd909319c580a00535b483d1efcf3 # v1.0.14
       name: Upload Coverage Results
       if: ${{ matrix.node-version == '16.x' }}
     - run: mv junit.xml wsman-messages-unit.xml
     - name: Upload JEST Results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       with:
         name: wsman-messages-unit
         path: wsman-messages-unit.xml
