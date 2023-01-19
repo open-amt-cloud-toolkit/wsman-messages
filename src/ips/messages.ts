@@ -223,7 +223,7 @@ export class Messages {
    * @param optInServiceResponse OptInServiceResponse Object
    * @returns string
    */
-  OptInService = (method: Methods.GET | Methods.ENUMERATE | Methods.PULL | Methods.PUT | Methods.START_OPT_IN | Methods.CANCEL_OPT_IN | Methods.SEND_OPT_IN_CODE, enumerationContext?: string, optInCode?: Number, optInServiceResponse?: Models.OptInServiceResponse): string => {
+  OptInService = (method: Methods.GET | Methods.ENUMERATE | Methods.PULL | Methods.PUT | Methods.START_OPT_IN | Methods.CANCEL_OPT_IN | Methods.SEND_OPT_IN_CODE, enumerationContext?: string, optInCode?: number, optInServiceResponse?: Models.OptInServiceResponse): string => {
     let header: string, body: string
     switch (method) {
       case Methods.GET:
