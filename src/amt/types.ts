@@ -128,11 +128,15 @@ export namespace Types {
     export type RequestedState = 32768 | 32769 | 32770 | 32771
   }
 
-  export namespace GenerateKeyPair {
+  export namespace GenerateKeyPairParameters {
     /**
      * 0 = RSA
      */
     export type KeyAlgorithm = 0
+    /**
+     * The only valid key length is 2048 bits
+     */
+    export type KeyLength = 2048
   }
 
   export namespace GeneratePKCS10RequestEx {
@@ -188,6 +192,11 @@ export namespace Types {
      * 1 = Admin Control Mode | 4 = Client Control Mode
      */
     export type ProvisioningMode = 1 | 4
+    /**
+     * Indicates the provisioning mode (Enterprise , Small Business or Remote Connectivity) the device will enter following successful completion of the command. Starting from Release 6.0 only effective value is ProvisioningModeEnterprise
+     * @value_map 0 = ProvisioningModeCurrent, 1 = ProvisioningModeEnterprise, 2 = ProvisioningModeSmallBusiness, 3 = ProvisioningRemoteConnectivity
+     */
+    export type ProvisioningMode_Input = 0 | 1 | 2 | 3
   }
 
   export namespace IEEE8021xProfile {

@@ -307,4 +307,26 @@ export namespace Types {
      */
     export type PowerState = 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16
   }
+
+  export namespace BootConfigSetting {
+    export type InstanceID =
+    'Intel(r) AMT: Force Hard-drive Boot' |
+    'Intel(r) AMT: Force CD/DVD Boot' |
+    'Intel(r) AMT: Force PXE Boot' |
+    'Intel(r) AMT: Force OCR UEFI HTTPS Boot' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 1' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 2' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 3' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 4' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 5' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 6' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 7' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 8' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 9' |
+    'Intel(r) AMT: Force OCR UEFI Boot Option 10'
+    /**
+     * Unknown: 0 | Is Supported: 1 | Not Supported: 2
+     */
+    export type FailThroughSupported = 0 | 1 | 2
+  }
 }

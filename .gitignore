@@ -81,4 +81,5 @@ typings/
 
 # out/ folder
 out/
+dist/
 *.exe

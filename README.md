@@ -17,6 +17,6 @@ npm i @open-amt-cloud-toolkit/wsman-messages
 import { AMT } from '@open-amt-cloud-toolkit/wsman-messages'
 
 const amtClass = new AMT.Message()
-const message = this.amtClass.GeneralSettings(AMT.Methods.GET)
+const message = this.amtClass.GeneralSettings.Get()
 console.log(message)
 ```
