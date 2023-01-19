@@ -251,6 +251,7 @@ export namespace Models {
 
   export interface EthernetPort extends NetworkPort { }
 
+  export interface WiFiPort extends NetworkPort { }
   export interface BootSettingData extends SettingData {
     OwningEntity?: string // MaxLen=256
   }
@@ -410,5 +411,14 @@ export namespace Models {
     ProtectedAccessCredential?: string // OctetString Write-Only
     PACPassword?: string // Max Length 256 Write-Only
     PSK?: string // OctetString Write-Only
+  }
+
+  export interface BootSourceSetting extends SettingData {
+    ElementName: string
+    InstanceID: Types.BootConfigSetting.InstanceID
+    StructuredBootString?: string
+    BIOSBootString?: string
+    BootString?: string
+    FailThroughSupported?: Types.BootConfigSetting.FailThroughSupported
   }
 }

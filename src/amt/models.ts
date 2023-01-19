@@ -172,34 +172,38 @@ export namespace Models {
   }
 
   export interface BootSettingData extends CIM.Models.BootSettingData {
-    UseSOL?: boolean
-    UseSafeMode?: boolean
-    ReflashBIOS?: boolean
-    BIOSSetup?: boolean
-    BIOSPause?: boolean
-    LockPowerButton?: boolean
-    LockResetButton?: boolean
-    LockKeyboard?: boolean
-    LockSleepButton?: boolean
-    UserPasswordBypass?: boolean
-    ForcedProgressEvents?: boolean
-    FirmwareVerbosity?: Types.BootSettingData.FirmwareVerbosity // ValueMap={0, 1, 2, 3} Values={System default, Quiet - minimal screen activity, Verbose - all messages appear on the screen, Screen blank - no messages appear on the screen}
-    ConfigurationDataReset?: boolean
-    IDERBootDevice?: Types.BootSettingData.IDERBootDevice // ValueMap={0, 1} Values={Floppy Boot, CD Boot}
-    UseIDER?: boolean
+    InstanceID?: string
+    ElementName: string
+    UseSOL: boolean
+    UseSafeMode: boolean
+    ReflashBIOS: boolean
+    BIOSSetup: boolean
+    BIOSPause: boolean
+    LockPowerButton: boolean
+    LockResetButton: boolean
+    LockKeyboard: boolean
+    LockSleepButton: boolean
+    UserPasswordBypass: boolean
+    ForcedProgressEvents: boolean
+    FirmwareVerbosity: Types.BootSettingData.FirmwareVerbosity // ValueMap={0, 1, 2, 3} Values={System default, Quiet - minimal screen activity, Verbose - all messages appear on the screen, Screen blank - no messages appear on the screen}
+    ConfigurationDataReset: boolean
+    IDERBootDevice: Types.BootSettingData.IDERBootDevice // ValueMap={0, 1} Values={Floppy Boot, CD Boot}
+    UseIDER: boolean
     EnforceSecureBoot?: boolean
-    BootMediaIndex?: number
-    SecureErase?: boolean
+    BootMediaIndex: number
+    SecureErase: boolean
     RSEPassword?: string
-    OptionsCleared?: boolean
-    WinREBootEnabled?: boolean
-    UEFILocalPBABootEnabled?: boolean
-    UEFIHTTPSBootEnabled?: boolean
-    SecureBootControlEnabled?: boolean
-    BootguardStatus?: boolean
-    BIOSLastStatus?: number[]
+    readonly WinREBootEnabled?: boolean
+    readonly UEFILocalPBABootEnabled?: boolean
+    readonly UEFIHTTPSBootEnabled?: boolean
+    readonly SecureBootControlEnabled?: boolean
+    readonly BootguardStatus?: boolean
+    readonly OptionsCleared?: boolean
+    readonly BIOSLastStatus?: number[]
     UEFIBootParametersArray?: number[]
     UEFIBootNumberOfParams?: number[]
+    RPEEnabled?: boolean
+    PlatformErase?: boolean
   }
   export interface BootSettingDataResponse {
     AMT_BootSettingData: BootSettingData
@@ -327,9 +331,9 @@ export namespace Models {
     // If the value of this read-only field is True, the value of AcceptNonSecureConnections can be changed. Note that this class and field can be accessed locally as well as remotely.
   }
 
-  export interface GenerateKeyPair {
-    KeyAlgorithm: Types.GenerateKeyPair.KeyAlgorithm
-    KeyLength: number
+  export interface GenerateKeyPairParameters {
+    KeyAlgorithm: Types.GenerateKeyPairParameters.KeyAlgorithm
+    KeyLength: Types.GenerateKeyPairParameters.KeyLength
   }
   export interface AddCertificate {
     CertificateBlob: string
