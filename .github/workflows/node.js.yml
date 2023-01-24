@@ -43,7 +43,7 @@ jobs:
         path: junit.xml       # Path to test results
         reporter: jest-junit  # Format of test results
         fail-on-error: 'false'
-    - uses: codecov/codecov-action@7d5dfa54903bd909319c580a00535b483d1efcf3 # v1.0.14
+    - uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # v3.1.1
       name: Upload Coverage Results
       if: ${{ matrix.node-version == '16.x' }}
     - run: mv junit.xml wsman-messages-unit.xml
