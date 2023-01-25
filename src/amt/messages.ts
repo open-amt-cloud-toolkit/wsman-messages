@@ -7,9 +7,9 @@ import { AMT } from '../'
 import { WSManMessageCreator } from '../WSMan'
 import { REQUEST_STATE_CHANGE } from './actions'
 import { Classes, Actions } from './'
+import type { Models, Types } from './'
 import type { CIM, IPS } from '../'
 import type { Selector } from '../WSMan'
-import type { Models, Types } from './'
 
 export class Messages {
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/amt-schema/1/'

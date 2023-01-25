@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  **********************************************************************/
 
-import type { Common } from '../'
 import type { Types } from './types'
+import type { Common } from '../'
 
 export namespace Models {
   export interface ManagedElement {
