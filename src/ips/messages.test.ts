@@ -4,9 +4,9 @@
 **********************************************************************/
 
 import { Messages } from './'
+import type { Models } from './'
 import type { AMT } from '../'
 import type { Selector } from '../WSMan'
-import type { Models } from './'
 
 describe('IPS Tests', () => {
   let messageId: number

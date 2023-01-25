@@ -6,8 +6,8 @@
 import { WSManMessageCreator } from '../WSMan'
 import { REQUEST_STATE_CHANGE } from './actions'
 import { Classes, Actions } from './'
-import type { Selector } from '../WSMan'
 import type { Types } from './'
+import type { Selector } from '../WSMan'
 
 export class Messages {
   readonly resourceUriBase: string = 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'

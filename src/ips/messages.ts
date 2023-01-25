@@ -5,9 +5,9 @@
 
 import { WSManMessageCreator } from '../WSMan'
 import { Actions, Methods, Classes } from './'
+import type { Models, Types } from './'
 import type { AMT } from '..'
 import type { Selector } from '../WSMan'
-import type { Models, Types } from './'
 
 export class Messages {
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/ips-schema/1/'
