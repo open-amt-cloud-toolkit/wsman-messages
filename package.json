@@ -1,6 +1,6 @@
 {
   "name": "@open-amt-cloud-toolkit/wsman-messages",
-  "version": "1.0.0",
+  "version": "5.0.1",
   "description": "A reusable package for AMT libraries",
   "main": "index.js",
   "types": " index.d.ts",
