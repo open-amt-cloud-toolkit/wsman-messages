@@ -29,5 +29,16 @@ export enum Methods {
   ADD_WIFI_SETTINGS = 'AddWiFiSettings',
   ADD_ALARM = 'AddAlarm',
   GENERATE_PKCS10_REQUEST_EX = 'GeneratePKCS10RequestEx',
-  GET_UUID = 'GetUuid'
+  GET_UUID = 'GetUuid',
+  ADD_ADMIN_ACL_ENTRY_EX = 'AddUserAclEntryEx',
+  ENUMERATE_USER_ACL_ENTRIES = 'EnumerateUserAclEntries',
+  GET_ACL_ENABLED_STATE = 'GetAclEnabledState',
+  GET_ADMIN_ACL_ENTRY = 'GetAdminAclEntry',
+  GET_ADMIN_ACL_ENTRY_STATUS = 'GetAdminAclEntryStatus',
+  GET_ADMIN_NET_ACL_ENTRY_STATUS = 'GetAdminNetAclEntryStatus',
+  GET_USER_ACL_ENTRY_EX = 'GetUserAclEntryEx',
+  REMOVE_USER_ACL_ENTRY = 'RemoveUserAclEntry',
+  SET_ACL_ENABLED_STATE = 'SetAclEnabledState',
+  UPDATE_USER_ACL_ENTRY_EX = 'UpdateUserAclEntryEx',
+  ADD_USER_ACL_ENTRY_EX = 'AddUserAclEntryEx'
 }

@@ -385,4 +385,18 @@ export namespace Models {
     ServerCertificateIssue?: string
     PxeTimeout?: number
   }
+
+  export interface MPSUsernamePassword extends CIM.Models.SharedCredential { }
+
+  export interface AuthorizationService extends CIM.Models.Service {
+    AllowHttpQopAuthOnly: number
+  }
+  export interface UserAclEntry {
+    Handle?: number
+    DigestUsername?: string
+    DigestPassword?: string
+    KerberosUserSid?: string
+    AccessPermission: Types.AuthorizationService.AccessPermission
+    Realms: Types.AuthorizationService.Realms
+  }
 }

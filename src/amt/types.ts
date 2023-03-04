@@ -209,4 +209,15 @@ export namespace Types {
      */
     export type ServerCertificateNameComparison = 0 | 1
   }
+  export namespace AuthorizationService {
+    /**
+     * Local Access Only:0 | Network Access Only:1 | Local and Network Access: 2
+     */
+    export type AccessPermission = 0 | 1 | 2
+    /**
+     * RedirectionRealm: 2 | PTAdministrationRealm: 3 | HardwareAssetRealm: 4 | RemoteControlRealm: 5 | StorageRealm: 6 | EventManagerRealm: 7 | StorageAdminRealm: 8 | AgentPresenceLocalRealm: 9 | AgentPresenceRemoteRealm: 10 | CircuitBreakerRealm: 11 | NetworkTimeRealm: 12 | GeneralInfoRealm: 13 | EndpointAccessControlRealm: 17 | EndpointAccessControlAdminRealm: 18 | EventLogReaderRealm: 19 | AuditLogRealm: 20 | ACLRealm: 21 | LocalSystemRealm: 24
+     */
+    export type RealmValues = 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 17 | 18 | 19 | 20 | 21 | 24
+    export type Realms = RealmValues[]
+  }
 }

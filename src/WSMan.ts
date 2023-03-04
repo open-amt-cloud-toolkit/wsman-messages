@@ -45,10 +45,12 @@ export enum WSManErrors {
   TLS_CREDENTIAL_CONTEXT = 'missing tlsCredentialContext',
   GENERAL_SETTINGS = 'missing generalSettings',
   PASSWORD = 'missing password',
-  PKCS10Request = 'missing PKCS10Request',
+  PKCS10_REQUEST = 'missing PKCS10Request',
   USERNAME = 'missing username',
   DIGEST_PASSWORD = 'missing digestPassword',
-  InstanceID = 'missing InstanceID'
+  INSTANCE_ID = 'missing InstanceID',
+  MISSING_USER_ACL_ENTRY_INFORMATION = 'Digest username and password or Kerberos SID is required',
+  USERNAME_TOO_LONG = 'Username is too long'
 }
 
 export class WSManMessageCreator {
@@ -152,7 +154,11 @@ export class WSManMessageCreator {
      * @param enumerationContext string returned from an Enumerate call.
      * @returns string
      */
-    Pull: (enumerationContext: string): string => `<Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body>`,
+    Pull: (enumerationContext: string, maxElements?: number, maxCharacters?: number): string => {
+      if (!maxElements) maxElements = 999
+      if (!maxCharacters) maxCharacters = 99999
+      return `<Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>${maxElements}</MaxElements><MaxCharacters>${maxCharacters}</MaxCharacters></Pull></Body>`
+    },
     /**
      * Body used for Create or Put actions
      * @param wsmanClass AMT.Classes, IPS.Classes, or CIM.Classes

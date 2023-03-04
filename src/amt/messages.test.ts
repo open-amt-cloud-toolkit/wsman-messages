@@ -3,9 +3,10 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { Messages } from './'
+import { WSManErrors } from '../WSMan'
+import { Messages, Realms } from './'
 import type { Models } from './'
-import type { AMT, CIM } from '../'
+import type { CIM } from '../'
 import type { Selector } from '../WSMan'
 
 describe('AMT Tests', () => {
@@ -154,8 +155,89 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_AuthorizationService SET_ADMIN_ACL_ENTRY_EX wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/SetAdminAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>0</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetAdminAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Username>admin</h:Username><h:DigestPassword>P@ssw0rd</h:DigestPassword></h:SetAdminAclEntryEx_INPUT></Body></Envelope>`
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/SetAdminAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetAdminAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Username>admin</h:Username><h:DigestPassword>P@ssw0rd</h:DigestPassword></h:SetAdminAclEntryEx_INPUT></Body></Envelope>`
       const response = amtClass.AuthorizationService.SetAdminACLEntryEx('admin', 'P@ssw0rd')
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService ADD_USER_ACL_ENTRY_EX wsman message using digest', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/AddUserAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddUserAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:DigestUsername>test</h:DigestUsername><h:DigestPassword>P@ssw0rd</h:DigestPassword><h:AccessPermission>2</h:AccessPermission><h:Realms>3</h:Realms></h:AddUserAclEntryEx_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], 'test', 'P@ssw0rd')
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService ADD_USER_ACL_ENTRY_EX wsman message using kerberos', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/AddUserAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddUserAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:KerberosUserSid>64</h:KerberosUserSid><h:AccessPermission>2</h:AccessPermission><h:Realms>3</h:Realms></h:AddUserAclEntryEx_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], undefined, undefined, '64')
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw an error if the digestUsername is longer than 16 when calling AddUserAclEntryEx', () => {
+      expect(() => { amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], 'thisusernameistoolong', 'test') }).toThrow(WSManErrors.USERNAME_TOO_LONG)
+    })
+    it('should throw an error if digest or kerberos credentials are not provided to AddUserAclEntryEx', () => {
+      expect(() => { amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION]) }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => { amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], 'test') }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => { amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], undefined, 'test') }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+    })
+    it('should return a valid amt_AuthorizationService EnumerateUserAclEntries wsman message when startIndex is undefined', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/EnumerateUserAclEntries</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:EnumerateUserAclEntries_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:StartIndex>1</h:StartIndex></h:EnumerateUserAclEntries_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.EnumerateUserAclEntries()
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService EnumerateUserAclEntries wsman message when startIndex is not 1', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/EnumerateUserAclEntries</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:EnumerateUserAclEntries_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:StartIndex>50</h:StartIndex></h:EnumerateUserAclEntries_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.EnumerateUserAclEntries(50)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService GetUserAclEntryEx wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/GetUserAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetUserAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Handle>1</h:Handle></h:GetUserAclEntryEx_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.GetUserAclEntryEx(1)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService UpdateUserAclEntryEx wsman message using digest', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/UpdateUserAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:UpdateUserAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Handle>1</h:Handle><h:DigestUsername>test</h:DigestUsername><h:DigestPassword>test123!</h:DigestPassword><h:AccessPermission>2</h:AccessPermission><h:Realms>3</h:Realms></h:UpdateUserAclEntryEx_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], 'test', 'test123!')
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService UpdateUserAclEntryEx wsman message using kerberos', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/UpdateUserAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:UpdateUserAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Handle>1</h:Handle><h:KerberosUserSid>64</h:KerberosUserSid><h:AccessPermission>2</h:AccessPermission><h:Realms>3</h:Realms></h:UpdateUserAclEntryEx_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], undefined, undefined, '64')
+      expect(response).toEqual(correctResponse)
+    })
+    it('should throw an error if digest or kerberos credentials are not provided to UpdateUserAclEntryEx', () => {
+      expect(() => { amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION]) }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => { amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], 'test') }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => { amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], undefined, 'test') }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+    })
+    it('should throw an error if the digestUsername is longer than 16 when calling UpdateUserAclEntryEx', () => {
+      expect(() => { amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], 'thisusernameistoolong', 'test') }).toThrow(WSManErrors.USERNAME_TOO_LONG)
+    })
+    it('should return a valid amt_AuthorizationService RemoveUserAclEntry wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/RemoveUserAclEntry</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:RemoveUserAclEntry_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Handle>1</h:Handle></h:RemoveUserAclEntry_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.RemoveUserAclEntry(1)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService GetAdminAclEntry wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/GetAdminAclEntry</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetAdminAclEntry_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"></h:GetAdminAclEntry_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.GetAdminAclEntry()
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService GetAdminAclEntryStatus wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/GetAdminAclEntryStatus</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetAdminAclEntryStatus_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"></h:GetAdminAclEntryStatus_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.GetAdminAclEntryStatus()
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService GetAdminNetAclEntryStatus wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/GetAdminNetAclEntryStatus</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetAdminNetAclEntryStatus_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"></h:GetAdminNetAclEntryStatus_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.GetAdminNetAclEntryStatus()
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService SetAclEnabledState wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/SetAclEnabledState</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetAclEnabledState_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Handle>1</h:Handle><h:Enabled>true</h:Enabled></h:SetAclEnabledState_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.SetAclEnabledState(1, true)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_AuthorizationService GetAclEnabledState wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/GetAclEnabledState</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetAclEnabledState_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Handle>1</h:Handle></h:GetAclEnabledState_INPUT></Body></Envelope>`
+      const response = amtClass.AuthorizationService.GetAclEnabledState(1)
       expect(response).toEqual(correctResponse)
     })
   })
@@ -348,6 +430,33 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
   })
+  describe('KerberosSettingData Tests', () => {
+    it('should return a valid amt_KerberosSettingData Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.KerberosSettingData.Get()
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_KerberosSettingData Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.KerberosSettingData.Enumerate()
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_KerberosSettingData GetCredentialCacheState wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData/GetCredentialCacheState</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetCredentialCacheState_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData" /></Body></Envelope>`
+      const response = amtClass.KerberosSettingData.GetCredentialCacheState()
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_KerberosSettingData SetCredentialCacheState wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData/SetCredentialCacheState</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetCredentialCacheState_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData"></h:SetCredentialCacheState_INPUT></Body></Envelope>`
+      const response = amtClass.KerberosSettingData.SetCredentialCacheState(true)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_KerberosSettingData Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.KerberosSettingData.Pull(enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+  })
   describe('ManagementPresenceRemoteSAP Tests', () => {
     it('should return a valid amt_ManagementPresenceRemoteSAP Get wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
@@ -400,6 +509,33 @@ describe('AMT Tests', () => {
     it('should return a valid amt_MessageLog GetRecords wsman message even if identifier is undefined', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog/GetRecords</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetRecords_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MessageLog"><h:IterationIdentifier>1</h:IterationIdentifier><h:MaxReadRecords>390</h:MaxReadRecords></h:GetRecords_INPUT></Body></Envelope>`
       const response = amtClass.MessageLog.GetRecords()
+      expect(response).toEqual(correctResponse)
+    })
+  })
+  describe('MPSUsernamePassword Tests', () => {
+    it('should return a valid amt_MPSUsernamePassword Get wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Get</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MPSUsernamePassword</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body></Body></Envelope>`
+      const response = amtClass.MPSUsernamePassword.Get()
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_MPSUsernamePassword Enumerate wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MPSUsernamePassword</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
+      const response = amtClass.MPSUsernamePassword.Enumerate()
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_MPSUsernamePassword Pull wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MPSUsernamePassword</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
+      const response = amtClass.MPSUsernamePassword.Pull(enumerationContext)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_MPSUsernamePassword Put wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MPSUsernamePassword</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AMT_MPSUsernamePassword xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_MPSUsernamePassword"><h:InstanceID>test</h:InstanceID><h:Secret>test</h:Secret><h:RemoteID>test</h:RemoteID></h:AMT_MPSUsernamePassword></Body></Envelope>`
+      const mpsUsernamePassword: Models.MPSUsernamePassword = {
+        InstanceID: 'test',
+        Secret: 'test',
+        RemoteID: 'test'
+      }
+      const response = amtClass.MPSUsernamePassword.Put(mpsUsernamePassword)
       expect(response).toEqual(correctResponse)
     })
   })
@@ -515,7 +651,7 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_BootSettingData Put wsman message', () => {
-      const test: AMT.Models.RedirectionService = {
+      const test: Models.RedirectionService = {
         Name: 'test',
         CreationClassName: 'test',
         SystemName: 'test',

@@ -421,4 +421,12 @@ export namespace Models {
     BootString?: string
     FailThroughSupported?: Types.BootConfigSetting.FailThroughSupported
   }
+
+  export interface SharedCredential extends Credential {
+    InstanceID: string
+    RemoteID?: string
+    Secret?: string
+    Algorithm?: string
+    Protocol?: string
+  }
 }

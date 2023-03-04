@@ -4,7 +4,7 @@
 **********************************************************************/
 
 import { AMT } from '../'
-import { WSManMessageCreator } from '../WSMan'
+import { WSManErrors, WSManMessageCreator } from '../WSMan'
 import { REQUEST_STATE_CHANGE } from './actions'
 import { Classes, Actions } from './'
 import type { Models, Types } from './'
@@ -131,21 +131,118 @@ export class Messages {
 
   public readonly AuthorizationService = {
     /**
+     * Adds a user entry to the Intel(R) AMT device.
+     * @param accessPermission Indicates whether the User is allowed to access Intel(R) AMT from the Network or Local Interfaces. Note: this definition is restricted by the Default Interface Access Permissions of each Realm.
+     * @param realms Array of interface names the ACL entry is allowed to access.
+     * @param digestUsername Username for access control. Contains 7-bit ASCII characters. String length is limited to 16 characters. Username cannot be an empty string.
+     * @param digestPassword An MD5 Hash of these parameters concatenated together (Username + ":" + DigestRealm + ":" + Password). The DigestRealm is a field in AMT_GeneralSettings
+     * @param kerberosUserSid Descriptor for user (SID) which is authenticated using the Kerberos Authentication. Byte array, specifying the Security Identifier (SID) according to the Kerberos specification. Current requirements imply that SID should be not smaller than 1 byte length and no longer than 28 bytes. SID length should also be a multiplicand of 4.
+     * @returns string
+     */
+    AddUserAclEntryEx: (accessPermission: Types.AuthorizationService.AccessPermission, realms: Types.AuthorizationService.Realms, digestUsername?: string, digestPassword?: string, kerberosUserSid?: string): string => {
+      if ((!digestUsername || !digestPassword) && !kerberosUserSid) { throw new Error(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION) }
+      if (digestUsername && digestUsername.length > 16) { throw new Error(WSManErrors.USERNAME_TOO_LONG) }
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.ADD_USER_ACL_ENTRY_EX, Classes.AUTHORIZATION_SERVICE)
+      const aclObject: Models.UserAclEntry = {
+        DigestUsername: digestUsername,
+        DigestPassword: digestPassword,
+        KerberosUserSid: kerberosUserSid,
+        AccessPermission: accessPermission,
+        Realms: realms
+      }
+      const body: string = this.wsmanMessageCreator.createBody('AddUserAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, aclObject)
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
      * Enumerates the instances of AuthorizationService
      * @returns string
      */
     Enumerate: (): string => this.enumerate(Classes.AUTHORIZATION_SERVICE),
     /**
+     * Enumerates entries in the User Access Control List (ACL). Only 50 handles can be returned, so in order to get others startIndex should be bigger than 1.
+     * @param startIndex Indicates the first ACL entry to retrieve. if startIndex isn't provided, it will be set to 1
+     * @returns string
+     */
+    EnumerateUserAclEntries: (startIndex?: number): string => {
+      if (!startIndex) startIndex = 1
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.ENUMERATE_USER_ACL_ENTRIES, Classes.AUTHORIZATION_SERVICE)
+      const body: string = this.wsmanMessageCreator.createBody('EnumerateUserAclEntries_INPUT', Classes.AUTHORIZATION_SERVICE, { StartIndex: startIndex })
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
      * Gets the representation of AuthorizationService
      * @returns string
      */
     Get: (): string => this.get(Classes.AUTHORIZATION_SERVICE),
+    GetAclEnabledState: (handle: number): string => {
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_ACL_ENABLED_STATE, Classes.AUTHORIZATION_SERVICE)
+      const body: string = this.wsmanMessageCreator.createBody('GetAclEnabledState_INPUT', Classes.AUTHORIZATION_SERVICE, { Handle: handle })
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
+     * Returns the username attribute of the Admin ACL.
+     * @returns string
+     */
+    GetAdminAclEntry: (): string => {
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_ADMIN_ACL_ENTRY, Classes.AUTHORIZATION_SERVICE)
+      const body: string = this.wsmanMessageCreator.createBody('GetAdminAclEntry_INPUT', Classes.AUTHORIZATION_SERVICE, {})
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
+     * Reads the Admin ACL Entry status from Intel(R) AMT. The return state changes as a function of the admin password.  TRUE if the admin ACL entry (admin password) was never changed by the user. Otherwise, the parameter is FALSE.
+     * @returns string
+     */
+    GetAdminAclEntryStatus: (): string => {
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_ADMIN_ACL_ENTRY_STATUS, Classes.AUTHORIZATION_SERVICE)
+      const body: string = this.wsmanMessageCreator.createBody('GetAdminAclEntryStatus_INPUT', Classes.AUTHORIZATION_SERVICE, {})
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
+     * Reads the remote Admin ACL Entry status from Intel(R) AMT. The return state changes as a function of the remote admin password.  TRUE if the admin ACL entry (admin password) was never changed by the user. Otherwise, the parameter is FALSE.
+     * @returns string
+     */
+    GetAdminNetAclEntryStatus: (): string => {
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_ADMIN_NET_ACL_ENTRY_STATUS, Classes.AUTHORIZATION_SERVICE)
+      const body: string = this.wsmanMessageCreator.createBody('GetAdminNetAclEntryStatus_INPUT', Classes.AUTHORIZATION_SERVICE, {})
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
+     * Reads a user entry from the Intel(R) AMT device. Note: confidential information, such as password (hash) is omitted or zeroed in the response.
+     * @param handle Specifies the ACL entry to fetch.
+     * @returns string
+     */
+    GetUserAclEntryEx: (handle: number): string => {
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_USER_ACL_ENTRY_EX, Classes.AUTHORIZATION_SERVICE)
+      const body: string = this.wsmanMessageCreator.createBody('GetUserAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, { Handle: handle })
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
     /**
      * Pulls instances of AuthorizationService, following an Enumerate operation
      * @param enumerationContext string returned from an Enumerate call.
      * @returns string
      */
     Pull: (enumerationContext: string): string => this.pull(Classes.AUTHORIZATION_SERVICE, enumerationContext),
+    /**
+    * Removes an entry from the User Access Control List (ACL), given a handle.
+    * @param handle Specifies the ACL entry to be removed.
+    * @returns string
+    */
+    RemoveUserAclEntry: (handle: number): string => {
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.REMOVE_USER_ACL_ENTRY, Classes.AUTHORIZATION_SERVICE)
+      const body: string = this.wsmanMessageCreator.createBody('RemoveUserAclEntry_INPUT', Classes.AUTHORIZATION_SERVICE, { Handle: handle })
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
+     * Enables or disables a user ACL entry.Disabling ACL entries is useful when accounts that cannot be removed (system accounts - starting with $$) are required to be disabled.
+     * @param handle Specifies the ACL entry to update
+     * @param enabled Specifies the state of the ACL entry
+     * @returns string
+     */
+    SetAclEnabledState: (handle: number, enabled: boolean): string => {
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_ACL_ENABLED_STATE, Classes.AUTHORIZATION_SERVICE)
+      const body: string = this.wsmanMessageCreator.createBody('SetAclEnabledState_INPUT', Classes.AUTHORIZATION_SERVICE, { Handle: handle, Enabled: enabled })
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
     /**
      * Updates an Admin entry in the Intel(R) AMT device.
      * @param username Username for access control. Contains 7-bit ASCII characters. String length is limited to 16 characters. Username cannot be an empty string.
@@ -158,6 +255,31 @@ export class Messages {
         Username: username,
         DigestPassword: digestPassword
       })
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
+     * Updates a user entry in the Intel(R) AMT device.
+     * @param handle Creation handle to a User ACL entry.
+     * @param accessPermission Indicates whether the User is allowed to access Intel(R) AMT from the Network or Local Interfaces. Note: this definition is restricted by the Default Interface Access Permissions of each Realm.
+     * @param realms Array of interface names the ACL entry is allowed to access.
+     * @param digestUsername Username for access control. Contains 7-bit ASCII characters. String length is limited to 16 characters. Username cannot be an empty string.
+     * @param digestPassword An MD5 Hash of these parameters concatenated together (Username + ":" + DigestRealm + ":" + Password). The DigestRealm is a field in AMT_GeneralSettings
+     * @param kerberosUserSid Descriptor for user (SID) which is authenticated using the Kerberos Authentication. Byte array, specifying the Security Identifier (SID) according to the Kerberos specification. Current requirements imply that SID should be not smaller than 1 byte length and no longer than 28 bytes. SID length should also be a multiplicand of 4.
+     * @returns string
+     */
+    UpdateUserAclEntryEx: (handle: number, accessPermission: Types.AuthorizationService.AccessPermission, realms: Types.AuthorizationService.Realms, digestUsername?: string, digestPassword?: string, kerberosUserSid?: string): string => {
+      if ((!digestUsername || !digestPassword) && !kerberosUserSid) { throw new Error(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION) }
+      if (digestUsername && digestUsername.length > 16) { throw new Error(WSManErrors.USERNAME_TOO_LONG) }
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.UPDATE_USER_ACL_ENTRY_EX, Classes.AUTHORIZATION_SERVICE)
+      const aclObject: Models.UserAclEntry = {
+        Handle: handle,
+        DigestUsername: digestUsername,
+        DigestPassword: digestPassword,
+        KerberosUserSid: kerberosUserSid,
+        AccessPermission: accessPermission,
+        Realms: realms
+      }
+      const body: string = this.wsmanMessageCreator.createBody('UpdateUserAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, aclObject)
       return this.wsmanMessageCreator.createXml(header, body)
     }
   }
@@ -332,6 +454,44 @@ export class Messages {
     Put: (ieee8021xProfile: Models.IEEE8021xProfile): string => this.put(Classes.IEEE8021X_PROFILE, ieee8021xProfile)
   }
 
+  public readonly KerberosSettingData = {
+    /**
+     * Enumerates the instances of KerberosSettingData.
+     * @returns string
+     */
+    Enumerate: (): string => this.enumerate(Classes.KERBEROS_SETTING_DATA),
+    /**
+     * Retrieves a representation of the KerberosSettingData.
+     * @returns string
+     */
+    Get: (): string => this.get(Classes.KERBEROS_SETTING_DATA),
+    /**
+     * Gets the current state of the credential caching functionality
+     * @returns string
+     */
+    GetCredentialCacheState: (): string => {
+      const header = this.wsmanMessageCreator.createHeader(Actions.GET_CREDENTIAL_CACHE_STATE, Classes.KERBEROS_SETTING_DATA)
+      const body = this.wsmanMessageCreator.createBody('GetCredentialCacheState_INPUT', Classes.KERBEROS_SETTING_DATA)
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
+     * Enables/disables the credential caching functionality
+     * @param enabled New state of the functionality
+     * @returns string
+     */
+    SetCredentialCacheState: (enabled: boolean): string => {
+      const header = this.wsmanMessageCreator.createHeader(Actions.SET_CREDENTIAL_CACHE_STATE, Classes.KERBEROS_SETTING_DATA)
+      const body = this.wsmanMessageCreator.createBody('SetCredentialCacheState_INPUT', Classes.KERBEROS_SETTING_DATA, enabled)
+      return this.wsmanMessageCreator.createXml(header, body)
+    },
+    /**
+     * Pulls instances of KerberosSettingData, following an Enumerate operation.
+     * @param enumerationContext string returned from an Enumerate call.
+     * @returns string
+     */
+    Pull: (enumerationContext: string): string => this.pull(Classes.KERBEROS_SETTING_DATA, enumerationContext)
+  }
+
   public readonly ManagementPresenceRemoteSAP = {
     /**
      * Deletes the ManagementPresenceRemoteSAP instance.
@@ -394,6 +554,31 @@ export class Messages {
      * @returns string
      */
     Pull: (enumerationContext: string): string => this.pull(Classes.MESSAGE_LOG, enumerationContext)
+  }
+
+  public readonly MPSUsernamePassword = {
+    /**
+     * Enumerates the instances of MPSUsernamePassword.
+     * @returns string
+     */
+    Enumerate: (): string => this.enumerate(Classes.MPS_USERNAME_PASSWORD),
+    /**
+     * Retrieves a representation of MPSUsernamePassword.
+     * @returns string
+     */
+    Get: (): string => this.get(Classes.MPS_USERNAME_PASSWORD),
+    /**
+     * Pulls instances of MPSUsernamePassword, following an Enumerate operation.
+     * @param enumerationContext string returned from an Enumerate call.
+     * @returns string
+     */
+    Pull: (enumerationContext: string): string => this.pull(Classes.MPS_USERNAME_PASSWORD, enumerationContext),
+    /**
+    * Changes properties of MPSUsernamePassword.
+    * @param  mpsUsernamePassword MPSUsernamePassword Object.
+    * @returns string
+    */
+    Put: (mpsUsernamePassword: Models.MPSUsernamePassword): string => this.put(Classes.MPS_USERNAME_PASSWORD, mpsUsernamePassword)
   }
 
   public readonly PublicKeyCertificate = {
