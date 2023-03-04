@@ -28,5 +28,7 @@ export enum Classes {
   REMOTE_ACCESS_POLICY_APPLIES_TO_MPS = 'AMT_RemoteAccessPolicyAppliesToMPS',
   ALARM_CLOCK_SERVICE = 'AMT_AlarmClockService',
   IEEE8021X_CREDENTIAL_CONTEXT = 'AMT_8021xCredentialContext',
-  IEEE8021X_PROFILE = 'AMT_8021XProfile'
+  IEEE8021X_PROFILE = 'AMT_8021XProfile',
+  KERBEROS_SETTING_DATA = 'AMT_KerberosSettingData',
+  MPS_USERNAME_PASSWORD = 'AMT_MPSUsernamePassword'
 }
