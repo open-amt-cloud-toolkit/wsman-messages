@@ -6,7 +6,6 @@
 import { WSManMessageCreator } from '../WSMan'
 import { Actions, Methods, Classes } from './'
 import type { Models, Types } from './'
-import type { AMT } from '..'
 import type { Selector } from '../WSMan'
 
 export class Messages {
@@ -191,9 +190,9 @@ export class Messages {
      * @param clientCertificate AMT_PublicKeyCertificate Object
      * @returns string
      */
-    SetCertificates: (serverCertificateIssuer: AMT.Models.PublicKeyCertificate, clientCertificate: AMT.Models.PublicKeyCertificate): string => {
-      const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_CERTIFICATES, Classes.IEEE8021X_SETTINGS, undefined, Classes.IEEE8021X_SETTINGS)
-      const body: string = this.wsmanMessageCreator.createBody(Methods.SET_CERTIFICATES, Classes.IEEE8021X_SETTINGS, {
+    SetCertificates: (serverCertificateIssuer: string, clientCertificate: string): string => {
+      const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_CERTIFICATES, Classes.IEEE8021X_SETTINGS, undefined, undefined)
+      const body: string = this.wsmanMessageCreator.createBody(Methods.SET_CERTIFICATES_INPUT, Classes.IEEE8021X_SETTINGS, {
         ServerCertificateIssuer: serverCertificateIssuer,
         ClientCertificate: clientCertificate
       })

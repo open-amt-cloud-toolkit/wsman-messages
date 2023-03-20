@@ -16,5 +16,6 @@ export enum Methods {
   SEND_OPT_IN_CODE = 'SendOptInCode',
   REQUEST_POWER_STATE_CHANGE = 'RequestPowerStateChange',
   ADD_NEXT_CERT_IN_CHAIN = 'AddNextCertInChain',
-  SET_CERTIFICATES = 'SetCertificates'
+  SET_CERTIFICATES = 'SetCertificates',
+  SET_CERTIFICATES_INPUT = 'SetCertificates_INPUT'
 }
