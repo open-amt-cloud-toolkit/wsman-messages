@@ -5,7 +5,6 @@
 
 import { Messages } from './'
 import type { Models } from './'
-import type { AMT } from '../'
 import type { Selector } from '../WSMan'
 
 describe('IPS Tests', () => {
@@ -146,26 +145,9 @@ describe('IPS Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid ips_IEEE8021xSettings SetCertificates wsman message', () => {
-      const serverCertificateIssuer: AMT.Models.PublicKeyCertificate = {
-        ElementName: 'publicKeyCertificate',
-        InstanceID: 'abc',
-        Issuer: 'serverTest',
-        ReadOnlyCertificate: true,
-        Subject: 'serverTest',
-        TrustedRootCertficate: true,
-        X509Certificate: 'certificateblob'
-      }
-      const clientCertificate: AMT.Models.PublicKeyCertificate = {
-        ElementName: 'publicKeyCertificate',
-        InstanceID: 'abc',
-        Issuer: 'clientTest',
-        ReadOnlyCertificate: true,
-        Subject: 'clientTest',
-        TrustedRootCertficate: false,
-        X509Certificate: 'certificateblob'
-      }
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings/SetCertificates</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>IPS_IEEE8021xSettings</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetCertificates xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings"><h:ServerCertificateIssuer><h:ElementName>publicKeyCertificate</h:ElementName><h:InstanceID>abc</h:InstanceID><h:Issuer>serverTest</h:Issuer><h:ReadOnlyCertificate>true</h:ReadOnlyCertificate><h:Subject>serverTest</h:Subject><h:TrustedRootCertficate>true</h:TrustedRootCertficate><h:X509Certificate>certificateblob</h:X509Certificate></h:ServerCertificateIssuer><h:ClientCertificate><h:ElementName>publicKeyCertificate</h:ElementName><h:InstanceID>abc</h:InstanceID><h:Issuer>clientTest</h:Issuer><h:ReadOnlyCertificate>true</h:ReadOnlyCertificate><h:Subject>clientTest</h:Subject><h:TrustedRootCertficate>false</h:TrustedRootCertficate><h:X509Certificate>certificateblob</h:X509Certificate></h:ClientCertificate></h:SetCertificates></Body></Envelope>`
-      const response = ipsClass.IEEE8021xSettings.SetCertificates(serverCertificateIssuer, clientCertificate)
+      const X509Certificate = 'certificateblob'
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings/SetCertificates</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:SetCertificates_INPUT xmlns:h="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_IEEE8021xSettings"><h:ServerCertificateIssuer>certificateblob</h:ServerCertificateIssuer><h:ClientCertificate>certificateblob</h:ClientCertificate></h:SetCertificates_INPUT></Body></Envelope>`
+      const response = ipsClass.IEEE8021xSettings.SetCertificates(X509Certificate, X509Certificate)
       expect(response).toEqual(correctResponse)
     })
   })
