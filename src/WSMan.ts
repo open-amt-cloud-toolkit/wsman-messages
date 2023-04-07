@@ -124,6 +124,11 @@ export class WSManMessageCreator {
     return result
   }
 
+  createSelectorObjectForBody = (selector: Selector): object => {
+    const obj = { Selector: [{ _: selector.value, $: { Name: selector.name } }] }
+    return obj
+  }
+
   /**
    * Creates a WSMAN Body for methods listed.  For other methods use createBody()
    * @method Pull Methods.PULL
@@ -165,7 +170,7 @@ export class WSManMessageCreator {
      * @param data Object being applied to AMT
      * @returns string
      */
-    CreateOrPut: (wsmanClass: AMT.Classes | IPS.Classes | CIM.Classes, data: any): string => this.createBody(wsmanClass, wsmanClass, data),
+    CreateOrPut: (wsmanClass: AMT.Classes | IPS.Classes | CIM.Classes, data: any): string => this.createBody(wsmanClass, wsmanClass, [data]),
     /**
      * Body used for RequestStateChange actions
      * @param input namespace of the class being modified
@@ -181,19 +186,24 @@ export class WSManMessageCreator {
    * @param method string - methods not covered by createCommonBody()
    * @param resourceUriBase string - URI address of the resource
    * @param wsmanClass string - name of WSMAN class being used
-   * @param data Object being converted into XML format
+   * @param data Array or Object being converted into XML format
    * @returns string
    */
-  createBody = (method: string, wsmanClass: string, data?: any): string => {
-    this.processBody(data)
-    let str = '<Body>'
-    if (data) {
-      str += `<h:${method} xmlns:h="${this.resourceUriBase}${wsmanClass}">`
-      str += this.OBJtoXML(data)
-      str += `</h:${method}>`
-    } else {
-      str += `<h:${method} xmlns:h="${this.resourceUriBase}${wsmanClass}" />`
+  createBody = (method: string, wsmanClass: string, data?: any | any[]): string => {
+    if (!Array.isArray(data)) {
+      data = [data]
     }
+    data?.forEach(element => {
+      this.processBody(element)
+    })
+    let str = '<Body>'
+    str += `<h:${method} xmlns:h="${this.resourceUriBase}${wsmanClass}">`
+    if (data) {
+      data.forEach(element => {
+        str += this.OBJtoXML(element)
+      })
+    }
+    str += `</h:${method}>`
     str += '</Body>'
     return str
   }
@@ -206,10 +216,17 @@ export class WSManMessageCreator {
   OBJtoXML = (data: any): string => {
     let xml = ''
     for (const prop in data) {
+      if (prop === 'namespace') continue
       if (Array.isArray(data[prop])) {
         xml += ''
       } else {
-        if (data[prop] != null) xml += `<${prop}>`
+        if (data[prop] != null) {
+          if (data.namespace != null) {
+            xml += `<${prop} xmlns:q="${data.namespace}">`
+          } else {
+            xml += `<${prop}>`
+          }
+        }
       }
       if (Array.isArray(data[prop])) {
         for (const arrayIdx in data[prop]) {
@@ -254,6 +271,8 @@ export class WSManMessageCreator {
         case 'Selector':
         case 'ResourceURI':
           this.prependObjectKey(data, val, 'w:')
+          break
+        case 'namespace':
           break
         default:
           this.prependObjectKey(data, val, 'h:')

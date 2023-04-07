@@ -96,11 +96,11 @@ export class Messages {
      */
     AddNextCertInChain: (cert: string, isLeaf: boolean, isRoot: boolean): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.ADD_NEXT_CERT_IN_CHAIN, Classes.HOST_BASED_SETUP_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('AddNextCertInChain_INPUT', Classes.HOST_BASED_SETUP_SERVICE, {
+      const body: string = this.wsmanMessageCreator.createBody('AddNextCertInChain_INPUT', Classes.HOST_BASED_SETUP_SERVICE, [{
         NextCertificate: cert,
         IsLeafCertificate: isLeaf,
         IsRootCertificate: isRoot
-      })
+      }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -114,13 +114,13 @@ export class Messages {
      */
     AdminSetup: (adminPassEncryptionType: Types.HostBasedSetupService.AdminPassEncryptionType, adminPassword: string, mcNonce: string, signingAlgorithm: Types.HostBasedSetupService.SigningAlgorithm, digitalSignature: string): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.ADMIN_SETUP, Classes.HOST_BASED_SETUP_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('AdminSetup_INPUT', Classes.HOST_BASED_SETUP_SERVICE, {
+      const body: string = this.wsmanMessageCreator.createBody('AdminSetup_INPUT', Classes.HOST_BASED_SETUP_SERVICE, [{
         NetAdminPassEncryptionType: adminPassEncryptionType,
         NetworkAdminPassword: adminPassword,
         McNonce: mcNonce,
         SigningAlgorithm: signingAlgorithm,
         DigitalSignature: digitalSignature
-      })
+      }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -147,10 +147,10 @@ export class Messages {
      */
     Setup: (adminPassEncryptionType: Types.HostBasedSetupService.AdminPassEncryptionType, adminPassword: string): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.SETUP, Classes.HOST_BASED_SETUP_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('Setup_INPUT', Classes.HOST_BASED_SETUP_SERVICE, {
+      const body: string = this.wsmanMessageCreator.createBody('Setup_INPUT', Classes.HOST_BASED_SETUP_SERVICE, [{
         NetAdminPassEncryptionType: adminPassEncryptionType.toString(),
         NetworkAdminPassword: adminPassword
-      })
+      }])
       return this.wsmanMessageCreator.createXml(header, body)
     }
   }
@@ -192,10 +192,10 @@ export class Messages {
      */
     SetCertificates: (serverCertificateIssuer: string, clientCertificate: string): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_CERTIFICATES, Classes.IEEE8021X_SETTINGS, undefined, undefined)
-      const body: string = this.wsmanMessageCreator.createBody(Methods.SET_CERTIFICATES_INPUT, Classes.IEEE8021X_SETTINGS, {
+      const body: string = this.wsmanMessageCreator.createBody(Methods.SET_CERTIFICATES_INPUT, Classes.IEEE8021X_SETTINGS, [{
         ServerCertificateIssuer: serverCertificateIssuer,
         ClientCertificate: clientCertificate
-      })
+      }])
       return this.wsmanMessageCreator.createXml(header, body)
     }
   }
@@ -242,7 +242,7 @@ export class Messages {
      */
     SendOptInCode: (optInCode: number): string => {
       const header = this.wsmanMessageCreator.createHeader(Actions.SEND_OPT_IN_CODE, Classes.OPT_IN_SERVICE)
-      const body = this.wsmanMessageCreator.createBody('SendOptInCode_INPUT', Classes.OPT_IN_SERVICE, { OptInCode: optInCode })
+      const body = this.wsmanMessageCreator.createBody('SendOptInCode_INPUT', Classes.OPT_IN_SERVICE, [{ OptInCode: optInCode }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
