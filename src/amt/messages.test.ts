@@ -442,7 +442,7 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_KerberosSettingData GetCredentialCacheState wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData/GetCredentialCacheState</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetCredentialCacheState_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData" /></Body></Envelope>`
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData/GetCredentialCacheState</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetCredentialCacheState_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_KerberosSettingData"></h:GetCredentialCacheState_INPUT></Body></Envelope>`
       const response = amtClass.KerberosSettingData.GetCredentialCacheState()
       expect(response).toEqual(correctResponse)
     })
@@ -821,7 +821,7 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_SetupAndConfigurationService GetUuid wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/GetUuid</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetUuid_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService" /></Body></Envelope>`
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService/GetUuid</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetUuid_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_SetupAndConfigurationService"></h:GetUuid_INPUT></Body></Envelope>`
       const response = amtClass.SetupAndConfigurationService.GetUuid()
       expect(response).toEqual(correctResponse)
     })
@@ -868,7 +868,7 @@ describe('AMT Tests', () => {
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_TimeSynchronizationService GET_LOW_ACCURACY_TIME_SYNCH wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/GetLowAccuracyTimeSynch</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService</w:ResourceURI><a:MessageID>0</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetLowAccuracyTimeSynch_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService" /></Body></Envelope>`
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService/GetLowAccuracyTimeSynch</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService</w:ResourceURI><a:MessageID>0</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:GetLowAccuracyTimeSynch_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_TimeSynchronizationService"></h:GetLowAccuracyTimeSynch_INPUT></Body></Envelope>`
       const response = amtClass.TimeSynchronizationService.GetLowAccuracyTimeSynch()
       expect(response).toEqual(correctResponse)
     })
@@ -994,22 +994,39 @@ describe('AMT Tests', () => {
     })
   })
   describe('WiFiPortConfigurationService Tests', () => {
-    const selector: Selector = {
-      name: 'Name',
-      value: 'WiFi Endpoint 0'
-    }
-    const wifiEndpointSettings: CIM.Models.WiFiEndpointSettings = {
-      ElementName: 'home',
-      InstanceID: 'Intel(r) AMT:WiFi Endpoint Settings home',
-      AuthenticationMethod: 6,
-      EncryptionMethod: 4,
-      SSID: 'admin',
-      Priority: 1,
-      PSKPassPhrase: 'p\'ass<>&"code'
-    }
+    let selector: Selector
+    let wifiEndpointSettings: CIM.Models.WiFiEndpointSettings
+    let ieee8021xSettingsInput: CIM.Models.IEEE8021xSettings
+    let clientCredential: string, caCredential: string
+    beforeEach(() => {
+      selector = {
+        name: 'Name',
+        value: 'WiFi Endpoint 0'
+      }
+      wifiEndpointSettings = {
+        ElementName: 'home',
+        InstanceID: 'Intel(r) AMT:WiFi Endpoint Settings home',
+        AuthenticationMethod: 6,
+        EncryptionMethod: 4,
+        SSID: 'admin',
+        Priority: 1,
+        PSKPassPhrase: 'p\'ass<>&"code'
+      }
+      ieee8021xSettingsInput = {
+        ElementName: 'wifi_8021x_profile',
+        AuthenticationProtocol: 0
+      }
+      clientCredential = 'handle 0'
+      caCredential = 'handle 1'
+    })
     it('should return a valid amt_WiFiPortConfigurationService ADD_WIFI_SETTINGS wsman message', () => {
-      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService/AddWiFiSettings</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddWiFiSettings_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><h:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name="${selector.name}">${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></h:WiFiEndpoint><h:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><q:ElementName>${wifiEndpointSettings.ElementName}</q:ElementName><q:InstanceID>${wifiEndpointSettings.InstanceID}</q:InstanceID><q:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</q:AuthenticationMethod><q:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</q:EncryptionMethod><q:SSID>${wifiEndpointSettings.SSID}</q:SSID><q:Priority>${wifiEndpointSettings.Priority}</q:Priority><q:PSKPassPhrase>p&apos;ass&lt;&gt;&amp;&quot;code</q:PSKPassPhrase></h:WiFiEndpointSettingsInput></h:AddWiFiSettings_INPUT></Body></Envelope>`
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService/AddWiFiSettings</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddWiFiSettings_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><h:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name="${selector.name}">${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></h:WiFiEndpoint><h:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><h:ElementName>${wifiEndpointSettings.ElementName}</h:ElementName><h:InstanceID>${wifiEndpointSettings.InstanceID}</h:InstanceID><h:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</h:AuthenticationMethod><h:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</h:EncryptionMethod><h:SSID>${wifiEndpointSettings.SSID}</h:SSID><h:Priority>${wifiEndpointSettings.Priority}</h:Priority><h:PSKPassPhrase>p&apos;ass&lt;&gt;&amp;&quot;code</h:PSKPassPhrase></h:WiFiEndpointSettingsInput></h:AddWiFiSettings_INPUT></Body></Envelope>`
       const response = amtClass.WiFiPortConfigurationService.AddWiFiSettings(wifiEndpointSettings, selector)
+      expect(response).toEqual(correctResponse)
+    })
+    it('should return a valid amt_WiFiPortConfigurationService ADD_WIFI_SETTINGS with 802.1x wsman message', () => {
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService/AddWiFiSettings</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddWiFiSettings_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><h:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name="${selector.name}">${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></h:WiFiEndpoint><h:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><h:ElementName>${wifiEndpointSettings.ElementName}</h:ElementName><h:InstanceID>${wifiEndpointSettings.InstanceID}</h:InstanceID><h:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</h:AuthenticationMethod><h:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</h:EncryptionMethod><h:SSID>${wifiEndpointSettings.SSID}</h:SSID><h:Priority>${wifiEndpointSettings.Priority}</h:Priority><h:PSKPassPhrase>p&apos;ass&lt;&gt;&amp;&quot;code</h:PSKPassPhrase></h:WiFiEndpointSettingsInput><h:ieee8021xSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_IEEE8021xSettings"><h:ElementName>wifi_8021x_profile</h:ElementName><h:AuthenticationProtocol>0</h:AuthenticationProtocol></h:ieee8021xSettingsInput><h:ClientCredential>handle 0</h:ClientCredential><h:CACredential>handle 1</h:CACredential></h:AddWiFiSettings_INPUT></Body></Envelope>`
+      const response = amtClass.WiFiPortConfigurationService.AddWiFiSettings(wifiEndpointSettings, selector, ieee8021xSettingsInput, clientCredential, caCredential)
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_WiFiPortConfigurationService PUT message ', () => {

@@ -3,13 +3,15 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { AMT } from '../'
+import { CIM } from '../'
 import { WSManErrors, WSManMessageCreator } from '../WSMan'
 import { REQUEST_STATE_CHANGE } from './actions'
-import { Classes, Actions } from './'
+import { Classes, Actions, Methods } from './'
 import type { Models, Types } from './'
-import type { CIM, IPS } from '../'
+import type { IPS } from '../'
 import type { Selector } from '../WSMan'
+
+const cimResourceURI = 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'
 
 export class Messages {
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/amt-schema/1/'
@@ -124,7 +126,7 @@ export class Messages {
     ReadRecords: (startIndex?: number): string => {
       if (startIndex === undefined) { startIndex = 1 }
       const header = this.wsmanMessageCreator.createHeader(Actions.READ_RECORDS, Classes.AUDIT_LOG)
-      const body = this.wsmanMessageCreator.createBody('ReadRecords_INPUT', Classes.AUDIT_LOG, { StartIndex: startIndex })
+      const body = this.wsmanMessageCreator.createBody('ReadRecords_INPUT', Classes.AUDIT_LOG, [{ StartIndex: startIndex }])
       return this.wsmanMessageCreator.createXml(header, body)
     }
   }
@@ -150,7 +152,7 @@ export class Messages {
         AccessPermission: accessPermission,
         Realms: realms
       }
-      const body: string = this.wsmanMessageCreator.createBody('AddUserAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, aclObject)
+      const body: string = this.wsmanMessageCreator.createBody('AddUserAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, [aclObject])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -166,7 +168,7 @@ export class Messages {
     EnumerateUserAclEntries: (startIndex?: number): string => {
       if (!startIndex) startIndex = 1
       const header: string = this.wsmanMessageCreator.createHeader(Actions.ENUMERATE_USER_ACL_ENTRIES, Classes.AUTHORIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('EnumerateUserAclEntries_INPUT', Classes.AUTHORIZATION_SERVICE, { StartIndex: startIndex })
+      const body: string = this.wsmanMessageCreator.createBody('EnumerateUserAclEntries_INPUT', Classes.AUTHORIZATION_SERVICE, [{ StartIndex: startIndex }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -176,7 +178,7 @@ export class Messages {
     Get: (): string => this.get(Classes.AUTHORIZATION_SERVICE),
     GetAclEnabledState: (handle: number): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_ACL_ENABLED_STATE, Classes.AUTHORIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('GetAclEnabledState_INPUT', Classes.AUTHORIZATION_SERVICE, { Handle: handle })
+      const body: string = this.wsmanMessageCreator.createBody('GetAclEnabledState_INPUT', Classes.AUTHORIZATION_SERVICE, [{ Handle: handle }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -185,7 +187,7 @@ export class Messages {
      */
     GetAdminAclEntry: (): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_ADMIN_ACL_ENTRY, Classes.AUTHORIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('GetAdminAclEntry_INPUT', Classes.AUTHORIZATION_SERVICE, {})
+      const body: string = this.wsmanMessageCreator.createBody('GetAdminAclEntry_INPUT', Classes.AUTHORIZATION_SERVICE, [{}])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -194,7 +196,7 @@ export class Messages {
      */
     GetAdminAclEntryStatus: (): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_ADMIN_ACL_ENTRY_STATUS, Classes.AUTHORIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('GetAdminAclEntryStatus_INPUT', Classes.AUTHORIZATION_SERVICE, {})
+      const body: string = this.wsmanMessageCreator.createBody('GetAdminAclEntryStatus_INPUT', Classes.AUTHORIZATION_SERVICE, [{}])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -203,7 +205,7 @@ export class Messages {
      */
     GetAdminNetAclEntryStatus: (): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_ADMIN_NET_ACL_ENTRY_STATUS, Classes.AUTHORIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('GetAdminNetAclEntryStatus_INPUT', Classes.AUTHORIZATION_SERVICE, {})
+      const body: string = this.wsmanMessageCreator.createBody('GetAdminNetAclEntryStatus_INPUT', Classes.AUTHORIZATION_SERVICE, [{}])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -213,7 +215,7 @@ export class Messages {
      */
     GetUserAclEntryEx: (handle: number): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_USER_ACL_ENTRY_EX, Classes.AUTHORIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('GetUserAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, { Handle: handle })
+      const body: string = this.wsmanMessageCreator.createBody('GetUserAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, [{ Handle: handle }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -229,7 +231,7 @@ export class Messages {
     */
     RemoveUserAclEntry: (handle: number): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.REMOVE_USER_ACL_ENTRY, Classes.AUTHORIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('RemoveUserAclEntry_INPUT', Classes.AUTHORIZATION_SERVICE, { Handle: handle })
+      const body: string = this.wsmanMessageCreator.createBody('RemoveUserAclEntry_INPUT', Classes.AUTHORIZATION_SERVICE, [{ Handle: handle }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -240,7 +242,7 @@ export class Messages {
      */
     SetAclEnabledState: (handle: number, enabled: boolean): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_ACL_ENABLED_STATE, Classes.AUTHORIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('SetAclEnabledState_INPUT', Classes.AUTHORIZATION_SERVICE, { Handle: handle, Enabled: enabled })
+      const body: string = this.wsmanMessageCreator.createBody('SetAclEnabledState_INPUT', Classes.AUTHORIZATION_SERVICE, [{ Handle: handle, Enabled: enabled }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -251,10 +253,10 @@ export class Messages {
      */
     SetAdminACLEntryEx: (username: string, digestPassword: string): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_ADMIN_ACL_ENTRY_EX, Classes.AUTHORIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('SetAdminAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, {
+      const body: string = this.wsmanMessageCreator.createBody('SetAdminAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, [{
         Username: username,
         DigestPassword: digestPassword
-      })
+      }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -279,7 +281,7 @@ export class Messages {
         AccessPermission: accessPermission,
         Realms: realms
       }
-      const body: string = this.wsmanMessageCreator.createBody('UpdateUserAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, aclObject)
+      const body: string = this.wsmanMessageCreator.createBody('UpdateUserAclEntryEx_INPUT', Classes.AUTHORIZATION_SERVICE, [aclObject])
       return this.wsmanMessageCreator.createXml(header, body)
     }
   }
@@ -415,12 +417,12 @@ export class Messages {
      * Enumerates the instances of IEEE8021xCredentialContext
      * @returns string
      */
-    Enumerate: (): string => this.enumerate(AMT.Classes.IEEE8021X_CREDENTIAL_CONTEXT),
+    Enumerate: (): string => this.enumerate(Classes.IEEE8021X_CREDENTIAL_CONTEXT),
     /**
      * Gets the representation of IEEE8021xCredentialContext
      * @returns string
      */
-    Get: (): string => this.get(AMT.Classes.IEEE8021X_CREDENTIAL_CONTEXT),
+    Get: (): string => this.get(Classes.IEEE8021X_CREDENTIAL_CONTEXT),
     /**
      * Pulls instances of IEEE8021xCredentialContext, following an Enumerate operation
      * @param enumerationContext string returned from an Enumerate call.
@@ -481,7 +483,7 @@ export class Messages {
      */
     SetCredentialCacheState: (enabled: boolean): string => {
       const header = this.wsmanMessageCreator.createHeader(Actions.SET_CREDENTIAL_CACHE_STATE, Classes.KERBEROS_SETTING_DATA)
-      const body = this.wsmanMessageCreator.createBody('SetCredentialCacheState_INPUT', Classes.KERBEROS_SETTING_DATA, enabled)
+      const body = this.wsmanMessageCreator.createBody('SetCredentialCacheState_INPUT', Classes.KERBEROS_SETTING_DATA, [enabled])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -536,7 +538,7 @@ export class Messages {
     GetRecords: (identifier?: number): string => {
       if (identifier === undefined) { identifier = 1 }
       const header = this.wsmanMessageCreator.createHeader(Actions.GET_RECORDS, Classes.MESSAGE_LOG)
-      const body = this.wsmanMessageCreator.createBody('GetRecords_INPUT', Classes.MESSAGE_LOG, { IterationIdentifier: identifier, MaxReadRecords: 390 })
+      const body = this.wsmanMessageCreator.createBody('GetRecords_INPUT', Classes.MESSAGE_LOG, [{ IterationIdentifier: identifier, MaxReadRecords: 390 }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -614,7 +616,7 @@ export class Messages {
      */
     AddCertificate: (addCertificate: Models.AddCertificate): string => {
       const header = this.wsmanMessageCreator.createHeader(Actions.ADD_CERTIFICATE, Classes.PUBLIC_KEY_MANAGEMENT_SERVICE)
-      const body = this.wsmanMessageCreator.createBody('AddCertificate_INPUT', Classes.PUBLIC_KEY_MANAGEMENT_SERVICE, addCertificate)
+      const body = this.wsmanMessageCreator.createBody('AddCertificate_INPUT', Classes.PUBLIC_KEY_MANAGEMENT_SERVICE, [addCertificate])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -624,7 +626,7 @@ export class Messages {
      */
     AddTrustedRootCertificate: (addCertificate: Models.AddCertificate): string => {
       const header = this.wsmanMessageCreator.createHeader(Actions.ADD_TRUSTED_ROOT_CERTIFICATE, Classes.PUBLIC_KEY_MANAGEMENT_SERVICE)
-      const body = this.wsmanMessageCreator.createBody('AddTrustedRootCertificate_INPUT', Classes.PUBLIC_KEY_MANAGEMENT_SERVICE, addCertificate)
+      const body = this.wsmanMessageCreator.createBody('AddTrustedRootCertificate_INPUT', Classes.PUBLIC_KEY_MANAGEMENT_SERVICE, [addCertificate])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -639,7 +641,7 @@ export class Messages {
      */
     GenerateKeyPair: (keyPairParameters: Models.GenerateKeyPairParameters): string => {
       const header = this.wsmanMessageCreator.createHeader(Actions.GENERATE_KEY_PAIR, Classes.PUBLIC_KEY_MANAGEMENT_SERVICE)
-      const body = this.wsmanMessageCreator.createBody('GenerateKeyPair_INPUT', Classes.PUBLIC_KEY_MANAGEMENT_SERVICE, keyPairParameters)
+      const body = this.wsmanMessageCreator.createBody('GenerateKeyPair_INPUT', Classes.PUBLIC_KEY_MANAGEMENT_SERVICE, [keyPairParameters])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -649,7 +651,7 @@ export class Messages {
      */
     GeneratePKCS10RequestEx: (pkcs10Request: Models.PKCS10Request): string => {
       const header = this.wsmanMessageCreator.createHeader(Actions.GENERATE_PKCS10_REQUEST_EX, Classes.PUBLIC_KEY_MANAGEMENT_SERVICE)
-      const body = this.wsmanMessageCreator.createBody('GeneratePKCS10RequestEx_INPUT', Classes.PUBLIC_KEY_MANAGEMENT_SERVICE, pkcs10Request)
+      const body = this.wsmanMessageCreator.createBody('GeneratePKCS10RequestEx_INPUT', Classes.PUBLIC_KEY_MANAGEMENT_SERVICE, [pkcs10Request])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -831,7 +833,7 @@ export class Messages {
      */
     CommitChanges: (): string => {
       const header = this.wsmanMessageCreator.createHeader(Actions.COMMIT_CHANGES, Classes.SETUP_AND_CONFIGURATION_SERVICE)
-      const body = this.wsmanMessageCreator.createBody('CommitChanges_INPUT', Classes.SETUP_AND_CONFIGURATION_SERVICE, {})
+      const body = this.wsmanMessageCreator.createBody('CommitChanges_INPUT', Classes.SETUP_AND_CONFIGURATION_SERVICE, [{}])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -906,11 +908,11 @@ export class Messages {
      */
     SetHighAccuracyTimeSynch: (ta0: number, tm1: number, tm2: number): string => {
       const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_HIGH_ACCURACY_TIME_SYNCH, Classes.TIME_SYNCHRONIZATION_SERVICE)
-      const body: string = this.wsmanMessageCreator.createBody('SetHighAccuracyTimeSynch_INPUT', Classes.TIME_SYNCHRONIZATION_SERVICE, {
+      const body: string = this.wsmanMessageCreator.createBody('SetHighAccuracyTimeSynch_INPUT', Classes.TIME_SYNCHRONIZATION_SERVICE, [{
         Ta0: ta0,
         Tm1: tm1,
         Tm2: tm2
-      })
+      }])
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -1025,11 +1027,48 @@ export class Messages {
      * @param selector Selector Object.
      * @returns string
      */
-    AddWiFiSettings: (wifiEndpointSettings: CIM.Models.WiFiEndpointSettings, selector: Selector): string => {
+    AddWiFiSettings: (wifiEndpointSettings: CIM.Models.WiFiEndpointSettings, selector: Selector, ieee8021xSettingsInput?: CIM.Models.IEEE8021xSettings, clientCredential?: string, caCredential?: string): string => {
       const header = this.wsmanMessageCreator.createHeader(Actions.ADD_WIFI_SETTINGS, Classes.WIFI_PORT_CONFIGURATION_SERVICE)
+      const dataArray: object[] = []
       // HANDLE SPECIAL CHARACTERS FOR XML
-      const encodedPassphrase = wifiEndpointSettings.PSKPassPhrase?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
-      const body = `<Body><h:AddWiFiSettings_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><h:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name="${selector.name}">${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></h:WiFiEndpoint><h:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><q:ElementName>${wifiEndpointSettings.ElementName}</q:ElementName><q:InstanceID>${wifiEndpointSettings.InstanceID}</q:InstanceID><q:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</q:AuthenticationMethod><q:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</q:EncryptionMethod><q:SSID>${wifiEndpointSettings.SSID}</q:SSID><q:Priority>${wifiEndpointSettings.Priority}</q:Priority><q:PSKPassPhrase>${encodedPassphrase}</q:PSKPassPhrase></h:WiFiEndpointSettingsInput></h:AddWiFiSettings_INPUT></Body>`
+      wifiEndpointSettings.PSKPassPhrase = wifiEndpointSettings.PSKPassPhrase?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
+      const wifiEndpointObject = {
+        WiFiEndpoint: {
+          Address: '/wsman',
+          ReferenceParameters: {
+            ResourceURI: cimResourceURI + CIM.Classes.WIFI_ENDPOINT,
+            SelectorSet: this.wsmanMessageCreator.createSelectorObjectForBody(selector)
+          }
+        }
+      }
+      dataArray.push(wifiEndpointObject)
+      if (wifiEndpointSettings) {
+        const wifiEndpointSettingInputObject = {
+          WiFiEndpointSettingsInput: wifiEndpointSettings,
+          namespace: 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings'
+        }
+        dataArray.push(wifiEndpointSettingInputObject)
+      }
+      if (ieee8021xSettingsInput) {
+        const ieee8021xSettingsInputObject = {
+          ieee8021xSettingsInput,
+          namespace: 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_IEEE8021xSettings'
+        }
+        dataArray.push(ieee8021xSettingsInputObject)
+      }
+      if (clientCredential) {
+        const clientCredentialObject = {
+          ClientCredential: clientCredential
+        }
+        dataArray.push(clientCredentialObject)
+      }
+      if (caCredential) {
+        const caCredentialObject = {
+          CACredential: caCredential
+        }
+        dataArray.push(caCredentialObject)
+      }
+      const body = this.wsmanMessageCreator.createBody(Methods.ADD_WIFI_SETTINGS + '_INPUT', Classes.WIFI_PORT_CONFIGURATION_SERVICE, dataArray)
       return this.wsmanMessageCreator.createXml(header, body)
     },
     /**
@@ -1054,6 +1093,6 @@ export class Messages {
      * @param selector Selector Object.
      * @returns string
      */
-    Put: (wifiEndpointSettings: AMT.Models.WiFiPortConfigurationService, selector?: Selector): string => this.put(Classes.WIFI_PORT_CONFIGURATION_SERVICE, wifiEndpointSettings, selector)
+    Put: (wifiEndpointSettings: Models.WiFiPortConfigurationService, selector?: Selector): string => this.put(Classes.WIFI_PORT_CONFIGURATION_SERVICE, wifiEndpointSettings, selector)
   }
 }

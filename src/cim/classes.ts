@@ -23,5 +23,6 @@ export enum Classes {
   BOOT_CONFIG_SETTING = 'CIM_BootConfigSetting',
   BOOT_SOURCE_SETTING = 'CIM_BootSourceSetting',
   POWER_MANAGEMENT_SERVICE = 'CIM_PowerManagementService',
-  IEEE8021X_SETTINGS = 'CIM_IEEE8021xSettings'
+  IEEE8021X_SETTINGS = 'CIM_IEEE8021xSettings',
+  WIFI_ENDPOINT = 'CIM_WiFiEndpoint'
 }

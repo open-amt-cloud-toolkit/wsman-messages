@@ -401,8 +401,10 @@ export namespace Models {
   }
 
   export interface IEEE8021xSettings extends SettingData {
-    AuthenticationProtocol: Types.IEEE8021xSettings.AuthenticationProtocol // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ..} Values={EAP-TLS, EAP-TTLS/MSCHAPv2, PEAPv0/EAP-MSCHAPv2, PEAPv1/EAP-GTC, EAP-FAST/MSCHAPv2, EAP-FAST/GTC, EAP-MD5, EAP-PSK, EAP-SIM, EAP-AKA, EAP-FAST/TLS, DMTF Reserved} MappingStrings={RFC4017.IETF, RFC2716.IETF, draft-ietf-pppext-eap-ttls.IETF, draft-kamath-pppext-peapv0.IETF, draft-josefsson-pppext-eap-tls-eap, RFC4851.IETF, RFC3748.IETF, RFC4764.IETF, RFC4186.IETF, RFC4187.IETF}
-    RoamingIdentity: string // Max Length 80
+    ElementName: string // Max Length 40
+    InstanceID?: string // Max Length 100
+    AuthenticationProtocol?: Types.IEEE8021xSettings.AuthenticationProtocol // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ..} Values={EAP-TLS, EAP-TTLS/MSCHAPv2, PEAPv0/EAP-MSCHAPv2, PEAPv1/EAP-GTC, EAP-FAST/MSCHAPv2, EAP-FAST/GTC, EAP-MD5, EAP-PSK, EAP-SIM, EAP-AKA, EAP-FAST/TLS, DMTF Reserved} MappingStrings={RFC4017.IETF, RFC2716.IETF, draft-ietf-pppext-eap-ttls.IETF, draft-kamath-pppext-peapv0.IETF, draft-josefsson-pppext-eap-tls-eap, RFC4851.IETF, RFC3748.IETF, RFC4764.IETF, RFC4186.IETF, RFC4187.IETF}
+    RoamingIdentity?: string // Max Length 80
     ServerCertificateName?: string // Max Length 80
     ServerCertificateNameComparison?: Types.IEEE8021xSettings.ServerCertificateNameComparison // ValueMap={1, 2, 3, ..} Values={Other, FullName, DomainSuffix, DMTF Reserved}
     Username?: string // Max Length 128

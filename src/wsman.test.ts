@@ -106,15 +106,15 @@ describe('WSManMessageCreator Tests', () => {
   })
   describe('createBody Tests', () => {
     it('should convert obj to XML with test values', () => {
-      const result = wsmanMessageCreator.createBody('testMethod', 'testUri', { testXmlns: 'test' })
+      const result = wsmanMessageCreator.createBody('testMethod', 'testUri', [{ testXmlns: 'test' }])
       expect(result).toBe('<Body><h:testMethod xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/testUri"><h:testXmlns>test</h:testXmlns></h:testMethod></Body>')
     })
     it('should convert obj to XML with not empty', () => {
-      const result = wsmanMessageCreator.createBody('test_INPUT', 'example', {
+      const result = wsmanMessageCreator.createBody('test_INPUT', 'example', [{
         AMTNetworkEnabled: '1',
         DDNSPeriodicUpdateInterval: '1440',
         DDNSTTL: '900'
-      })
+      }])
       expect(result).toBe('<Body><h:test_INPUT xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/example"><h:AMTNetworkEnabled>1</h:AMTNetworkEnabled><h:DDNSPeriodicUpdateInterval>1440</h:DDNSPeriodicUpdateInterval><h:DDNSTTL>900</h:DDNSTTL></h:test_INPUT></Body>')
     })
     it('should convert obj to XML with not empty with nested object', () => {
@@ -126,7 +126,7 @@ describe('WSManMessageCreator Tests', () => {
         }
       }
       const key = Object.keys(data)[0]
-      const result = wsmanMessageCreator.createBody('test_INPUT', key, data[key])
+      const result = wsmanMessageCreator.createBody('test_INPUT', key, [data[key]])
       expect(result).toBe('<Body><h:test_INPUT xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/AMT_GeneralSettings"><h:AMTNetworkEnabled>1</h:AMTNetworkEnabled><h:DDNSPeriodicUpdateInterval>1440</h:DDNSPeriodicUpdateInterval><h:DDNSTTL>900</h:DDNSTTL></h:test_INPUT></Body>')
     })
     it('should convert obj to XML with not empty with double nested object', () => {
@@ -143,7 +143,7 @@ describe('WSManMessageCreator Tests', () => {
         }
       }
       const key = Object.keys(data)[0]
-      const result = wsmanMessageCreator.createBody('test_INPUT', key, data[key])
+      const result = wsmanMessageCreator.createBody('test_INPUT', key, [data[key]])
       expect(result).toBe('<Body><h:test_INPUT xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/AMT_GeneralSettings"><h:AMTNetworkEnabled>1</h:AMTNetworkEnabled><h:DDNSPeriodicUpdateInterval>1440</h:DDNSPeriodicUpdateInterval><h:DDNSTTL>900</h:DDNSTTL><h:Settings><h:Set1>1</h:Set1><h:Set2>7</h:Set2><h:Set3>8</h:Set3></h:Settings></h:test_INPUT></Body>')
     })
     it('should convert obj to XML with data that includes Selector array', () => {
@@ -219,7 +219,7 @@ describe('WSManMessageCreator Tests', () => {
           }
         }
       }
-      const result = wsmanMessageCreator.createBody('AMT_RemoteAccessPolicyAppliesToMPS', 'AMT_RemoteAccessPolicyAppliesToMPS', data)
+      const result = wsmanMessageCreator.createBody('AMT_RemoteAccessPolicyAppliesToMPS', 'AMT_RemoteAccessPolicyAppliesToMPS', [data])
       expect(result).toBe('<Body><h:AMT_RemoteAccessPolicyAppliesToMPS xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/AMT_RemoteAccessPolicyAppliesToMPS"><h:ManagedElement><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">AMT_ManagementPresenceRemoteSAP</w:Selector><w:Selector Name="Name">Intel(r) AMT:Management Presence Server 0</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector></w:SelectorSet></a:ReferenceParameters></h:ManagedElement><h:MpsType>0</h:MpsType><h:OrderOfAccess>0</h:OrderOfAccess><h:PolicySet><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">AMT_RemoteAccessPolicyRule</w:Selector><w:Selector Name="PolicyRuleName">Periodic</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector></w:SelectorSet></a:ReferenceParameters></h:PolicySet></h:AMT_RemoteAccessPolicyAppliesToMPS></Body>')
     })
     it('should create a proper wsman body with a mix of xml properties', () => {
@@ -296,7 +296,7 @@ describe('WSManMessageCreator Tests', () => {
         }
       }
       const expectedBody = '<Body><h:AMT_RemoteAccessPolicyAppliesToMPS xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/AMT_RemoteAccessPolicyAppliesToMPS"><h:ManagedElement><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_ManagementPresenceRemoteSAP</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">AMT_ManagementPresenceRemoteSAP</w:Selector><w:Selector Name="Name">Intel(r) AMT:Management Presence Server 0</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector></w:SelectorSet></a:ReferenceParameters></h:ManagedElement><h:MpsType>0</h:MpsType><h:OrderOfAccess>0</h:OrderOfAccess><h:PolicySet><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_RemoteAccessPolicyRule</w:ResourceURI><w:SelectorSet><w:Selector Name="CreationClassName">AMT_RemoteAccessPolicyRule</w:Selector><w:Selector Name="PolicyRuleName">Periodic</w:Selector><w:Selector Name="SystemCreationClassName">CIM_ComputerSystem</w:Selector><w:Selector Name="SystemName">Intel(r) AMT</w:Selector></w:SelectorSet></a:ReferenceParameters></h:PolicySet></h:AMT_RemoteAccessPolicyAppliesToMPS></Body>'
-      const result = wsmanMessageCreator.createBody(AMT.Classes.REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, AMT.Classes.REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, data)
+      const result = wsmanMessageCreator.createBody(AMT.Classes.REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, AMT.Classes.REMOTE_ACCESS_POLICY_APPLIES_TO_MPS, [data])
       expect(result).toStrictEqual(expectedBody)
     })
   })
