@@ -3,7 +3,7 @@
 * SPDX-License-Identifier: Apache-2.0
 ***********************************************************************/
 
-import type { AMT, CIM, IPS } from '.'
+import type { AMT, IPS, CIM } from '.'
 
 export interface Selector {
   name: string | undefined
@@ -53,6 +53,15 @@ export enum WSManErrors {
   USERNAME_TOO_LONG = 'Username is too long'
 }
 
+export enum BaseActions {
+  ENUMERATE = 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate',
+  PULL = 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull',
+  GET = 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Get',
+  PUT = 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Put',
+  CREATE = 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Create',
+  DELETE = 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete'
+}
+
 export class WSManMessageCreator {
   messageId: number = 0
   xmlCommonPrefix: string = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope">'
@@ -81,7 +90,7 @@ export class WSManMessageCreator {
    * @param selector WSMAN Selector values for headers that require it
    * @returns string
    */
-  createHeader = (action: string, wsmanClass: CIM.Classes | AMT.Classes | IPS.Classes, selector?: Selector, address?: string, timeout?: string): string => {
+  createHeader = (action: string, wsmanClass: AMT.Classes | IPS.Classes | CIM.Classes, selector?: Selector, address?: string, timeout?: string): string => {
     let header: string = '<Header>'
     header += `<a:Action>${action}</a:Action><a:To>/wsman</a:To><w:ResourceURI>${this.resourceUriBase}${wsmanClass}</w:ResourceURI><a:MessageID>${(this.messageId++).toString()}</a:MessageID><a:ReplyTo>`
     if (address != null) { header += `<a:Address>${address}</a:Address>` } else { header += `<a:Address>${this.anonymousAddress}</a:Address>` }
@@ -295,4 +304,69 @@ export class WSManMessageCreator {
     }
     delete data[key]
   }
+}
+
+export class Base {
+  wsmanMessageCreator: WSManMessageCreator
+  className: any
+  constructor (wsmanMessageCreator: WSManMessageCreator) {
+    this.wsmanMessageCreator = wsmanMessageCreator
+  }
+
+  /**
+   * Enumerates the instances of the class.
+   * @returns string
+   */
+  Enumerate = (): string => {
+    const header = this.wsmanMessageCreator.createHeader(BaseActions.ENUMERATE, this.className)
+    const body = this.wsmanMessageCreator.createCommonBody.Enumerate()
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  /**
+   * Gets the representation of the class.
+   * @param selector optional selector object for picking which item to get from an array of items
+   * @returns string
+   */
+  Get = (selector?: Selector): string => {
+    const header = this.wsmanMessageCreator.createHeader(BaseActions.GET, this.className, selector)
+    const body = this.wsmanMessageCreator.createCommonBody.Get()
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  /**
+   * Pulls an instances of the class, following an Enumerate operation.
+   * @param enumerationContext string returned from an Enumerate call.
+   * @returns string
+   */
+  Pull = (enumerationContext: string): string => {
+    const header = this.wsmanMessageCreator.createHeader(BaseActions.PULL, this.className)
+    const body = this.wsmanMessageCreator.createCommonBody.Pull(enumerationContext)
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+}
+
+export const genericDelete = (selector: Selector, wsmanMessageCreator: WSManMessageCreator, className: AMT.Classes | IPS.Classes | CIM.Classes): string => {
+  const header = wsmanMessageCreator.createHeader(BaseActions.DELETE, className, selector)
+  const body = wsmanMessageCreator.createCommonBody.Delete()
+  return wsmanMessageCreator.createXml(header, body)
+}
+
+export const genericPut = (data: any, wsmanMessageCreator: WSManMessageCreator, className: AMT.Classes | IPS.Classes | CIM.Classes, useHeaderSelector: boolean, customSelector?: Selector): string => {
+  const headerSelector: Selector = { name: 'InstanceID', value: data.InstanceID }
+  const header = wsmanMessageCreator.createHeader(BaseActions.PUT, className, (useHeaderSelector ? headerSelector : customSelector))
+  const body = wsmanMessageCreator.createCommonBody.CreateOrPut(className, data)
+  return wsmanMessageCreator.createXml(header, body)
+}
+
+export const genericCreate = (data: any, wsmanMessageCreator: WSManMessageCreator, className: AMT.Classes | IPS.Classes | CIM.Classes, selector?: Selector): string => {
+  const header = wsmanMessageCreator.createHeader(BaseActions.CREATE, className, selector)
+  const body = wsmanMessageCreator.createCommonBody.CreateOrPut(className, data)
+  return wsmanMessageCreator.createXml(header, body)
+}
+
+export const genericRequestStateChange = (actionName: string, className: AMT.Classes | IPS.Classes | CIM.Classes, requestedState: number, wsmanMessageCreator: WSManMessageCreator): string => {
+  const header = wsmanMessageCreator.createHeader(actionName, className)
+  const body = wsmanMessageCreator.createCommonBody.RequestStateChange(`${wsmanMessageCreator.resourceUriBase}${className}`, requestedState)
+  return wsmanMessageCreator.createXml(header, body)
 }

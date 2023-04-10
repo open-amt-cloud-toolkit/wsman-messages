@@ -3,7 +3,8 @@
 * SPDX-License-Identifier: Apache-2.0
 **********************************************************************/
 
-import { WSManMessageCreator } from './WSMan'
+import { WSManMessageCreator, genericDelete, genericPut, genericCreate, genericRequestStateChange, BaseActions } from './WSMan'
+import { REQUEST_STATE_CHANGE } from './cim/actions'
 import { CIM, AMT } from './index'
 import type { Selector } from './WSMan'
 
@@ -14,14 +15,14 @@ describe('WSManMessageCreator Tests', () => {
   const enumerationContext = 'A4070000-0000-0000-0000-000000000000'
   describe('createXml Tests', () => {
     it('creates an enumerate wsman string when provided a header and body to createXml', () => {
-      const header = wsmanMessageCreator.createHeader(CIM.Actions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT)
+      const header = wsmanMessageCreator.createHeader(BaseActions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT)
       const body = wsmanMessageCreator.createCommonBody.Enumerate()
       const response = wsmanMessageCreator.createXml(header, body)
       const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ServiceAvailableToElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><Enumerate xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration" /></Body></Envelope>`
       expect(response).toEqual(correctResponse)
     })
     it('creates a pull wsman string when provided a header and body to createXml', () => {
-      const header = wsmanMessageCreator.createHeader(CIM.Actions.PULL, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT)
+      const header = wsmanMessageCreator.createHeader(BaseActions.PULL, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT)
       const body = wsmanMessageCreator.createCommonBody.Pull('A4070000-0000-0000-0000-000000000000')
       const response = wsmanMessageCreator.createXml(header, body)
       const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ServiceAvailableToElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><Pull xmlns="http://schemas.xmlsoap.org/ws/2004/09/enumeration"><EnumerationContext>${enumerationContext}</EnumerationContext><MaxElements>999</MaxElements><MaxCharacters>99999</MaxCharacters></Pull></Body></Envelope>`
@@ -31,22 +32,22 @@ describe('WSManMessageCreator Tests', () => {
   describe('createHeader Tests', () => {
     it('creates a correct header with action, resourceUri, and messageId provided for createHeader', () => {
       const correctHeader = `<Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ServiceAvailableToElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header>`
-      const header = wsmanMessageCreator.createHeader(CIM.Actions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT)
+      const header = wsmanMessageCreator.createHeader(BaseActions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT)
       expect(header).toEqual(correctHeader)
     })
     it('applies custom address correctly in createHeader', () => {
       const correctHeader = `<Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ServiceAvailableToElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>customAddress</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header>`
-      const header = wsmanMessageCreator.createHeader(CIM.Actions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT, undefined, 'customAddress')
+      const header = wsmanMessageCreator.createHeader(BaseActions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT, undefined, 'customAddress')
       expect(header).toEqual(correctHeader)
     })
     it('applies custom timeout correctly in createHeader', () => {
       const correctHeader = `<Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ServiceAvailableToElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT30S</w:OperationTimeout></Header>`
-      const header = wsmanMessageCreator.createHeader(CIM.Actions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT, undefined, undefined, 'PT30S')
+      const header = wsmanMessageCreator.createHeader(BaseActions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT, undefined, undefined, 'PT30S')
       expect(header).toEqual(correctHeader)
     })
     it('applies custom selector correctly in createHeader', () => {
       const correctHeader = `<Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ServiceAvailableToElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT30S</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">Intel(r) AMT Device 0</w:Selector></w:SelectorSet></Header>`
-      const header = wsmanMessageCreator.createHeader(CIM.Actions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT, selector, undefined, 'PT30S')
+      const header = wsmanMessageCreator.createHeader(BaseActions.ENUMERATE, CIM.Classes.SERVICE_AVAILABLE_TO_ELEMENT, selector, undefined, 'PT30S')
       expect(header).toEqual(correctHeader)
     })
   })
@@ -468,6 +469,66 @@ describe('WSManMessageCreator Tests', () => {
       }
       wsmanMessageCreator.prependObjectKey(data, 'origKey', 'h:')
       expect(data).toStrictEqual(modifiedData)
+    })
+  })
+  describe('generic function tests', () => {
+    it('should return a valid Delete wsman message', () => {
+      const className: CIM.Classes = CIM.Classes.BIOS_ELEMENT
+      const selector: Selector = {
+        name: 'test',
+        value: 'test value'
+      }
+      const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout><w:SelectorSet><w:Selector Name="test">test value</w:Selector></w:SelectorSet></Header><Body></Body></Envelope>`
+      const result = genericDelete(selector, wsmanMessageCreator, className)
+      expect(result).toEqual(correctResponse)
+    })
+    it('should return a valid Put wsman message', () => {
+      const className: CIM.Classes = CIM.Classes.BIOS_ELEMENT
+      const selector: Selector = {
+        name: 'test',
+        value: 'test value'
+      }
+      const testData: any = {
+        name: 'testName',
+        value: 'testValue',
+        testProperty: 'propertyTest',
+        InstanceID: 'testInstance'
+      }
+      const correctResponse1 = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout><w:SelectorSet><w:Selector Name="InstanceID">testInstance</w:Selector></w:SelectorSet></Header><Body><h:CIM_BIOSElement xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement"><h:name>testName</h:name><h:value>testValue</h:value><h:testProperty>propertyTest</h:testProperty><h:InstanceID>testInstance</h:InstanceID></h:CIM_BIOSElement></Body></Envelope>`
+      const correctResponse2 = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><h:CIM_BIOSElement xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement"><h:h:name>testName</h:h:name><h:h:value>testValue</h:h:value><h:h:testProperty>propertyTest</h:h:testProperty><h:h:InstanceID>testInstance</h:h:InstanceID></h:CIM_BIOSElement></Body></Envelope>`
+      const correctResponse3 = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Put</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout><w:SelectorSet><w:Selector Name="test">test value</w:Selector></w:SelectorSet></Header><Body><h:CIM_BIOSElement xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement"><h:h:h:name>testName</h:h:h:name><h:h:h:value>testValue</h:h:h:value><h:h:h:testProperty>propertyTest</h:h:h:testProperty><h:h:h:InstanceID>testInstance</h:h:h:InstanceID></h:CIM_BIOSElement></Body></Envelope>`
+      const result1 = genericPut(testData, wsmanMessageCreator, className, true)
+      const result2 = genericPut(testData, wsmanMessageCreator, className, false)
+      const result3 = genericPut(testData, wsmanMessageCreator, className, false, selector)
+      expect(result1).toEqual(correctResponse1)
+      expect(result2).toEqual(correctResponse2)
+      expect(result3).toEqual(correctResponse3)
+    })
+    it('should return a valid Create wsman message', () => {
+      const className: CIM.Classes = CIM.Classes.BIOS_ELEMENT
+      const selector: Selector = {
+        name: 'test',
+        value: 'test value'
+      }
+      const testData: any = {
+        name: 'testName',
+        value: 'testValue',
+        testProperty: 'propertyTest',
+        InstanceID: 'testInstance'
+      }
+      const correctResponse1 = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Create</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><h:CIM_BIOSElement xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement"><h:name>testName</h:name><h:value>testValue</h:value><h:testProperty>propertyTest</h:testProperty><h:InstanceID>testInstance</h:InstanceID></h:CIM_BIOSElement></Body></Envelope>`
+      const correctResponse2 = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Create</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout><w:SelectorSet><w:Selector Name="test">test value</w:Selector></w:SelectorSet></Header><Body><h:CIM_BIOSElement xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement"><h:h:name>testName</h:h:name><h:h:value>testValue</h:h:value><h:h:testProperty>propertyTest</h:h:testProperty><h:h:InstanceID>testInstance</h:h:InstanceID></h:CIM_BIOSElement></Body></Envelope>`
+      const result1 = genericCreate(testData, wsmanMessageCreator, className)
+      const result2 = genericCreate(testData, wsmanMessageCreator, className, selector)
+      expect(result1).toEqual(correctResponse1)
+      expect(result2).toEqual(correctResponse2)
+    })
+    it('should return a valid Request State Change wsman message', () => {
+      const className: CIM.Classes = CIM.Classes.BIOS_ELEMENT
+      const requestedState = 0
+      const correctResponse = `<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement/RequestStateChange</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement</w:ResourceURI><a:MessageID>${messageId++}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>PT60S</w:OperationTimeout></Header><Body><h:RequestStateChange_INPUT xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BIOSElement"><h:RequestedState>0</h:RequestedState></h:RequestStateChange_INPUT></Body></Envelope>`
+      const result = genericRequestStateChange(REQUEST_STATE_CHANGE(className), className, requestedState, wsmanMessageCreator)
+      expect(result).toEqual(correctResponse)
     })
   })
 })
