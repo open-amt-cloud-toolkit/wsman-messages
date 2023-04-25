@@ -1051,7 +1051,7 @@ export class Messages {
       }
       if (ieee8021xSettingsInput) {
         const ieee8021xSettingsInputObject = {
-          ieee8021xSettingsInput,
+          IEEE8021xSettingsInput: ieee8021xSettingsInput,
           namespace: 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_IEEE8021xSettings'
         }
         dataArray.push(ieee8021xSettingsInputObject)
