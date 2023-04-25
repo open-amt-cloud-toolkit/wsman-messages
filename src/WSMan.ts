@@ -257,7 +257,7 @@ export class WSManMessageCreator {
    * @param data JavaScript object
    * @returns any
    */
-  processBody = (data: any): any => {
+  processBody = (data: any, tag: string = 'h:'): any => {
     if (Array.isArray(data)) {
       return
     }
@@ -275,7 +275,7 @@ export class WSManMessageCreator {
         case 'namespace':
           break
         default:
-          this.prependObjectKey(data, val, 'h:')
+          this.prependObjectKey(data, val, tag)
           break
       }
     }
@@ -291,7 +291,12 @@ export class WSManMessageCreator {
   prependObjectKey = (data: object, key: string, prefix: string): void => {
     data[prefix + key] = data[key]
     if (typeof data[key] === 'object') {
-      this.processBody(data[key])
+      // eslint-disable-next-line @typescript-eslint/dot-notation
+      if (data['namespace'] != null) {
+        this.processBody(data[key], 'q:')
+      } else {
+        this.processBody(data[key])
+      }
     }
     delete data[key]
   }

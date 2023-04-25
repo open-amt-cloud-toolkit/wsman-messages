@@ -1051,20 +1051,32 @@ export class Messages {
       }
       if (ieee8021xSettingsInput) {
         const ieee8021xSettingsInputObject = {
-          ieee8021xSettingsInput,
+          IEEE8021xSettingsInput: ieee8021xSettingsInput,
           namespace: 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_IEEE8021xSettings'
         }
         dataArray.push(ieee8021xSettingsInputObject)
       }
       if (clientCredential) {
         const clientCredentialObject = {
-          ClientCredential: clientCredential
+          ClientCredential: {
+            Address: 'default',
+            ReferenceParameters: {
+              ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate',
+              SelectorSet: this.wsmanMessageCreator.createSelectorObjectForBody({ name: 'InstanceID', value: clientCredential })
+            }
+          }
         }
         dataArray.push(clientCredentialObject)
       }
       if (caCredential) {
         const caCredentialObject = {
-          CACredential: caCredential
+          CACredential: {
+            Address: 'default',
+            ReferenceParameters: {
+              ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate',
+              SelectorSet: this.wsmanMessageCreator.createSelectorObjectForBody({ name: 'InstanceID', value: caCredential })
+            }
+          }
         }
         dataArray.push(caCredentialObject)
       }
