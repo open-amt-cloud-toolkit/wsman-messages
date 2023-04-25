@@ -1058,13 +1058,25 @@ export class Messages {
       }
       if (clientCredential) {
         const clientCredentialObject = {
-          ClientCredential: clientCredential
+          ClientCredential: {
+            Address: 'default',
+            ReferenceParameters: {
+              ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate',
+              SelectorSet: this.wsmanMessageCreator.createSelectorObjectForBody({ name: 'InstanceID', value: clientCredential })
+            }
+          }
         }
         dataArray.push(clientCredentialObject)
       }
       if (caCredential) {
         const caCredentialObject = {
-          CACredential: caCredential
+          CACredential: {
+            Address: 'default',
+            ReferenceParameters: {
+              ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate',
+              SelectorSet: this.wsmanMessageCreator.createSelectorObjectForBody({ name: 'InstanceID', value: caCredential })
+            }
+          }
         }
         dataArray.push(caCredentialObject)
       }
