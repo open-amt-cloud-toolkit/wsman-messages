@@ -53,6 +53,15 @@ export enum WSManErrors {
   USERNAME_TOO_LONG = 'Username is too long'
 }
 
+export enum BaseActions {
+  ENUMERATE = 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Enumerate',
+  PULL = 'http://schemas.xmlsoap.org/ws/2004/09/enumeration/Pull',
+  GET = 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Get',
+  PUT = 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Put',
+  CREATE = 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Create',
+  DELETE = 'http://schemas.xmlsoap.org/ws/2004/09/transfer/Delete'
+}
+
 export class WSManMessageCreator {
   messageId: number = 0
   xmlCommonPrefix: string = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope">'
@@ -81,12 +90,9 @@ export class WSManMessageCreator {
    * @param selector WSMAN Selector values for headers that require it
    * @returns string
    */
-  createHeader = (action: string, wsmanClass: CIM.Classes | AMT.Classes | IPS.Classes, selector?: Selector, address?: string, timeout?: string): string => {
+  createHeader = (action: string, wsmanClass: CIM.Classes | AMT.Classes | IPS.Classes, selector: Selector | null = null, address: string = this.anonymousAddress, timeout: string = this.defaultTimeout): string => {
     let header: string = '<Header>'
-    header += `<a:Action>${action}</a:Action><a:To>/wsman</a:To><w:ResourceURI>${this.resourceUriBase}${wsmanClass}</w:ResourceURI><a:MessageID>${(this.messageId++).toString()}</a:MessageID><a:ReplyTo>`
-    if (address != null) { header += `<a:Address>${address}</a:Address>` } else { header += `<a:Address>${this.anonymousAddress}</a:Address>` }
-    header += '</a:ReplyTo>'
-    if (timeout != null) { header += `<w:OperationTimeout>${timeout}</w:OperationTimeout>` } else { header += `<w:OperationTimeout>${this.defaultTimeout}</w:OperationTimeout>` }
+    header += `<a:Action>${action}</a:Action><a:To>/wsman</a:To><w:ResourceURI>${this.resourceUriBase}${wsmanClass}</w:ResourceURI><a:MessageID>${(this.messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>${address}</a:Address></a:ReplyTo><w:OperationTimeout>${timeout}</w:OperationTimeout>`
     if (selector != null) {
       header += this.createSelector(selector)
     }
@@ -189,7 +195,7 @@ export class WSManMessageCreator {
    * @param data Array or Object being converted into XML format
    * @returns string
    */
-  createBody = (method: string, wsmanClass: string, data?: any | any[]): string => {
+  createBody = (method: string, wsmanClass: string, data?: any): string => {
     if (!Array.isArray(data)) {
       data = [data]
     }
@@ -299,5 +305,93 @@ export class WSManMessageCreator {
       }
     }
     delete data[key]
+  }
+}
+
+export class Base {
+  wsmanMessageCreator: WSManMessageCreator
+  className: any
+  constructor (wsmanMessageCreator: WSManMessageCreator) {
+    this.wsmanMessageCreator = wsmanMessageCreator
+  }
+
+  /**
+   * Enumerates the instances of the class.
+   * @returns string
+   */
+  Enumerate = (): string => {
+    const header = this.wsmanMessageCreator.createHeader(BaseActions.ENUMERATE, this.className)
+    const body = this.wsmanMessageCreator.createCommonBody.Enumerate()
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  /**
+   * Gets the representation of the class.
+   * @param selector optional selector object for picking which item to get from an array of items
+   * @returns string
+   */
+  Get = (selector?: Selector): string => {
+    const header = this.wsmanMessageCreator.createHeader(BaseActions.GET, this.className, selector)
+    const body = this.wsmanMessageCreator.createCommonBody.Get()
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  /**
+   * Pulls an instances of the class, following an Enumerate operation.
+   * @param enumerationContext string returned from an Enumerate call.
+   * @returns string
+   */
+  Pull = (enumerationContext: string): string => {
+    const header = this.wsmanMessageCreator.createHeader(BaseActions.PULL, this.className)
+    const body = this.wsmanMessageCreator.createCommonBody.Pull(enumerationContext)
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  /**
+   * Deletes and instance of the class
+   * @param selector Selector object
+   * @returns string
+   */
+  protected protectedDelete = (selector: Selector): string => {
+    const header = this.wsmanMessageCreator.createHeader(BaseActions.DELETE, this.className, selector)
+    const body = this.wsmanMessageCreator.createCommonBody.Delete()
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  /**
+   * Modifies the properties of the class
+   * @param data data that will be used to update the class
+   * @param useHeaderSelector indicates if the call needs to use a selector in the header
+   * @param customSelector allows input of a custom selector
+   * @returns string
+   */
+  protected protectedPut = (data: any, useHeaderSelector: boolean, customSelector: Selector = { name: 'InstanceID', value: data.InstanceID }): string => {
+    const header = this.wsmanMessageCreator.createHeader(BaseActions.PUT, this.className, (useHeaderSelector ? customSelector : null))
+    const body = this.wsmanMessageCreator.createCommonBody.CreateOrPut(this.className, data)
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  /**
+   * Creates a new instance of the class
+   * @param data data that will be used to create the class
+   * @param selector Selector object
+   * @returns string
+   */
+  protected protectedCreate = (data: any, selector?: Selector): string => {
+    const header = this.wsmanMessageCreator.createHeader(BaseActions.CREATE, this.className, selector)
+    const body = this.wsmanMessageCreator.createCommonBody.CreateOrPut(this.className, data)
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  /**
+   * Requests a change of state in AMT
+   * @param actionName resource that will have the state change
+   * @param requestedState the new state
+   * @returns string
+   */
+  protected protectedRequestStateChange = (actionName: string, requestedState: number): string => {
+    const header = this.wsmanMessageCreator.createHeader(actionName, this.className)
+    const body = this.wsmanMessageCreator.createCommonBody.RequestStateChange(`${this.wsmanMessageCreator.resourceUriBase}${this.className}`, requestedState)
+    return this.wsmanMessageCreator.createXml(header, body)
   }
 }
