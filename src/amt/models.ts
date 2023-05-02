@@ -346,18 +346,18 @@ export namespace Models {
   }
 
   export interface WiFiPortConfigurationService extends CIM.Models.NetworkPortConfigurationService {
-    RequestedState: Types.WiFiPortConfigurationService.RequestedState // ValueMap={0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, .., 32768..65535} Values={Unknown, Enabled, Disabled, Shut Down, No Change, Offline, Test, Deferred, Quiesce, Reboot, Reset, Not Applicable, DMTF Reserved, Vendor Reserved}
-    EnabledState: Types.WiFiPortConfigurationService.EnabledState // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11..32767, 32768..65535} Values={Unknown, Other, Enabled, Disabled, Shutting Down, Not Applicable, Enabled but Offline, In Test, Deferred, Quiesce, Starting, DMTF Reserved, Vendor Reserved}
-    HealthState: Types.WiFiPortConfigurationService.HealthState // ValueMap={0, 5, 10, 15, 20, 25, 30, .., 32768..65535} Values={Unknown, OK, Degraded/Warning, Minor failure, Major failure, Critical failure, Non-recoverable error, DMTF Reserved, Vendor Specific}
-    ElementName: string
-    SystemCreationClassName: string
-    SystemName: string
-    CreationClassName: string
-    Name: string
-    localProfileSynchronizationEnabled: Types.WiFiPortConfigurationService.localProfileSynchronizationEnabled // ValueMap={0, 1..2, 3, 4..} Values={Local synchronization disabled, Vendor Reserved, Unrestricted synchronization, Reserved}
-    LastConnectedSsidUnderMeControl: string
-    NoHostCsmeSoftwarePolicy: Types.WiFiPortConfigurationService.NoHostCsmeSoftwarePolicy // ValueMap={0, 1, 2} Values={NoHostCsmeSoftwareRelaxedPolicy, NoHostCsmeSoftwareAggressivePolicy, Reserved}
-    UEFIWiFiProfileShareEnabled: Types.WiFiPortConfigurationService.UEFIWiFiProfileShareEnabled // 1: Enable 0: Disable
+    RequestedState?: Types.WiFiPortConfigurationService.RequestedState // ValueMap={0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, .., 32768..65535} Values={Unknown, Enabled, Disabled, Shut Down, No Change, Offline, Test, Deferred, Quiesce, Reboot, Reset, Not Applicable, DMTF Reserved, Vendor Reserved}
+    EnabledState?: Types.WiFiPortConfigurationService.EnabledState // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11..32767, 32768..65535} Values={Unknown, Other, Enabled, Disabled, Shutting Down, Not Applicable, Enabled but Offline, In Test, Deferred, Quiesce, Starting, DMTF Reserved, Vendor Reserved}
+    HealthState?: Types.WiFiPortConfigurationService.HealthState // ValueMap={0, 5, 10, 15, 20, 25, 30, .., 32768..65535} Values={Unknown, OK, Degraded/Warning, Minor failure, Major failure, Critical failure, Non-recoverable error, DMTF Reserved, Vendor Specific}
+    ElementName?: string
+    SystemCreationClassName?: string
+    SystemName?: string
+    CreationClassName?: string
+    Name?: string
+    localProfileSynchronizationEnabled?: Types.WiFiPortConfigurationService.localProfileSynchronizationEnabled // ValueMap={0, 1..2, 3, 4..} Values={Local synchronization disabled, Vendor Reserved, Unrestricted synchronization, Reserved}
+    LastConnectedSsidUnderMeControl?: string
+    NoHostCsmeSoftwarePolicy?: Types.WiFiPortConfigurationService.NoHostCsmeSoftwarePolicy // ValueMap={0, 1, 2} Values={NoHostCsmeSoftwareRelaxedPolicy, NoHostCsmeSoftwareAggressivePolicy, Reserved}
+    UEFIWiFiProfileShareEnabled?: Types.WiFiPortConfigurationService.UEFIWiFiProfileShareEnabled // 1: Enable 0: Disable
   }
 
   export interface RemoteAccessPolicyAppliesToMPS extends CIM.Models.PolicySetAppliesToElement {
