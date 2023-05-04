@@ -607,6 +607,12 @@ describe('AMT Tests', () => {
       const response = amtClass.PublicKeyManagementService.GeneratePKCS10RequestEx(pkcs10Request)
       expect(response).toEqual(correctResponse)
     })
+    it('should return a valid amt_PublicKeyManagementService AddKey wsman message', () => {
+      const keyBlob = 'testkeyblob'
+      const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService/AddKey</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddKey_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService"><h:KeyBlob>${keyBlob}</h:KeyBlob></h:AddKey_INPUT></Body></Envelope>`
+      const response = amtClass.PublicKeyManagementService.AddKey(keyBlob)
+      expect(response).toEqual(correctResponse)
+    })
   })
   describe('PublicPrivateKeyPair Tests', () => {
     const selector: Selector = {
