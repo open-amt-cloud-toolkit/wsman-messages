@@ -356,6 +356,20 @@ class PublicKeyManagementService extends Base {
   }
 
   /**
+   * This function adds new certificate key to the Intel(R) AMT CertStore. A key cannot be removed if its corresponding certificate is referenced (for example, used by TLS or 802.1X).
+   * @param keyBlob RSA Key encoded as DES PKCS#1
+   * @returns string
+   */
+  AddKey = (keyBlob: string): string => {
+    const keyObj = {
+      KeyBlob: keyBlob
+    }
+    const header = this.wsmanMessageCreator.createHeader(Actions.ADD_KEY, this.className)
+    const body = this.wsmanMessageCreator.createBody('AddKey_INPUT', this.className, [keyObj])
+    return this.wsmanMessageCreator.createXml(header, body)
+  }
+
+  /**
    * This method adds new root certificate to the Intel(R) AMT CertStore. A certificate cannot be removed if it is referenced (for example, used by TLS, 802.1X or EAC).
    * @param addCertificate AddCertificate Object
    * @returns string
