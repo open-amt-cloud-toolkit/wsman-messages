@@ -600,7 +600,7 @@ class TLSSettingData extends Base {
    * @param tlsSettingData TLSSettingData Object.
    * @returns string
    */
-  Put = (tlsSettingData: Models.TLSSettingData): string => this.protectedPut(tlsSettingData, true)
+  Put = (tlsSettingData: Models.TLSSettingData): string => this.protectedPut(tlsSettingData, true, { name: 'InstanceID', value: tlsSettingData.InstanceID })
 }
 class UserInitiatedConnectionService extends Base {
   className = Classes.USER_INITIATED_CONNECTION_SERVICE

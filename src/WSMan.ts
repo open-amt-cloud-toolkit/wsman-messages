@@ -365,7 +365,10 @@ export class Base {
    * @param customSelector allows input of a custom selector
    * @returns string
    */
-  protected protectedPut = (data: any, useHeaderSelector: boolean, customSelector: Selector = { name: 'InstanceID', value: data.InstanceID }): string => {
+  protected protectedPut = (data: any, useHeaderSelector: boolean, customSelector?: Selector): string => {
+    if (!customSelector && data.InstanceID) {
+      customSelector = { name: 'InstanceID', value: data.InstanceID }
+    }
     const header = this.wsmanMessageCreator.createHeader(BaseActions.PUT, this.className, (useHeaderSelector ? customSelector : null))
     const body = this.wsmanMessageCreator.createCommonBody.CreateOrPut(this.className, data)
     return this.wsmanMessageCreator.createXml(header, body)
