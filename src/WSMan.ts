@@ -366,7 +366,7 @@ export class Base {
    * @returns string
    */
   protected protectedPut = (data: any, useHeaderSelector: boolean, customSelector?: Selector): string => {
-    if (!customSelector && data.InstanceID) {
+    if (!customSelector && data?.InstanceID) {
       customSelector = { name: 'InstanceID', value: data.InstanceID }
     }
     const header = this.wsmanMessageCreator.createHeader(BaseActions.PUT, this.className, (useHeaderSelector ? customSelector : null))
