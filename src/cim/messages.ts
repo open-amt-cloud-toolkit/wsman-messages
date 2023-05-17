@@ -15,12 +15,13 @@ class BootConfigSetting extends Base {
   className = Classes.BOOT_CONFIG_SETTING
   /**
    * This method is called to change the boot order within a boot configuration.
-   * @param source CIM.Models.BootSourceSetting Object
+   * @param source Types.BootConfigSetting.InstanceID. Optional. Not specifying a source clears the BootConfigSetting
    * @returns string
    */
-  ChangeBootOrder = (source: Types.BootConfigSetting.InstanceID): string => {
+  ChangeBootOrder = (source?: Types.BootConfigSetting.InstanceID): string => {
     const header = this.wsmanMessageCreator.createHeader(Actions.CHANGE_BOOT_ORDER, Classes.BOOT_CONFIG_SETTING)
-    const body = `<Body><h:ChangeBootOrder_INPUT xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting"><h:Source><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootSourceSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">${source}</Selector></SelectorSet></ReferenceParameters></h:Source></h:ChangeBootOrder_INPUT></Body>`
+    const bootSource = source ? `<h:Source><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootSourceSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">${source}</Selector></SelectorSet></ReferenceParameters></h:Source>` : ''
+    const body = `<Body><h:ChangeBootOrder_INPUT xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting">${bootSource}</h:ChangeBootOrder_INPUT></Body>`
     return this.wsmanMessageCreator.createXml(header, body)
   }
 }
