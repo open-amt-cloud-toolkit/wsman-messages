@@ -285,7 +285,7 @@ export namespace Models {
   export interface TLSProtocolEndpointCollection extends CIM.Models.Collection {
 
   }
-  export interface TLSCredentialContext {//  extends CIM.Models.CredentialContext{
+  export interface TLSCredentialContext { //  extends CIM.Models.CredentialContext{
     // A certificate whose context is defined.
     ElementInContext: {
       Address: string
