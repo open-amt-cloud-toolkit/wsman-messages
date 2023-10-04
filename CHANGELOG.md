@@ -1,3 +1,25 @@
+<a name="5.5.2"></a>
+## [5.5.2] - 2023-10-04
+### Build
+- removes jenkinsfile ([#583](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/583)) (#50d0eb1) 
+- **deps:** Bump actions/checkout from 4.0.0 to 4.1.0 ([#579](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/579)) (#80bc684) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.0 to 20.8.2 ([#584](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/584)) (#aa683f8) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.7.0 to 20.7.1 ([#581](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/581)) (#718943c) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.6.5 to 20.7.0 ([#580](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/580)) (#60ea01e) 
+- **deps-dev:** Bump eslint from 8.49.0 to 8.50.0 ([#576](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/576)) (#ccff107) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.6.3 to 20.6.5 ([#577](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/577)) (#5abc81e) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.7.1 to 20.8.0 ([#582](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/582)) (#38688b8) 
+- **deps-dev:** Bump semantic-release from 22.0.1 to 22.0.5 ([#578](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/578)) (#d813e2a) 
+- **deps-dev:** Bump semantic-release from 22.0.0 to 22.0.1 ([#575](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/575)) (#ddc0c3c) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.6.2 to 20.6.3 ([#574](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/574)) (#77c2265) 
+- **deps-dev:** Bump semantic-release from 21.1.1 to 22.0.0 ([#572](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/572)) (#bdc659e) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.6.0 to 20.6.2 ([#573](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/573)) (#b146bde) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.5.9 to 20.6.0 ([#569](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/569)) (#50934ba) 
+- **deps-dev:** Bump eslint from 8.48.0 to 8.49.0 ([#570](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/570)) (#64b79b4) 
+
+### Chore
+- update build tasks, package.json and changelo (#25b1d35) 
+
 <a name="5.5.1"></a>
 ## [5.5.1] - 2023-09-07
 ### Build
