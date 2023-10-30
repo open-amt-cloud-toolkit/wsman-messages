@@ -1,3 +1,25 @@
+<a name="5.5.3"></a>
+## [5.5.3] - 2023-10-30
+### Build
+- **deps:** Bump ossf/scorecard-action from 2.3.0 to 2.3.1 ([#600](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/600)) (#6c4739f) 
+- **deps:** Bump actions/checkout from 4.1.0 to 4.1.1 ([#594](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/594)) (#df4ba59) 
+- **deps:** Bump ossf/scorecard-action from 2.2.0 to 2.3.0 ([#586](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/586)) (#af982b6) 
+- **deps:** Bump actions/setup-node from 3.8.1 to 4.0.0 ([#599](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/599)) (#b1e29d8) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.5 to 20.8.6 ([#591](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/591)) (#9d7efc9) 
+- **deps-dev:** Bump eslint from 8.51.0 to 8.52.0 ([#596](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/596)) (#3693d0b) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.6 to 20.8.7 (#ab0e268) 
+- **deps-dev:** Bump eslint-plugin-import from 2.28.1 to 2.29.0 ([#598](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/598)) (#e3c5b7d) 
+- **deps-dev:** Bump [@babel](https://github.com/babel)/traverse from 7.17.0 to 7.23.2 ([#593](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/593)) (#f1d7ca5) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.7 to 20.8.8 ([#601](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/601)) (#75223b8) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.4 to 20.8.5 ([#590](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/590)) (#c3e6a49) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.3 to 20.8.4 ([#589](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/589)) (#79372b0) 
+- **deps-dev:** Bump eslint from 8.50.0 to 8.51.0 ([#588](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/588)) (#49c07b5) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.2 to 20.8.3 ([#587](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/587)) (#ad46de5) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.8 to 20.8.9 ([#602](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/602)) (#63f9430) 
+
+### Chore
+- update build tasks, package.json and changelog (#7a228b8) 
+
 <a name="5.5.2"></a>
 ## [5.5.2] - 2023-10-04
 ### Build
