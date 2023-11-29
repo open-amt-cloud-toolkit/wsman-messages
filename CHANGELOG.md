@@ -1,3 +1,37 @@
+<a name="5.6.1"></a>
+## [5.6.1] - 2023-11-29
+### Build
+- **deps-dev:** Bump [@typescript](https://github.com/typescript)-eslint/parser from 6.12.0 to 6.13.1 ([#627](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/627)) (#9f62169) 
+- **deps-dev:** Bump [@typescript](https://github.com/typescript)-eslint/eslint-plugin ([#628](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/628)) (#e139388) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.9.5 to 20.10.0 ([#624](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/624)) (#3d50271) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.9.3 to 20.9.5 ([#623](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/623)) (#1581969) 
+- **deps-dev:** Bump [@typescript](https://github.com/typescript)-eslint/eslint-plugin ([#619](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/619)) (#42827af) 
+- **deps-dev:** Bump [@typescript](https://github.com/typescript)-eslint/parser from 6.11.0 to 6.12.0 ([#620](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/620)) (#3730a51) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.9.2 to 20.9.3 ([#621](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/621)) (#9bf26d4) 
+- **deps-dev:** Bump eslint-config-standard-with-typescript ([#615](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/615)) (#b046907) 
+- **deps-dev:** Bump semantic-release from 22.0.7 to 22.0.8 ([#616](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/616)) (#3da2ffa) 
+- **deps-dev:** Bump eslint from 8.53.0 to 8.54.0 ([#617](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/617)) (#4b17812) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.9.1 to 20.9.2 ([#618](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/618)) (#351a3b9) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.9.0 to 20.9.1 ([#614](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/614)) (#cb51110) 
+- **deps-dev:** Bump [@typescript](https://github.com/typescript)-eslint/eslint-plugin from 5.61.0 to 6.11.0 ([#613](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/613)) (#99258ed) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.10 to 20.9.0 ([#611](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/611)) (#c207217) 
+
+### Chore
+- update build tasks, package.json and changelog (#5f1118b) 
+
+
+<a name="v5.6.0"></a>
+## [v5.6.0] - 2023-11-07
+### Build
+- **deps:** Bump wagoid/commitlint-github-action from 5.4.3 to 5.4.4 ([#606](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/606)) (#971c10d) 
+- **deps-dev:** Bump eslint from 8.52.0 to 8.53.0 ([#607](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/607)) (#f5b87e4) 
+- **deps-dev:** Bump semantic-release from 22.0.6 to 22.0.7 ([#608](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/608)) (#642e239) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.8.9 to 20.8.10 ([#604](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/604)) (#6229461) 
+- **deps-dev:** Bump semantic-release from 22.0.5 to 22.0.6 ([#605](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/605)) (#3e5ec4f) 
+
+### Feat
+- adds report out to code analysis action (#3a622c5) 
+
 <a name="5.5.3"></a>
 ## [5.5.3] - 2023-10-30
 ### Build
