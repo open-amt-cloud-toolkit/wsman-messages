@@ -294,7 +294,7 @@ export class WSManMessageCreator {
    * @param prefix string
    * @returns void
    */
-  prependObjectKey = (data: object, key: string, prefix: string): void => {
+  prependObjectKey = (data: any, key: string, prefix: string): void => {
     data[prefix + key] = data[key]
     if (typeof data[key] === 'object') {
       // eslint-disable-next-line @typescript-eslint/dot-notation
@@ -310,7 +310,7 @@ export class WSManMessageCreator {
 
 export class Base {
   wsmanMessageCreator: WSManMessageCreator
-  className: any
+  className: CIM.Classes | AMT.Classes | IPS.Classes
   constructor (wsmanMessageCreator: WSManMessageCreator) {
     this.wsmanMessageCreator = wsmanMessageCreator
   }
