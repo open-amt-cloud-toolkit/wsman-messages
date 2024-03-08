@@ -1,3 +1,17 @@
+<a name="5.6.4"></a>
+## [5.6.4] - 2024-03-08
+### Build
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.24 to 20.11.25 ([#694](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/694)) (#421e50d) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.22 to 20.11.24 ([#693](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/693)) (#8ddf3f8) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.21 to 20.11.22 ([#692](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/692)) (#d0013ef) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.20 to 20.11.21 ([#691](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/691)) (#6965fa2) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.19 to 20.11.20 ([#688](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/688)) (#cfcdab3) 
+- **deps-dev:** Bump eslint from 8.56.0 to 8.57.0 ([#689](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/689)) (#90269e3) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.16 to 20.11.19 ([#687](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/687)) (#0a24dfc) 
+
+### Chore
+- update build tasks, package.json and changelog (#e08c18c) 
+
 <a name="5.6.3"></a>
 ## [5.6.3] - 2024-02-08
 ### Build
