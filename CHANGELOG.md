@@ -1,3 +1,26 @@
+<a name="5.6.5"></a>
+## [5.6.5] - 2024-04-02
+### Build
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.30 to 20.12.2 ([#710](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/710)) (#ba73627) 
+- **deps-dev:** Bump semantic-release from 23.0.5 to 23.0.6 ([#706](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/706)) (#465b61f) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.29 to 20.11.30 ([#705](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/705)) (#cb4a5b8) 
+- **deps-dev:** Bump semantic-release from 23.0.4 to 23.0.5 ([#704](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/704)) (#a787de3) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.28 to 20.11.29 ([#703](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/703)) (#8fd9f0e) 
+- **deps-dev:** Bump semantic-release from 23.0.2 to 23.0.4 ([#700](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/700)) (#786a1bb) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.27 to 20.11.28 ([#699](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/699)) (#d2cd10e) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.26 to 20.11.27 (#76a85ea) 
+- **deps-dev:** Bump [@types](https://github.com/types)/node from 20.11.25 to 20.11.26 ([#696](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/696)) (#e244d26) 
+
+### Chore
+- update build tasks, package.json and changelog (#13f4318) 
+
+### Ci
+- remove branch-protection check for scorecard ([#701](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/701)) (#e6e2962) 
+
+### Docs
+- update badges ([#709](https://github.com/open-amt-cloud-toolkit/wsman-messages/issues/709)) (#348043c) 
+- update badge style (#038fe79) 
+
 <a name="5.6.4"></a>
 ## [5.6.4] - 2024-03-08
 ### Build
