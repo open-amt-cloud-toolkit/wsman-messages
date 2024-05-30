@@ -9,6 +9,11 @@ jobs:
   alert:
     runs-on: ubuntu-latest
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@f086349bfa2bd1361f7909c78558e816508cdc10 # v2.8.0
+        with:
+          egress-policy: audit
+
       - uses: danhellem/github-actions-issue-to-work-item@3072da42abf94ebe4c7778c57fb4af06db341c72 # v2.2
         env:
           ado_token: "${{ secrets.ADO_PERSONAL_ACCESS_TOKEN }}"
