@@ -1,7 +1,12 @@
 # WSMAN-MESSAGES
-[![Known Vulnerabilities](https://snyk.io/test/github/open-amt-cloud-toolkit/wsman-messages/badge.svg?targetFile=package.json)](https://snyk.io/test/github/open-amt-cloud-toolkit/wsman-messages?targetFile=package.json) ![Node.js CI](https://github.com/open-amt-cloud-toolkit/wsman-messages/workflows/Node.js%20CI/badge.svg) ![codecov.io](https://codecov.io/github/open-amt-cloud-toolkit/wsman-messages/coverage.svg?branch=main) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/open-amt-cloud-toolkit/wsman-messages/badge)](https://api.securityscorecards.dev/projects/github.com/open-amt-cloud-toolkit/wsman-messages) [![Discord Shield](https://discordapp.com/api/guilds/1063200098680582154/widget.png?style=shield)](https://discord.gg/yrcMp2kDWh)
 
-Creates properly formated wsman messages to send to Intel&reg; Active Management Technology (AMT) capable platforms.  These libraries provide an easy to use API that when called return an XML string that is ready to be sent to an Intel&reg; AMT device.  Supports calls into AMT, IPS, and CIM classes supported by Intel&reg; AMT devices.  Full AMT SDK documentation can be found [here](https://software.intel.com/sites/manageability/AMT_Implementation_and_Reference_Guide/default.htm). 
+![CodeQL](https://img.shields.io/github/actions/workflow/status/open-amt-cloud-toolkit/wsman-messages/codeql-analysis.yml?style=for-the-badge&label=CodeQL&logo=github)
+![Build](https://img.shields.io/github/actions/workflow/status/open-amt-cloud-toolkit/wsman-messages/node.js.yml?style=for-the-badge&logo=github)
+![Codecov](https://img.shields.io/codecov/c/github/open-amt-cloud-toolkit/wsman-messages?style=for-the-badge&logo=codecov)
+[![OSSF-Scorecard Score](https://img.shields.io/ossf-scorecard/github.com/open-amt-cloud-toolkit/wsman-messages?style=for-the-badge&label=OSSF%20Score)](https://api.securityscorecards.dev/projects/github.com/open-amt-cloud-toolkit/wsman-messages)
+[![Discord](https://img.shields.io/discord/1063200098680582154?style=for-the-badge&label=Discord&logo=discord&logoColor=white&labelColor=%235865F2&link=https%3A%2F%2Fdiscord.gg%2FDKHeUNEWVH)](https://discord.gg/DKHeUNEWVH)
+
+Creates properly formatted wsman messages to send to Intel&reg; Active Management Technology (AMT) capable platforms.  These libraries provide an easy to use API that when called return an XML string that is ready to be sent to an Intel&reg; AMT device.  Supports calls into AMT, IPS, and CIM classes supported by Intel&reg; AMT devices.  Full AMT SDK documentation can be found [here](https://software.intel.com/sites/manageability/AMT_Implementation_and_Reference_Guide/default.htm). 
 
 <br>
 
