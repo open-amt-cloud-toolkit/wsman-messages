@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-**********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ **********************************************************************/
 
 import type { Types } from './types'
 import type { CIM } from '../'
@@ -226,7 +226,7 @@ export namespace Models {
     }
   }
 
-  export interface MessageLog extends CIM.Models.MessageLog { }
+  export type MessageLog = CIM.Models.MessageLog
 
   // Event Log Records have no header and the record data is combined of 21 binary bytes which could be read as EVENT_DATA
   export interface EVENT_DATA {
@@ -282,10 +282,9 @@ export namespace Models {
     Subject: string // The Subject field of this certificate.
     ReadOnlyCertificate: boolean // Indicates whether the certificate is an Intel AMT self-signed certificate. If True, the certificate cannot be deleted.
   }
-  export interface TLSProtocolEndpointCollection extends CIM.Models.Collection {
-
-  }
-  export interface TLSCredentialContext { //  extends CIM.Models.CredentialContext{
+  export type TLSProtocolEndpointCollection = CIM.Models.Collection
+  export interface TLSCredentialContext {
+    //  extends CIM.Models.CredentialContext{
     // A certificate whose context is defined.
     ElementInContext: {
       Address: string
@@ -365,7 +364,7 @@ export namespace Models {
     MpsType: Types.RemoteAccessPolicyAppliesToMPS.MpsType // ValueMap={0, 1, 2} Values={External MPS, Internal MPS, Both}
   }
 
-  export interface AlarmClockService extends CIM.Models.Service { }
+  export type AlarmClockService = CIM.Models.Service
 
   export interface IEEE8021xProfile extends CIM.Models.SettingData {
     ElementName: string
@@ -386,7 +385,7 @@ export namespace Models {
     PxeTimeout?: number
   }
 
-  export interface MPSUsernamePassword extends CIM.Models.SharedCredential { }
+  export type MPSUsernamePassword = CIM.Models.SharedCredential
 
   export interface AuthorizationService extends CIM.Models.Service {
     AllowHttpQopAuthOnly: number

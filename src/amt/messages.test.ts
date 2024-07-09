@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-**********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ **********************************************************************/
 
 import { WSManErrors } from '../WSMan'
 import { Messages, Realms } from './'
@@ -18,7 +18,8 @@ describe('AMT Tests', () => {
   })
 
   const xmlHeader = '<?xml version="1.0" encoding="utf-8"?>'
-  const envelope = '<Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>'
+  const envelope =
+    '<Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope"><Header><a:Action>'
   const enumerationContext = 'AC070000-0000-0000-0000-000000000000'
   const operationTimeout = 'PT60S'
   const ethernetPortObject: Models.EthernetPortSettings = {
@@ -27,7 +28,11 @@ describe('AMT Tests', () => {
     SharedMAC: true,
     MACAddress: 'a4-ae-11-1c-02-4d',
     LinkIsUp: true,
-    LinkPolicy: [1, 14, 16],
+    LinkPolicy: [
+      1,
+      14,
+      16
+    ],
     SharedStaticIp: false,
     SharedDynamicIP: true,
     IpSyncEnabled: true,
@@ -70,7 +75,8 @@ describe('AMT Tests', () => {
     UEFIBootNumberOfParams: [1],
     UEFIBootParametersArray: [1]
   }
-  const trustedRootCert = 'MIIEOzCCAqOgAwIBAgIDAZiFMA0GCSqGSIb3DQEBDAUAMD0xFzAVBgNVBAMTDk1QU1Jvb3QtNjE0ZDg4MRAwDgYDVQQKEwd1bmtub3duMRAwDgYDVQQGEwd1bmtub3duMCAXDTIwMDgyNTE4MzMzN1oYDzIwNTEwODI1MTgzMzM3WjA9MRcwFQYDVQQDEw5NUFNSb290LTYxNGQ4ODEQMA4GA1UEChMHdW5rbm93bjEQMA4GA1UEBhMHdW5rbm93bjCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAOi1jx9L8DG6gBPxd9gmJ6vqQC/F/TBMTJvb3ZAuRbDxUKnxZk3PafyNM6fO8QTL4qZVhvyGEZaIzVePrdJj31aZ93mNY2TJee3/DLRsJUIZHGFufBvi8pgQL+JjE9JmFD5/S2yciHIEVpKmXo1CbGmZGsnb8NRjaQVwB94pI1mg8JFMxyKzU/cUoCBfI+wmeMgBVdOJPNpH2zjC/GxwEFNQaxGe9GHmYbwoeiDeMPo75E/o+Gw6kJm429cuhJBC3KqHevAJj9V2nSUvoO0oxKqzLVkUYcjHEGYjxIvP6a6uo7x9llwfshJsBZ3PE5hucNdWS3dY3GeCqOwcaAQQIj2jULpZ/KlgVAdBK/o5QjE+IIQXCVK9USvktGzz7I5oH98zy8jCFStbGM7PQCo+DEnHn/SANmVbcy3hjzrXC8zf5dvmKiUb2eKnpv+z3FHsi64sVwFqBArB2ipcTM/qv4nEM6uLW1t+7+NB0OyaBmLktJrpb6af7z/EW1QuPIfTcQIDAQABo0IwQDAMBgNVHRMEBTADAQH/MBEGCWCGSAGG+EIBAQQEAwIABzAdBgNVHQ4EFgQUYU2IeTFqWXI1rG+JqZq8eVDO/LMwDQYJKoZIhvcNAQEMBQADggGBANoKIsFOn8/Lrb98DjOP+LUeopoU9KQ70ndreNqchrkPmM61V9IdD9OZiLr/7OY/rLGZwNvkhQYRPUa842Mqjfpr4YcV6HC0j6Zg0lcpxQ5eGGBkLb/teBcboi3sZcJvbCFUW2DJjhy7uqYxzE4eqSsKx5fEjp/wa6oNzNrgWRXyxQlaOo42RjXnOXS7sB0jPrgO0FClL1Xzif06kFHzzyJCVUqzNEJv0ynLgkpzCVdUUfoMM1RcKc3xJes5C0zg64ugj2R9e4VwJfn9W3+rlYS1So1q1jL8w+3qOM7lXyvr8Bdgc5BMvrOvHxzdOnpZmUEJkbKty62e8fYKN+WP7BrpxnzFQSzczX5S0uN4rn0rLO4wxVf2rtnTqIhKKYTsPMRBVEjpbRT1smzPPdINKu5l/Rz/zZS0b5I4yKJrkTYNgoPC/QSq8A9uXZxxQvj6x1bWZJVWywmaqYolEp8NaVHd+JYnlTmr4XpMHm01TPi1laowtY3ZepnKm8I55Ly0JA=='
+  const trustedRootCert =
+    'MIIEOzCCAqOgAwIBAgIDAZiFMA0GCSqGSIb3DQEBDAUAMD0xFzAVBgNVBAMTDk1QU1Jvb3QtNjE0ZDg4MRAwDgYDVQQKEwd1bmtub3duMRAwDgYDVQQGEwd1bmtub3duMCAXDTIwMDgyNTE4MzMzN1oYDzIwNTEwODI1MTgzMzM3WjA9MRcwFQYDVQQDEw5NUFNSb290LTYxNGQ4ODEQMA4GA1UEChMHdW5rbm93bjEQMA4GA1UEBhMHdW5rbm93bjCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAOi1jx9L8DG6gBPxd9gmJ6vqQC/F/TBMTJvb3ZAuRbDxUKnxZk3PafyNM6fO8QTL4qZVhvyGEZaIzVePrdJj31aZ93mNY2TJee3/DLRsJUIZHGFufBvi8pgQL+JjE9JmFD5/S2yciHIEVpKmXo1CbGmZGsnb8NRjaQVwB94pI1mg8JFMxyKzU/cUoCBfI+wmeMgBVdOJPNpH2zjC/GxwEFNQaxGe9GHmYbwoeiDeMPo75E/o+Gw6kJm429cuhJBC3KqHevAJj9V2nSUvoO0oxKqzLVkUYcjHEGYjxIvP6a6uo7x9llwfshJsBZ3PE5hucNdWS3dY3GeCqOwcaAQQIj2jULpZ/KlgVAdBK/o5QjE+IIQXCVK9USvktGzz7I5oH98zy8jCFStbGM7PQCo+DEnHn/SANmVbcy3hjzrXC8zf5dvmKiUb2eKnpv+z3FHsi64sVwFqBArB2ipcTM/qv4nEM6uLW1t+7+NB0OyaBmLktJrpb6af7z/EW1QuPIfTcQIDAQABo0IwQDAMBgNVHRMEBTADAQH/MBEGCWCGSAGG+EIBAQQEAwIABzAdBgNVHQ4EFgQUYU2IeTFqWXI1rG+JqZq8eVDO/LMwDQYJKoZIhvcNAQEMBQADggGBANoKIsFOn8/Lrb98DjOP+LUeopoU9KQ70ndreNqchrkPmM61V9IdD9OZiLr/7OY/rLGZwNvkhQYRPUa842Mqjfpr4YcV6HC0j6Zg0lcpxQ5eGGBkLb/teBcboi3sZcJvbCFUW2DJjhy7uqYxzE4eqSsKx5fEjp/wa6oNzNrgWRXyxQlaOo42RjXnOXS7sB0jPrgO0FClL1Xzif06kFHzzyJCVUqzNEJv0ynLgkpzCVdUUfoMM1RcKc3xJes5C0zg64ugj2R9e4VwJfn9W3+rlYS1So1q1jL8w+3qOM7lXyvr8Bdgc5BMvrOvHxzdOnpZmUEJkbKty62e8fYKN+WP7BrpxnzFQSzczX5S0uN4rn0rLO4wxVf2rtnTqIhKKYTsPMRBVEjpbRT1smzPPdINKu5l/Rz/zZS0b5I4yKJrkTYNgoPC/QSq8A9uXZxxQvj6x1bWZJVWywmaqYolEp8NaVHd+JYnlTmr4XpMHm01TPi1laowtY3ZepnKm8I55Ly0JA=='
 
   describe('AlarmClockService Tests', () => {
     it('should return a valid amt_AlarmClockService ADD_ALARM wsman message', () => {
@@ -85,14 +91,21 @@ describe('AMT Tests', () => {
       const interval = minutes + hours * 60 + days * 1440
       const deleteOnCompletion = true
       let correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService/AddAlarm</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header>`
-      correctResponse += '<Body><p:AddAlarm_INPUT xmlns:p="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService"><p:AlarmTemplate>'
+      correctResponse +=
+        '<Body><p:AddAlarm_INPUT xmlns:p="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AlarmClockService"><p:AlarmTemplate>'
       correctResponse += `<s:InstanceID xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${instanceID}</s:InstanceID>`
       correctResponse += `<s:ElementName xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${elementName}</s:ElementName>`
       correctResponse += `<s:StartTime xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Datetime xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">${startTime}</p:Datetime></s:StartTime>`
       correctResponse += `<s:Interval xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence"><p:Interval xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/common">P${days}DT${hours}H${minutes}M</p:Interval></s:Interval>`
       correctResponse += `<s:DeleteOnCompletion xmlns:s="http://intel.com/wbem/wscim/1/ips-schema/1/IPS_AlarmClockOccurrence">${String(deleteOnCompletion)}</s:DeleteOnCompletion>`
       correctResponse += '</p:AlarmTemplate></p:AddAlarm_INPUT></Body></Envelope>'
-      const response = amtClass.AlarmClockService.AddAlarm({ InstanceID: instanceID, ElementName: elementName, StartTime: new Date(startTime), Interval: interval, DeleteOnCompletion: deleteOnCompletion })
+      const response = amtClass.AlarmClockService.AddAlarm({
+        InstanceID: instanceID,
+        ElementName: elementName,
+        StartTime: new Date(startTime),
+        Interval: interval,
+        DeleteOnCompletion: deleteOnCompletion
+      })
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_AlarmClockService GET message ', () => {
@@ -166,16 +179,30 @@ describe('AMT Tests', () => {
     })
     it('should return a valid amt_AuthorizationService ADD_USER_ACL_ENTRY_EX wsman message using kerberos', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/AddUserAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddUserAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:KerberosUserSid>64</h:KerberosUserSid><h:AccessPermission>2</h:AccessPermission><h:Realms>3</h:Realms></h:AddUserAclEntryEx_INPUT></Body></Envelope>`
-      const response = amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], undefined, undefined, '64')
+      const response = amtClass.AuthorizationService.AddUserAclEntryEx(
+        2,
+        [Realms.ADMINISTRATION],
+        undefined,
+        undefined,
+        '64'
+      )
       expect(response).toEqual(correctResponse)
     })
     it('should throw an error if the digestUsername is longer than 16 when calling AddUserAclEntryEx', () => {
-      expect(() => { amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], 'thisusernameistoolong', 'test') }).toThrow(WSManErrors.USERNAME_TOO_LONG)
+      expect(() => {
+        amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], 'thisusernameistoolong', 'test')
+      }).toThrow(WSManErrors.USERNAME_TOO_LONG)
     })
     it('should throw an error if digest or kerberos credentials are not provided to AddUserAclEntryEx', () => {
-      expect(() => { amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION]) }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
-      expect(() => { amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], 'test') }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
-      expect(() => { amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], undefined, 'test') }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => {
+        amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION])
+      }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => {
+        amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], 'test')
+      }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => {
+        amtClass.AuthorizationService.AddUserAclEntryEx(2, [Realms.ADMINISTRATION], undefined, 'test')
+      }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
     })
     it('should return a valid amt_AuthorizationService EnumerateUserAclEntries wsman message when startIndex is undefined', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/EnumerateUserAclEntries</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:EnumerateUserAclEntries_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:StartIndex>1</h:StartIndex></h:EnumerateUserAclEntries_INPUT></Body></Envelope>`
@@ -194,21 +221,48 @@ describe('AMT Tests', () => {
     })
     it('should return a valid amt_AuthorizationService UpdateUserAclEntryEx wsman message using digest', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/UpdateUserAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:UpdateUserAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Handle>1</h:Handle><h:DigestUsername>test</h:DigestUsername><h:DigestPassword>test123!</h:DigestPassword><h:AccessPermission>2</h:AccessPermission><h:Realms>3</h:Realms></h:UpdateUserAclEntryEx_INPUT></Body></Envelope>`
-      const response = amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], 'test', 'test123!')
+      const response = amtClass.AuthorizationService.UpdateUserAclEntryEx(
+        1,
+        2,
+        [Realms.ADMINISTRATION],
+        'test',
+        'test123!'
+      )
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_AuthorizationService UpdateUserAclEntryEx wsman message using kerberos', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/UpdateUserAclEntryEx</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:UpdateUserAclEntryEx_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Handle>1</h:Handle><h:KerberosUserSid>64</h:KerberosUserSid><h:AccessPermission>2</h:AccessPermission><h:Realms>3</h:Realms></h:UpdateUserAclEntryEx_INPUT></Body></Envelope>`
-      const response = amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], undefined, undefined, '64')
+      const response = amtClass.AuthorizationService.UpdateUserAclEntryEx(
+        1,
+        2,
+        [Realms.ADMINISTRATION],
+        undefined,
+        undefined,
+        '64'
+      )
       expect(response).toEqual(correctResponse)
     })
     it('should throw an error if digest or kerberos credentials are not provided to UpdateUserAclEntryEx', () => {
-      expect(() => { amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION]) }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
-      expect(() => { amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], 'test') }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
-      expect(() => { amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], undefined, 'test') }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => {
+        amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION])
+      }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => {
+        amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], 'test')
+      }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+      expect(() => {
+        amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], undefined, 'test')
+      }).toThrow(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
     })
     it('should throw an error if the digestUsername is longer than 16 when calling UpdateUserAclEntryEx', () => {
-      expect(() => { amtClass.AuthorizationService.UpdateUserAclEntryEx(1, 2, [Realms.ADMINISTRATION], 'thisusernameistoolong', 'test') }).toThrow(WSManErrors.USERNAME_TOO_LONG)
+      expect(() => {
+        amtClass.AuthorizationService.UpdateUserAclEntryEx(
+          1,
+          2,
+          [Realms.ADMINISTRATION],
+          'thisusernameistoolong',
+          'test'
+        )
+      }).toThrow(WSManErrors.USERNAME_TOO_LONG)
     })
     it('should return a valid amt_AuthorizationService RemoveUserAclEntry wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService/RemoveUserAclEntry</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:RemoveUserAclEntry_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuthorizationService"><h:Handle>1</h:Handle></h:RemoveUserAclEntry_INPUT></Body></Envelope>`
@@ -341,7 +395,11 @@ describe('AMT Tests', () => {
         SharedMAC: true,
         MACAddress: 'a4-ae-11-1c-02-4d',
         LinkIsUp: true,
-        LinkPolicy: [1, 14, 16],
+        LinkPolicy: [
+          1,
+          14,
+          16
+        ],
         SharedStaticIp: false,
         SharedDynamicIP: true,
         DefaultGateway: undefined,
@@ -580,7 +638,9 @@ describe('AMT Tests', () => {
     })
     it('should return a valid amt_PublicKeyManagementService AddTrustedRootCertificate wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService/AddTrustedRootCertificate</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddTrustedRootCertificate_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyManagementService"><h:CertificateBlob>${trustedRootCert}</h:CertificateBlob></h:AddTrustedRootCertificate_INPUT></Body></Envelope>`
-      const response = amtClass.PublicKeyManagementService.AddTrustedRootCertificate({ CertificateBlob: trustedRootCert })
+      const response = amtClass.PublicKeyManagementService.AddTrustedRootCertificate({
+        CertificateBlob: trustedRootCert
+      })
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_PublicKeyManagementService GenerateKeyPair wsman message', () => {
@@ -1032,7 +1092,13 @@ describe('AMT Tests', () => {
     })
     it('should return a valid amt_WiFiPortConfigurationService ADD_WIFI_SETTINGS with 802.1x wsman message', () => {
       const correctResponse = `${xmlHeader}${envelope}http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService/AddWiFiSettings</a:Action><a:To>/wsman</a:To><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService</w:ResourceURI><a:MessageID>${(messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</a:Address></a:ReplyTo><w:OperationTimeout>${operationTimeout}</w:OperationTimeout></Header><Body><h:AddWiFiSettings_INPUT xmlns:h="http://intel.com/wbem/wscim/1/amt-schema/1/AMT_WiFiPortConfigurationService"><h:WiFiEndpoint><a:Address>/wsman</a:Address><a:ReferenceParameters><w:ResourceURI>http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpoint</w:ResourceURI><w:SelectorSet><w:Selector Name="${selector.name}">${selector.value}</w:Selector></w:SelectorSet></a:ReferenceParameters></h:WiFiEndpoint><h:WiFiEndpointSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings"><q:ElementName>${wifiEndpointSettings.ElementName}</q:ElementName><q:InstanceID>${wifiEndpointSettings.InstanceID}</q:InstanceID><q:AuthenticationMethod>${wifiEndpointSettings.AuthenticationMethod}</q:AuthenticationMethod><q:EncryptionMethod>${wifiEndpointSettings.EncryptionMethod}</q:EncryptionMethod><q:SSID>${wifiEndpointSettings.SSID}</q:SSID><q:Priority>${wifiEndpointSettings.Priority}</q:Priority><q:PSKPassPhrase>p&apos;ass&lt;&gt;&amp;&quot;code</q:PSKPassPhrase></h:WiFiEndpointSettingsInput><h:IEEE8021xSettingsInput xmlns:q="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_IEEE8021xSettings"><q:ElementName>${ieee8021xSettingsInput.ElementName}</q:ElementName><q:AuthenticationProtocol>${ieee8021xSettingsInput.AuthenticationProtocol}</q:AuthenticationProtocol></h:IEEE8021xSettingsInput><h:ClientCredential><a:Address>default</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">${clientCredential}</w:Selector></w:SelectorSet></a:ReferenceParameters></h:ClientCredential><h:CACredential><a:Address>default</a:Address><a:ReferenceParameters><w:ResourceURI>http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate</w:ResourceURI><w:SelectorSet><w:Selector Name="InstanceID">${caCredential}</w:Selector></w:SelectorSet></a:ReferenceParameters></h:CACredential></h:AddWiFiSettings_INPUT></Body></Envelope>`
-      const response = amtClass.WiFiPortConfigurationService.AddWiFiSettings(wifiEndpointSettings, selector, ieee8021xSettingsInput, clientCredential, caCredential)
+      const response = amtClass.WiFiPortConfigurationService.AddWiFiSettings(
+        wifiEndpointSettings,
+        selector,
+        ieee8021xSettingsInput,
+        clientCredential,
+        caCredential
+      )
       expect(response).toEqual(correctResponse)
     })
     it('should return a valid amt_WiFiPortConfigurationService PUT message ', () => {

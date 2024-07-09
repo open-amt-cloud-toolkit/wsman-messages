@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-**********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ **********************************************************************/
 
 import { CIM } from '../'
 import { Base, BaseActions, WSManErrors, WSManMessageCreator } from '../WSMan'
@@ -51,7 +51,9 @@ class AuditLog extends Base {
    * @returns string
    */
   ReadRecords = (startIndex?: number): string => {
-    if (startIndex === undefined) { startIndex = 1 }
+    if (startIndex === undefined) {
+      startIndex = 1
+    }
     const header = this.wsmanMessageCreator.createHeader(Actions.READ_RECORDS, this.className)
     const body = this.wsmanMessageCreator.createBody('ReadRecords_INPUT', this.className, [{ StartIndex: startIndex }])
     return this.wsmanMessageCreator.createXml(header, body)
@@ -68,9 +70,19 @@ class AuthorizationService extends Base {
    * @param kerberosUserSid Descriptor for user (SID) which is authenticated using the Kerberos Authentication. Byte array, specifying the Security Identifier (SID) according to the Kerberos specification. Current requirements imply that SID should be not smaller than 1 byte length and no longer than 28 bytes. SID length should also be a multiplicand of 4.
    * @returns string
    */
-  AddUserAclEntryEx = (accessPermission: Types.AuthorizationService.AccessPermission, realms: Types.AuthorizationService.Realms, digestUsername?: string, digestPassword?: string, kerberosUserSid?: string): string => {
-    if ((!digestUsername || !digestPassword) && !kerberosUserSid) { throw new Error(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION) }
-    if (digestUsername && digestUsername.length > 16) { throw new Error(WSManErrors.USERNAME_TOO_LONG) }
+  AddUserAclEntryEx = (
+    accessPermission: Types.AuthorizationService.AccessPermission,
+    realms: Types.AuthorizationService.Realms,
+    digestUsername?: string,
+    digestPassword?: string,
+    kerberosUserSid?: string
+  ): string => {
+    if ((!digestUsername || !digestPassword) && !kerberosUserSid) {
+      throw new Error(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+    }
+    if (digestUsername && digestUsername.length > 16) {
+      throw new Error(WSManErrors.USERNAME_TOO_LONG)
+    }
     const header: string = this.wsmanMessageCreator.createHeader(Actions.ADD_USER_ACL_ENTRY_EX, this.className)
     const aclObject: Models.UserAclEntry = {
       DigestUsername: digestUsername,
@@ -91,7 +103,8 @@ class AuthorizationService extends Base {
   EnumerateUserAclEntries = (startIndex?: number): string => {
     if (!startIndex) startIndex = 1
     const header: string = this.wsmanMessageCreator.createHeader(Actions.ENUMERATE_USER_ACL_ENTRIES, this.className)
-    const body: string = this.wsmanMessageCreator.createBody('EnumerateUserAclEntries_INPUT', this.className, [{ StartIndex: startIndex }])
+    const body: string = this.wsmanMessageCreator.createBody('EnumerateUserAclEntries_INPUT', this.className, [
+      { StartIndex: startIndex }])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -102,7 +115,8 @@ class AuthorizationService extends Base {
    */
   GetAclEnabledState = (handle: number): string => {
     const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_ACL_ENABLED_STATE, this.className)
-    const body: string = this.wsmanMessageCreator.createBody('GetAclEnabledState_INPUT', this.className, [{ Handle: handle }])
+    const body: string = this.wsmanMessageCreator.createBody('GetAclEnabledState_INPUT', this.className, [
+      { Handle: handle }])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -143,18 +157,20 @@ class AuthorizationService extends Base {
    */
   GetUserAclEntryEx = (handle: number): string => {
     const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_USER_ACL_ENTRY_EX, this.className)
-    const body: string = this.wsmanMessageCreator.createBody('GetUserAclEntryEx_INPUT', this.className, [{ Handle: handle }])
+    const body: string = this.wsmanMessageCreator.createBody('GetUserAclEntryEx_INPUT', this.className, [
+      { Handle: handle }])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
   /**
-  * Removes an entry from the User Access Control List (ACL), given a handle.
-  * @param handle Specifies the ACL entry to be removed.
-  * @returns string
-  */
+   * Removes an entry from the User Access Control List (ACL), given a handle.
+   * @param handle Specifies the ACL entry to be removed.
+   * @returns string
+   */
   RemoveUserAclEntry = (handle: number): string => {
     const header: string = this.wsmanMessageCreator.createHeader(Actions.REMOVE_USER_ACL_ENTRY, this.className)
-    const body: string = this.wsmanMessageCreator.createBody('RemoveUserAclEntry_INPUT', this.className, [{ Handle: handle }])
+    const body: string = this.wsmanMessageCreator.createBody('RemoveUserAclEntry_INPUT', this.className, [
+      { Handle: handle }])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -166,7 +182,8 @@ class AuthorizationService extends Base {
    */
   SetAclEnabledState = (handle: number, enabled: boolean): string => {
     const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_ACL_ENABLED_STATE, this.className)
-    const body: string = this.wsmanMessageCreator.createBody('SetAclEnabledState_INPUT', this.className, [{ Handle: handle, Enabled: enabled }])
+    const body: string = this.wsmanMessageCreator.createBody('SetAclEnabledState_INPUT', this.className, [
+      { Handle: handle, Enabled: enabled }])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -178,10 +195,12 @@ class AuthorizationService extends Base {
    */
   SetAdminACLEntryEx = (username: string, digestPassword: string): string => {
     const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_ADMIN_ACL_ENTRY_EX, this.className)
-    const body: string = this.wsmanMessageCreator.createBody('SetAdminAclEntryEx_INPUT', this.className, [{
-      Username: username,
-      DigestPassword: digestPassword
-    }])
+    const body: string = this.wsmanMessageCreator.createBody('SetAdminAclEntryEx_INPUT', this.className, [
+      {
+        Username: username,
+        DigestPassword: digestPassword
+      }
+    ])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -195,9 +214,20 @@ class AuthorizationService extends Base {
    * @param kerberosUserSid Descriptor for user (SID) which is authenticated using the Kerberos Authentication. Byte array, specifying the Security Identifier (SID) according to the Kerberos specification. Current requirements imply that SID should be not smaller than 1 byte length and no longer than 28 bytes. SID length should also be a multiplicand of 4.
    * @returns string
    */
-  UpdateUserAclEntryEx = (handle: number, accessPermission: Types.AuthorizationService.AccessPermission, realms: Types.AuthorizationService.Realms, digestUsername?: string, digestPassword?: string, kerberosUserSid?: string): string => {
-    if ((!digestUsername || !digestPassword) && !kerberosUserSid) { throw new Error(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION) }
-    if (digestUsername && digestUsername.length > 16) { throw new Error(WSManErrors.USERNAME_TOO_LONG) }
+  UpdateUserAclEntryEx = (
+    handle: number,
+    accessPermission: Types.AuthorizationService.AccessPermission,
+    realms: Types.AuthorizationService.Realms,
+    digestUsername?: string,
+    digestPassword?: string,
+    kerberosUserSid?: string
+  ): string => {
+    if ((!digestUsername || !digestPassword) && !kerberosUserSid) {
+      throw new Error(WSManErrors.MISSING_USER_ACL_ENTRY_INFORMATION)
+    }
+    if (digestUsername && digestUsername.length > 16) {
+      throw new Error(WSManErrors.USERNAME_TOO_LONG)
+    }
     const header: string = this.wsmanMessageCreator.createHeader(Actions.UPDATE_USER_ACL_ENTRY_EX, this.className)
     const aclObject: Models.UserAclEntry = {
       Handle: handle,
@@ -230,7 +260,8 @@ class EnvironmentDetectionSettingData extends Base {
    * @param environmentDetectionSettingData EnvironmentDetectionSettingData Object.
    * @returns string
    */
-  Put = (environmentDetectionSettingData: Models.EnvironmentDetectionSettingData): string => this.protectedPut(environmentDetectionSettingData, true)
+  Put = (environmentDetectionSettingData: Models.EnvironmentDetectionSettingData): string =>
+    this.protectedPut(environmentDetectionSettingData, true)
 }
 class EthernetPortSettings extends Base {
   className = Classes.ETHERNET_PORT_SETTINGS
@@ -302,9 +333,12 @@ class MessageLog extends Base {
    * @returns string
    */
   GetRecords = (identifier?: number): string => {
-    if (identifier === undefined) { identifier = 1 }
+    if (identifier === undefined) {
+      identifier = 1
+    }
     const header = this.wsmanMessageCreator.createHeader(Actions.GET_RECORDS, this.className)
-    const body = this.wsmanMessageCreator.createBody('GetRecords_INPUT', this.className, [{ IterationIdentifier: identifier, MaxReadRecords: 390 }])
+    const body = this.wsmanMessageCreator.createBody('GetRecords_INPUT', this.className, [
+      { IterationIdentifier: identifier, MaxReadRecords: 390 }])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -321,10 +355,10 @@ class MessageLog extends Base {
 class MPSUsernamePassword extends Base {
   className = Classes.MPS_USERNAME_PASSWORD
   /**
-  * Changes properties of MPSUsernamePassword.
-  * @param  mpsUsernamePassword MPSUsernamePassword Object.
-  * @returns string
-  */
+   * Changes properties of MPSUsernamePassword.
+   * @param  mpsUsernamePassword MPSUsernamePassword Object.
+   * @returns string
+   */
   Put = (mpsUsernamePassword: Models.MPSUsernamePassword): string => this.protectedPut(mpsUsernamePassword, false)
 }
 class PublicKeyCertificate extends Base {
@@ -376,7 +410,9 @@ class PublicKeyManagementService extends Base {
    */
   AddTrustedRootCertificate = (addCertificate: Models.AddCertificate): string => {
     const header = this.wsmanMessageCreator.createHeader(Actions.ADD_TRUSTED_ROOT_CERTIFICATE, this.className)
-    const body = this.wsmanMessageCreator.createBody('AddTrustedRootCertificate_INPUT', this.className, [addCertificate])
+    const body = this.wsmanMessageCreator.createBody('AddTrustedRootCertificate_INPUT', this.className, [
+      addCertificate
+    ])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -403,11 +439,11 @@ class PublicKeyManagementService extends Base {
   }
 }
 class PublicPrivateKeyPair extends Base {
-  className = Classes.PUBLIC_PRIVATE_KEY_PAIR/**
-  * Deletes an instance
-  * @param selector indicates the instance
-  * @returns string
-  */
+  className = Classes.PUBLIC_PRIVATE_KEY_PAIR /**
+   * Deletes an instance
+   * @param selector indicates the instance
+   * @returns string
+   */
   Delete = (selector: Selector): string => this.protectedDelete(selector)
 }
 class RedirectionService extends Base {
@@ -424,28 +460,34 @@ class RedirectionService extends Base {
    * @value_map 32768 = disable IDER and SOL, 32769 = enable IDER and disable SOL, 32770 = enable SOL and disable IDER, 32771 = enable IDER and SOL
    * @returns string
    */
-  RequestStateChange = (requestedState: Types.RedirectionService.RequestedState): string => this.protectedRequestStateChange(`http://intel.com/wbem/wscim/1/amt-schema/1/${this.className}/RequestStateChange`, requestedState)
+  RequestStateChange = (requestedState: Types.RedirectionService.RequestedState): string =>
+    this.protectedRequestStateChange(
+      `http://intel.com/wbem/wscim/1/amt-schema/1/${this.className}/RequestStateChange`,
+      requestedState
+    )
 }
 class RemoteAccessPolicyAppliesToMPS extends Base {
   className = Classes.REMOTE_ACCESS_POLICY_APPLIES_TO_MPS
   /**
-  * Deletes an instance
-  * @param selector indicates the instance
-  * @returns string
-  */
+   * Deletes an instance
+   * @param selector indicates the instance
+   * @returns string
+   */
   Delete = (selector: Selector): string => this.protectedDelete(selector)
   /**
    * Creates an instance of RemoteAccessPolicyAppliesToMPS
    * @param remoteAccessPolicyAppliesToMPS RemoteAccessPolicyAppliesToMPS Object
    * @returns string
    */
-  Create = (remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS): string => this.protectedCreate(remoteAccessPolicyAppliesToMPS)
+  Create = (remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS): string =>
+    this.protectedCreate(remoteAccessPolicyAppliesToMPS)
   /**
    * Changes properties of RemoteAccessPolicyAppliesToMPS.
    * @param remoteAccessPolicyAppliesToMPS RemoteAccessPolicyAppliesToMPS Object.
    * @returns string
    */
-  Put = (remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS): string => this.protectedPut(remoteAccessPolicyAppliesToMPS, false)
+  Put = (remoteAccessPolicyAppliesToMPS: Models.RemoteAccessPolicyAppliesToMPS): string =>
+    this.protectedPut(remoteAccessPolicyAppliesToMPS, false)
 }
 class RemoteAccessPolicyRule extends Base {
   className = Classes.REMOTE_ACCESS_POLICY_RULE
@@ -460,7 +502,8 @@ class RemoteAccessPolicyRule extends Base {
    * @param remoteAccessPolicyRule Remote Access Policy Rule object
    * @returns string
    */
-  Put = (remoteAccessPolicyRule: Models.RemoteAccessPolicyRule): string => this.protectedPut(remoteAccessPolicyRule, false)
+  Put = (remoteAccessPolicyRule: Models.RemoteAccessPolicyRule): string =>
+    this.protectedPut(remoteAccessPolicyRule, false)
 }
 class RemoteAccessService extends Base {
   className = Classes.REMOTE_ACCESS_SERVICE
@@ -482,7 +525,10 @@ class RemoteAccessService extends Base {
    * @returns string
    */
   AddRemoteAccessPolicyRule = (remoteAccessPolicyRule: Models.RemoteAccessPolicyRule, selector: Selector): string => {
-    const header = this.wsmanMessageCreator.createHeader(Actions.ADD_REMOTE_ACCESS_POLICY_RULE, Classes.REMOTE_ACCESS_SERVICE)
+    const header = this.wsmanMessageCreator.createHeader(
+      Actions.ADD_REMOTE_ACCESS_POLICY_RULE,
+      Classes.REMOTE_ACCESS_SERVICE
+    )
     const body = `<Body><h:AddRemoteAccessPolicyRule_INPUT xmlns:h="${this.wsmanMessageCreator.resourceUriBase}AMT_RemoteAccessService"><h:Trigger>${remoteAccessPolicyRule.Trigger}</h:Trigger><h:TunnelLifeTime>${remoteAccessPolicyRule.TunnelLifeTime}</h:TunnelLifeTime><h:ExtendedData>${remoteAccessPolicyRule.ExtendedData}</h:ExtendedData><h:MpServer><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">${this.wsmanMessageCreator.resourceUriBase}AMT_ManagementPresenceRemoteSAP</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="${selector.name}">${selector.value}</Selector></SelectorSet></ReferenceParameters></h:MpServer></h:AddRemoteAccessPolicyRule_INPUT></Body>`
     return this.wsmanMessageCreator.createXml(header, body)
   }
@@ -494,8 +540,13 @@ class SetupAndConfigurationService extends Base {
    * @returns string
    */
   CommitChanges = (): string => {
-    const header = this.wsmanMessageCreator.createHeader(Actions.COMMIT_CHANGES, Classes.SETUP_AND_CONFIGURATION_SERVICE)
-    const body = this.wsmanMessageCreator.createBody('CommitChanges_INPUT', Classes.SETUP_AND_CONFIGURATION_SERVICE, [{}])
+    const header = this.wsmanMessageCreator.createHeader(
+      Actions.COMMIT_CHANGES,
+      Classes.SETUP_AND_CONFIGURATION_SERVICE
+    )
+    const body = this.wsmanMessageCreator.createBody('CommitChanges_INPUT', Classes.SETUP_AND_CONFIGURATION_SERVICE, [
+      {}
+    ])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -518,7 +569,10 @@ class SetupAndConfigurationService extends Base {
    * @returns string
    */
   SetMEBXPassword = (password: string): string => {
-    const header = this.wsmanMessageCreator.createHeader(Actions.SET_MEBX_PASSWORD, Classes.SETUP_AND_CONFIGURATION_SERVICE)
+    const header = this.wsmanMessageCreator.createHeader(
+      Actions.SET_MEBX_PASSWORD,
+      Classes.SETUP_AND_CONFIGURATION_SERVICE
+    )
     const body = `<Body><h:SetMEBxPassword_INPUT xmlns:h="${this.wsmanMessageCreator.resourceUriBase}${Classes.SETUP_AND_CONFIGURATION_SERVICE}"><h:Password>${password}</h:Password></h:SetMEBxPassword_INPUT></Body>`
     return this.wsmanMessageCreator.createXml(header, body)
   }
@@ -530,7 +584,9 @@ class SetupAndConfigurationService extends Base {
    * @returns string
    */
   Unprovision = (provisioningMode?: Types.SetupAndConfigurationService.ProvisioningMode_Input): string => {
-    if (provisioningMode === undefined) { provisioningMode = 1 }
+    if (provisioningMode === undefined) {
+      provisioningMode = 1
+    }
     const header = this.wsmanMessageCreator.createHeader(Actions.UNPROVISION, Classes.SETUP_AND_CONFIGURATION_SERVICE)
     const body = `<Body><h:Unprovision_INPUT xmlns:h="${this.wsmanMessageCreator.resourceUriBase}${Classes.SETUP_AND_CONFIGURATION_SERVICE}"><h:ProvisioningMode>${provisioningMode}</h:ProvisioningMode></h:Unprovision_INPUT></Body>`
     return this.wsmanMessageCreator.createXml(header, body)
@@ -541,7 +597,8 @@ class SetupAndConfigurationService extends Base {
    * @param setupAndConfigurationService SetupAndConfigurationService object
    * @returns string
    */
-  Put = (setupAndConfigurationService: Models.SetupAndConfigurationService): string => this.protectedPut(setupAndConfigurationService, false)
+  Put = (setupAndConfigurationService: Models.SetupAndConfigurationService): string =>
+    this.protectedPut(setupAndConfigurationService, false)
 }
 class TimeSynchronizationService extends Base {
   className = Classes.TIME_SYNCHRONIZATION_SERVICE
@@ -553,12 +610,21 @@ class TimeSynchronizationService extends Base {
    * @returns string
    */
   SetHighAccuracyTimeSynch = (ta0: number, tm1: number, tm2: number): string => {
-    const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_HIGH_ACCURACY_TIME_SYNCH, Classes.TIME_SYNCHRONIZATION_SERVICE)
-    const body: string = this.wsmanMessageCreator.createBody('SetHighAccuracyTimeSynch_INPUT', Classes.TIME_SYNCHRONIZATION_SERVICE, [{
-      Ta0: ta0,
-      Tm1: tm1,
-      Tm2: tm2
-    }])
+    const header: string = this.wsmanMessageCreator.createHeader(
+      Actions.SET_HIGH_ACCURACY_TIME_SYNCH,
+      Classes.TIME_SYNCHRONIZATION_SERVICE
+    )
+    const body: string = this.wsmanMessageCreator.createBody(
+      'SetHighAccuracyTimeSynch_INPUT',
+      Classes.TIME_SYNCHRONIZATION_SERVICE,
+      [
+        {
+          Ta0: ta0,
+          Tm1: tm1,
+          Tm2: tm2
+        }
+      ]
+    )
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -567,8 +633,14 @@ class TimeSynchronizationService extends Base {
    * @returns string
    */
   GetLowAccuracyTimeSynch = (): string => {
-    const header: string = this.wsmanMessageCreator.createHeader(Actions.GET_LOW_ACCURACY_TIME_SYNCH, Classes.TIME_SYNCHRONIZATION_SERVICE)
-    const body: string = this.wsmanMessageCreator.createBody('GetLowAccuracyTimeSynch_INPUT', Classes.TIME_SYNCHRONIZATION_SERVICE)
+    const header: string = this.wsmanMessageCreator.createHeader(
+      Actions.GET_LOW_ACCURACY_TIME_SYNCH,
+      Classes.TIME_SYNCHRONIZATION_SERVICE
+    )
+    const body: string = this.wsmanMessageCreator.createBody(
+      'GetLowAccuracyTimeSynch_INPUT',
+      Classes.TIME_SYNCHRONIZATION_SERVICE
+    )
     return this.wsmanMessageCreator.createXml(header, body)
   }
 }
@@ -600,7 +672,8 @@ class TLSSettingData extends Base {
    * @param tlsSettingData TLSSettingData Object.
    * @returns string
    */
-  Put = (tlsSettingData: Models.TLSSettingData): string => this.protectedPut(tlsSettingData, true, { name: 'InstanceID', value: tlsSettingData.InstanceID })
+  Put = (tlsSettingData: Models.TLSSettingData): string =>
+    this.protectedPut(tlsSettingData, true, { name: 'InstanceID', value: tlsSettingData.InstanceID })
 }
 class UserInitiatedConnectionService extends Base {
   className = Classes.USER_INITIATED_CONNECTION_SERVICE
@@ -610,7 +683,11 @@ class UserInitiatedConnectionService extends Base {
    * @value_map 32768 = All Interfaces disabled, 32769 = BIOS Interface enabled, 32770 = OS Interface enabled, 32771 = BIOS and OS Interfaces enabled
    * @returns string
    */
-  RequestStateChange = (requestedState: Types.UserInitiatedConnectionService.RequestedState): string => this.protectedRequestStateChange(`http://intel.com/wbem/wscim/1/amt-schema/1/${this.className}/RequestStateChange`, requestedState)
+  RequestStateChange = (requestedState: Types.UserInitiatedConnectionService.RequestedState): string =>
+    this.protectedRequestStateChange(
+      `http://intel.com/wbem/wscim/1/amt-schema/1/${this.className}/RequestStateChange`,
+      requestedState
+    )
 }
 class WiFiPortConfigurationService extends Base {
   className = Classes.WIFI_PORT_CONFIGURATION_SERVICE
@@ -620,8 +697,17 @@ class WiFiPortConfigurationService extends Base {
    * @param selector Selector Object.
    * @returns string
    */
-  AddWiFiSettings = (wifiEndpointSettings: CIM.Models.WiFiEndpointSettings, selector: Selector, ieee8021xSettingsInput?: CIM.Models.IEEE8021xSettings, clientCredential?: string, caCredential?: string): string => {
-    const header = this.wsmanMessageCreator.createHeader(Actions.ADD_WIFI_SETTINGS, Classes.WIFI_PORT_CONFIGURATION_SERVICE)
+  AddWiFiSettings = (
+    wifiEndpointSettings: CIM.Models.WiFiEndpointSettings,
+    selector: Selector,
+    ieee8021xSettingsInput?: CIM.Models.IEEE8021xSettings,
+    clientCredential?: string,
+    caCredential?: string
+  ): string => {
+    const header = this.wsmanMessageCreator.createHeader(
+      Actions.ADD_WIFI_SETTINGS,
+      Classes.WIFI_PORT_CONFIGURATION_SERVICE
+    )
     const dataArray: object[] = []
     const wifiEndpointObject = {
       WiFiEndpoint: {
@@ -635,7 +721,11 @@ class WiFiPortConfigurationService extends Base {
     dataArray.push(wifiEndpointObject)
     if (wifiEndpointSettings) {
       // HANDLE SPECIAL CHARACTERS FOR XML
-      wifiEndpointSettings.PSKPassPhrase = wifiEndpointSettings.PSKPassPhrase?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;')
+      wifiEndpointSettings.PSKPassPhrase = wifiEndpointSettings.PSKPassPhrase?.replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;')
       const wifiEndpointSettingInputObject = {
         WiFiEndpointSettingsInput: wifiEndpointSettings,
         namespace: 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_WiFiEndpointSettings'
@@ -655,7 +745,10 @@ class WiFiPortConfigurationService extends Base {
           Address: 'default',
           ReferenceParameters: {
             ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate',
-            SelectorSet: this.wsmanMessageCreator.createSelectorObjectForBody({ name: 'InstanceID', value: clientCredential })
+            SelectorSet: this.wsmanMessageCreator.createSelectorObjectForBody({
+              name: 'InstanceID',
+              value: clientCredential
+            })
           }
         }
       }
@@ -667,13 +760,20 @@ class WiFiPortConfigurationService extends Base {
           Address: 'default',
           ReferenceParameters: {
             ResourceURI: 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_PublicKeyCertificate',
-            SelectorSet: this.wsmanMessageCreator.createSelectorObjectForBody({ name: 'InstanceID', value: caCredential })
+            SelectorSet: this.wsmanMessageCreator.createSelectorObjectForBody({
+              name: 'InstanceID',
+              value: caCredential
+            })
           }
         }
       }
       dataArray.push(caCredentialObject)
     }
-    const body = this.wsmanMessageCreator.createBody(Methods.ADD_WIFI_SETTINGS + '_INPUT', Classes.WIFI_PORT_CONFIGURATION_SERVICE, dataArray)
+    const body = this.wsmanMessageCreator.createBody(
+      Methods.ADD_WIFI_SETTINGS + '_INPUT',
+      Classes.WIFI_PORT_CONFIGURATION_SERVICE,
+      dataArray
+    )
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -683,7 +783,8 @@ class WiFiPortConfigurationService extends Base {
    * @param selector Selector Object.
    * @returns string
    */
-  Put = (wifiEndpointSettings: Models.WiFiPortConfigurationService, selector?: Selector): string => this.protectedPut(wifiEndpointSettings, true, selector)
+  Put = (wifiEndpointSettings: Models.WiFiPortConfigurationService, selector?: Selector): string =>
+    this.protectedPut(wifiEndpointSettings, true, selector)
 }
 export class Messages {
   readonly resourceUriBase: string = 'http://intel.com/wbem/wscim/1/amt-schema/1/'
