@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-**********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ **********************************************************************/
 
 export enum Classes {
   OPT_IN_SERVICE = 'IPS_OptInService',

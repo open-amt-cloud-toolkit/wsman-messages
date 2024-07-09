@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-**********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ **********************************************************************/
 
 export enum Actions {
   READ_RECORDS = 'http://intel.com/wbem/wscim/1/amt-schema/1/AMT_AuditLog/ReadRecords',

@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-**********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ **********************************************************************/
 
 import type { Types } from './types'
 import type { CIM, Common } from '../'

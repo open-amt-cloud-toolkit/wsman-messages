@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-**********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ **********************************************************************/
 
 export enum Methods {
   GET = 'Get',
@@ -30,7 +30,6 @@ export enum Methods {
   ADD_ALARM = 'AddAlarm',
   GENERATE_PKCS10_REQUEST_EX = 'GeneratePKCS10RequestEx',
   GET_UUID = 'GetUuid',
-  ADD_ADMIN_ACL_ENTRY_EX = 'AddUserAclEntryEx',
   ENUMERATE_USER_ACL_ENTRIES = 'EnumerateUserAclEntries',
   GET_ACL_ENABLED_STATE = 'GetAclEnabledState',
   GET_ADMIN_ACL_ENTRY = 'GetAdminAclEntry',

@@ -70,7 +70,7 @@ export namespace Models {
     PackageType?: Types.PhysicalPackage.PackageType // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17} Values={Unknown, Other, Rack, Chassis/Frame, Cross Connect/Backplane, Container/Frame Slot, Power Supply, Fan, Sensor, Module/Card, Port/Connector, Battery, Processor, Memory, Power Source/Generator, Storage Media Package (e.g., Disk or Tape Drive), Blade, Blade Expansion}
   }
 
-  export interface Card extends PhysicalPackage { }
+  export type Card = PhysicalPackage
 
   export interface PhysicalFrame extends PhysicalPackage {
     VendorCompatibilityStrings?: string[] // MaxLen=256
@@ -98,7 +98,7 @@ export namespace Models {
     ChassisPackageType?: Types.Chassis.ChassisPackageType // ValueMap={0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, .., 0x8000..0xFFFF} Values={Unknown, Other, SMBIOS Reserved, Desktop, Low Profile Desktop, Pizza Box, Mini Tower, Tower, Portable, LapTop, Notebook, Hand Held, Docking Station, All in One, Sub Notebook, Space-Saving, Lunch Box, Main System Chassis, Expansion Chassis, SubChassis, Bus Expansion Chassis, Peripheral Chassis, Storage Chassis, SMBIOS Reserved, Sealed-Case PC, SMBIOS Reserved, CompactPCI, AdvancedTCA, Blade Enclosure, SMBIOS Reserved, Tablet, Convertible, Detachable, IoT Gateway, Embedded PC, Mini PC, Stick PC, DMTF Reserved, Vendor Reserved}
   }
 
-  export interface LogicalElement extends ManagedSystemElement { }
+  export type LogicalElement = ManagedSystemElement
 
   export interface SoftwareElement extends LogicalElement {
     Version?: string // MaxLen=64
@@ -210,7 +210,7 @@ export namespace Models {
     Started?: boolean
   }
 
-  export interface SecurityService extends Service { }
+  export type SecurityService = Service
 
   export interface SettingData extends ManagedElement {
     InstanceID?: string // MaxLen=256
@@ -222,7 +222,7 @@ export namespace Models {
     Dependent: any
   }
 
-  export interface SystemPackaging extends Dependency { }
+  export type SystemPackaging = Dependency
 
   export interface ComputerSystemPackage extends SystemPackaging {
     PlatformGuid?: string // MaxLen=40
@@ -249,14 +249,14 @@ export namespace Models {
     ActiveMaximumTransmissionUnit?: number // Units=Bytes
   }
 
-  export interface EthernetPort extends NetworkPort { }
+  export type EthernetPort = NetworkPort
 
-  export interface WiFiPort extends NetworkPort { }
+  export type WiFiPort = NetworkPort
   export interface BootSettingData extends SettingData {
     OwningEntity?: string // MaxLen=256
   }
 
-  export interface Collection extends ManagedElement { }
+  export type Collection = ManagedElement
 
   export interface Role extends Collection {
     CreationClassName?: string // MaxLen=12
@@ -265,8 +265,7 @@ export namespace Models {
     RoleCharacteristics?: Types.Role.RoleCharacteristics // ValueMap={2, 3, .., 32000..65535} Values={Static, Opaque, DMTF Reserved, Vendor Specific}
   }
 
-  export interface AuthenticationService extends SecurityService {
-  }
+  export type AuthenticationService = SecurityService
 
   export interface CredentialManagementService extends AuthenticationService {
     // InstanceID is an optional property that may be used to opaquely and uniquely identify an instance of this class within the scope of the instantiating Namespace . . .
@@ -314,13 +313,11 @@ export namespace Models {
   }
 
   export interface SoftwareIdentity extends LogicalElement {
-    CIM_SoftwareIdentity: Array<
-    {
+    CIM_SoftwareIdentity: ({
       InstanceID: string
       VersionString: string
       IsEntity: boolean
-    } & LogicalElement
-    >
+    } & LogicalElement)[]
   }
 
   export interface Log extends EnabledLogicalElement {
@@ -383,7 +380,7 @@ export namespace Models {
     PSKPassPhrase?: string // Min Length 8 Max Length 63
   }
 
-  export interface NetworkPortConfigurationService extends Service { }
+  export type NetworkPortConfigurationService = Service
 
   export interface Policy extends ManagedElement {
     CommonName: string

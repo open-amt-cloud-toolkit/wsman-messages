@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-**********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ **********************************************************************/
 
 import { Base, WSManMessageCreator } from '../WSMan'
 import { Classes, Actions } from './'
@@ -20,7 +20,9 @@ class BootConfigSetting extends Base {
    */
   ChangeBootOrder = (source?: Types.BootConfigSetting.InstanceID): string => {
     const header = this.wsmanMessageCreator.createHeader(Actions.CHANGE_BOOT_ORDER, Classes.BOOT_CONFIG_SETTING)
-    const bootSource = source ? `<h:Source><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootSourceSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">${source}</Selector></SelectorSet></ReferenceParameters></h:Source>` : ''
+    const bootSource = source
+      ? `<h:Source><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootSourceSetting</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="InstanceID">${source}</Selector></SelectorSet></ReferenceParameters></h:Source>`
+      : ''
     const body = `<Body><h:ChangeBootOrder_INPUT xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_BootConfigSetting">${bootSource}</h:ChangeBootOrder_INPUT></Body>`
     return this.wsmanMessageCreator.createXml(header, body)
   }
@@ -39,12 +41,24 @@ class BootService extends Base {
     return this.wsmanMessageCreator.createXml(header, body)
   }
 }
-class BootSourceSetting extends Base { className = Classes.BOOT_SOURCE_SETTING }
-class Card extends Base { className = Classes.CARD }
-class Chassis extends Base { className = Classes.CHASSIS }
-class Chip extends Base { className = Classes.CHIP }
-class ComputerSystemPackage extends Base { className = Classes.COMPUTER_SYSTEM_PACKAGE }
-class IEEE8021xSettings extends Base { className = Classes.IEEE8021X_SETTINGS }
+class BootSourceSetting extends Base {
+  className = Classes.BOOT_SOURCE_SETTING
+}
+class Card extends Base {
+  className = Classes.CARD
+}
+class Chassis extends Base {
+  className = Classes.CHASSIS
+}
+class Chip extends Base {
+  className = Classes.CHIP
+}
+class ComputerSystemPackage extends Base {
+  className = Classes.COMPUTER_SYSTEM_PACKAGE
+}
+class IEEE8021xSettings extends Base {
+  className = Classes.IEEE8021X_SETTINGS
+}
 class KVMRedirectionSAP extends Base {
   className = Classes.KVM_REDIRECTION_SAP
   /**
@@ -52,11 +66,21 @@ class KVMRedirectionSAP extends Base {
    * @param requestedState The state requested for the element. This information will be placed into the RequestedState property of the instance if the return code of the RequestStateChange method is 0 ('Completed with No Error'), or 4096 (0x1000) ('Job Started'). Refer to the description of the EnabledState and RequestedState properties for the detailed explanations of the RequestedState values.
    * @returns string
    */
-  RequestStateChange = (requestedState: Types.KVMRedirectionSAP.RequestedStateInputs): string => this.protectedRequestStateChange(`http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/${this.className}/RequestStateChange`, requestedState)
+  RequestStateChange = (requestedState: Types.KVMRedirectionSAP.RequestedStateInputs): string =>
+    this.protectedRequestStateChange(
+      `http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/${this.className}/RequestStateChange`,
+      requestedState
+    )
 }
-class MediaAccessDevice extends Base { className = Classes.MEDIA_ACCESS_DEVICE }
-class PhysicalMemory extends Base { className = Classes.PHYSICAL_MEMORY }
-class PhysicalPackage extends Base { className = Classes.PHYSICAL_PACKAGE }
+class MediaAccessDevice extends Base {
+  className = Classes.MEDIA_ACCESS_DEVICE
+}
+class PhysicalMemory extends Base {
+  className = Classes.PHYSICAL_MEMORY
+}
+class PhysicalPackage extends Base {
+  className = Classes.PHYSICAL_PACKAGE
+}
 class PowerManagementService extends Base {
   className = Classes.POWER_MANAGEMENT_SERVICE
   /**
@@ -65,15 +89,26 @@ class PowerManagementService extends Base {
    * @returns string
    */
   RequestPowerStateChange = (powerState: Types.PowerManagementService.PowerState): string => {
-    const header = this.wsmanMessageCreator.createHeader(Actions.REQUEST_POWER_STATE_CHANGE, Classes.POWER_MANAGEMENT_SERVICE)
+    const header = this.wsmanMessageCreator.createHeader(
+      Actions.REQUEST_POWER_STATE_CHANGE,
+      Classes.POWER_MANAGEMENT_SERVICE
+    )
     const body = `<Body><h:RequestPowerStateChange_INPUT xmlns:h="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_PowerManagementService"><h:PowerState>${powerState}</h:PowerState><h:ManagedElement><Address xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/addressing</Address><ReferenceParameters xmlns="http://schemas.xmlsoap.org/ws/2004/08/addressing"><ResourceURI xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd">http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ComputerSystem</ResourceURI><SelectorSet xmlns="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd"><Selector Name="CreationClassName">CIM_ComputerSystem</Selector><Selector Name="Name">ManagedSystem</Selector></SelectorSet></ReferenceParameters></h:ManagedElement></h:RequestPowerStateChange_INPUT></Body>`
     return this.wsmanMessageCreator.createXml(header, body)
   }
 }
-class Processor extends Base { className = Classes.PROCESSOR }
-class ServiceAvailableToElement extends Base { className = Classes.SERVICE_AVAILABLE_TO_ELEMENT }
-class SoftwareIdentity extends Base { className = Classes.SOFTWARE_IDENTITY }
-class SystemPackaging extends Base { className = Classes.SYSTEM_PACKAGING }
+class Processor extends Base {
+  className = Classes.PROCESSOR
+}
+class ServiceAvailableToElement extends Base {
+  className = Classes.SERVICE_AVAILABLE_TO_ELEMENT
+}
+class SoftwareIdentity extends Base {
+  className = Classes.SOFTWARE_IDENTITY
+}
+class SystemPackaging extends Base {
+  className = Classes.SYSTEM_PACKAGING
+}
 class WiFiEndpointSettings extends Base {
   className = Classes.WIFI_ENDPOINT_SETTINGS
   /**
@@ -90,7 +125,11 @@ class WiFiPort extends Base {
    * @param requestedState The state requested for the element. This information will be placed into the RequestedState property of the instance if the return code of the RequestStateChange method is 0 ('Completed with No Error'), or 4096 (0x1000) ('Job Started'). Refer to the description of the EnabledState and RequestedState properties for the detailed explanations of the RequestedState values.
    * @returns string
    */
-  RequestStateChange = (requestedState: Types.WiFiPort.RequestedState): string => this.protectedRequestStateChange(`http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/${this.className}/RequestStateChange`, requestedState)
+  RequestStateChange = (requestedState: Types.WiFiPort.RequestedState): string =>
+    this.protectedRequestStateChange(
+      `http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/${this.className}/RequestStateChange`,
+      requestedState
+    )
 }
 export class Messages {
   readonly resourceUriBase: string = 'http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/'

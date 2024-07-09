@@ -1,7 +1,7 @@
 {
-    "pkgRoot": "dist",
-    "branches": ["main", "next"],
-    "plugins": [
+  "pkgRoot": "dist",
+  "branches": ["main", "next"],
+  "plugins": [
     [
       "@semantic-release/commit-analyzer",
       {
@@ -18,5 +18,6 @@
     "@semantic-release/npm",
     "@semantic-release/github",
     "@semantic-release/git"
+
   ]
 }

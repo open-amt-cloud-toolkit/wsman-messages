@@ -1,21 +1,21 @@
 {
-    "compilerOptions": {
-        "strictNullChecks": true,
-        "outDir": "./dist",
-        "sourceMap": true,
-        "moduleResolution": "node",
-        "declaration": true,
-        "esModuleInterop": true,
-        "module": "commonjs",
-        "allowJs": true,
-        "target": "es2019",
-        "strict": false,
-        "typeRoots": [
-            "node_modules/@types"
-        ]
-    },
-    
-    "include": [
-        "./src/**/*"
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "allowJs": true,
+    "target": "es2019",
+    "strict": false,
+    "typeRoots": [
+      "node_modules/@types"
     ]
+  },
+
+  "include": [
+    "./src/**/*"
+  ]
 }

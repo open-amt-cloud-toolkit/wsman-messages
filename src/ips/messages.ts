@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-**********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ **********************************************************************/
 
 // import { CIM } from '../'
 import { Base, WSManMessageCreator } from '../WSMan'
@@ -9,7 +9,9 @@ import { Actions, Methods, Classes } from './'
 import type { Models, Types } from './'
 import type { Selector } from '../WSMan'
 
-class IEEE8021xCredentialContext extends Base { className = Classes.IEEE8021X_CREDENTIAL_CONTEXT }
+class IEEE8021xCredentialContext extends Base {
+  className = Classes.IEEE8021X_CREDENTIAL_CONTEXT
+}
 class AlarmClockOccurrence extends Base {
   className = Classes.ALARM_CLOCK_OCCURRENCE
   /**
@@ -29,12 +31,21 @@ class HostBasedSetupService extends Base {
    * @returns string
    */
   AddNextCertInChain = (cert: string, isLeaf: boolean, isRoot: boolean): string => {
-    const header: string = this.wsmanMessageCreator.createHeader(Actions.ADD_NEXT_CERT_IN_CHAIN, Classes.HOST_BASED_SETUP_SERVICE)
-    const body: string = this.wsmanMessageCreator.createBody('AddNextCertInChain_INPUT', Classes.HOST_BASED_SETUP_SERVICE, [{
-      NextCertificate: cert,
-      IsLeafCertificate: isLeaf,
-      IsRootCertificate: isRoot
-    }])
+    const header: string = this.wsmanMessageCreator.createHeader(
+      Actions.ADD_NEXT_CERT_IN_CHAIN,
+      Classes.HOST_BASED_SETUP_SERVICE
+    )
+    const body: string = this.wsmanMessageCreator.createBody(
+      'AddNextCertInChain_INPUT',
+      Classes.HOST_BASED_SETUP_SERVICE,
+      [
+        {
+          NextCertificate: cert,
+          IsLeafCertificate: isLeaf,
+          IsRootCertificate: isRoot
+        }
+      ]
+    )
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -47,15 +58,23 @@ class HostBasedSetupService extends Base {
    * @param digitalSignature A digital signature of the ConfigurationNonce and the McNonce concatenated. If this information is provided, AMT will validate the signature before accepting the command.
    * @returns string
    */
-  AdminSetup = (adminPassEncryptionType: Types.HostBasedSetupService.AdminPassEncryptionType, adminPassword: string, mcNonce: string, signingAlgorithm: Types.HostBasedSetupService.SigningAlgorithm, digitalSignature: string): string => {
+  AdminSetup = (
+    adminPassEncryptionType: Types.HostBasedSetupService.AdminPassEncryptionType,
+    adminPassword: string,
+    mcNonce: string,
+    signingAlgorithm: Types.HostBasedSetupService.SigningAlgorithm,
+    digitalSignature: string
+  ): string => {
     const header: string = this.wsmanMessageCreator.createHeader(Actions.ADMIN_SETUP, Classes.HOST_BASED_SETUP_SERVICE)
-    const body: string = this.wsmanMessageCreator.createBody('AdminSetup_INPUT', Classes.HOST_BASED_SETUP_SERVICE, [{
-      NetAdminPassEncryptionType: adminPassEncryptionType,
-      NetworkAdminPassword: adminPassword,
-      McNonce: mcNonce,
-      SigningAlgorithm: signingAlgorithm,
-      DigitalSignature: digitalSignature
-    }])
+    const body: string = this.wsmanMessageCreator.createBody('AdminSetup_INPUT', Classes.HOST_BASED_SETUP_SERVICE, [
+      {
+        NetAdminPassEncryptionType: adminPassEncryptionType,
+        NetworkAdminPassword: adminPassword,
+        McNonce: mcNonce,
+        SigningAlgorithm: signingAlgorithm,
+        DigitalSignature: digitalSignature
+      }
+    ])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -66,13 +85,26 @@ class HostBasedSetupService extends Base {
    * @param digitalSignature A digital signature of the ConfigurationNonce and the McNonce concatenated. If this information is provided, AMT will validate the signature before accepting the command.
    * @returns string
    */
-  UpgradeClientToAdmin = (mcNonce: string, signingAlgorithm: Types.HostBasedSetupService.SigningAlgorithm, digitalSignature: string): string => {
-    const header: string = this.wsmanMessageCreator.createHeader(Actions.UPGRADE_CLIENT_TO_ADMIN, Classes.HOST_BASED_SETUP_SERVICE)
-    const body: string = this.wsmanMessageCreator.createBody('UpgradeClientToAdmin_INPUT', Classes.HOST_BASED_SETUP_SERVICE, [{
-      McNonce: mcNonce,
-      SigningAlgorithm: signingAlgorithm,
-      DigitalSignature: digitalSignature
-    }])
+  UpgradeClientToAdmin = (
+    mcNonce: string,
+    signingAlgorithm: Types.HostBasedSetupService.SigningAlgorithm,
+    digitalSignature: string
+  ): string => {
+    const header: string = this.wsmanMessageCreator.createHeader(
+      Actions.UPGRADE_CLIENT_TO_ADMIN,
+      Classes.HOST_BASED_SETUP_SERVICE
+    )
+    const body: string = this.wsmanMessageCreator.createBody(
+      'UpgradeClientToAdmin_INPUT',
+      Classes.HOST_BASED_SETUP_SERVICE,
+      [
+        {
+          McNonce: mcNonce,
+          SigningAlgorithm: signingAlgorithm,
+          DigitalSignature: digitalSignature
+        }
+      ]
+    )
     return this.wsmanMessageCreator.createXml(header, body)
   }
 
@@ -82,12 +114,17 @@ class HostBasedSetupService extends Base {
    * @param adminPassword New network admin password to be set by this command, encrypted using the encryption type algorithm
    * @returns string
    */
-  Setup = (adminPassEncryptionType: Types.HostBasedSetupService.AdminPassEncryptionType, adminPassword: string): string => {
+  Setup = (
+    adminPassEncryptionType: Types.HostBasedSetupService.AdminPassEncryptionType,
+    adminPassword: string
+  ): string => {
     const header: string = this.wsmanMessageCreator.createHeader(Actions.SETUP, Classes.HOST_BASED_SETUP_SERVICE)
-    const body: string = this.wsmanMessageCreator.createBody('Setup_INPUT', Classes.HOST_BASED_SETUP_SERVICE, [{
-      NetAdminPassEncryptionType: adminPassEncryptionType.toString(),
-      NetworkAdminPassword: adminPassword
-    }])
+    const body: string = this.wsmanMessageCreator.createBody('Setup_INPUT', Classes.HOST_BASED_SETUP_SERVICE, [
+      {
+        NetAdminPassEncryptionType: adminPassEncryptionType.toString(),
+        NetworkAdminPassword: adminPassword
+      }
+    ])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 }
@@ -106,11 +143,22 @@ class IEEE8021xSettings extends Base {
    * @returns string
    */
   SetCertificates = (serverCertificateIssuer: string, clientCertificate: string): string => {
-    const header: string = this.wsmanMessageCreator.createHeader(Actions.SET_CERTIFICATES, Classes.IEEE8021X_SETTINGS, undefined, undefined)
-    const body: string = this.wsmanMessageCreator.createBody(Methods.SET_CERTIFICATES_INPUT, Classes.IEEE8021X_SETTINGS, [{
-      ServerCertificateIssuer: serverCertificateIssuer,
-      ClientCertificate: clientCertificate
-    }])
+    const header: string = this.wsmanMessageCreator.createHeader(
+      Actions.SET_CERTIFICATES,
+      Classes.IEEE8021X_SETTINGS,
+      undefined,
+      undefined
+    )
+    const body: string = this.wsmanMessageCreator.createBody(
+      Methods.SET_CERTIFICATES_INPUT,
+      Classes.IEEE8021X_SETTINGS,
+      [
+        {
+          ServerCertificateIssuer: serverCertificateIssuer,
+          ClientCertificate: clientCertificate
+        }
+      ]
+    )
     return this.wsmanMessageCreator.createXml(header, body)
   }
 }
@@ -143,7 +191,8 @@ class OptInService extends Base {
    */
   SendOptInCode = (optInCode: number): string => {
     const header = this.wsmanMessageCreator.createHeader(Actions.SEND_OPT_IN_CODE, Classes.OPT_IN_SERVICE)
-    const body = this.wsmanMessageCreator.createBody('SendOptInCode_INPUT', Classes.OPT_IN_SERVICE, [{ OptInCode: optInCode }])
+    const body = this.wsmanMessageCreator.createBody('SendOptInCode_INPUT', Classes.OPT_IN_SERVICE, [
+      { OptInCode: optInCode }])
     return this.wsmanMessageCreator.createXml(header, body)
   }
 

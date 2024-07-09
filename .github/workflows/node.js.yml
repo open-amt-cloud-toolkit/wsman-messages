@@ -49,7 +49,7 @@ jobs:
           name: JEST Tests # Name of the check run which will be created
           path: junit.xml # Path to test results
           reporter: jest-junit # Format of test results
-          fail-on-error: "false"
+          fail-on-error: 'false'
       - uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         name: Upload Coverage Results
         if: ${{ matrix.node-version == '16.x' }}

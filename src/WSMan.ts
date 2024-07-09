@@ -1,7 +1,7 @@
 /*********************************************************************
-* Copyright (c) Intel Corporation 2021
-* SPDX-License-Identifier: Apache-2.0
-***********************************************************************/
+ * Copyright (c) Intel Corporation 2021
+ * SPDX-License-Identifier: Apache-2.0
+ ***********************************************************************/
 
 import type { AMT, CIM, IPS } from '.'
 
@@ -63,13 +63,14 @@ export enum BaseActions {
 }
 
 export class WSManMessageCreator {
-  messageId: number = 0
-  xmlCommonPrefix: string = '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope">'
-  xmlCommonEnd: string = '</Envelope>'
-  anonymousAddress: string = 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous'
-  defaultTimeout: string = 'PT60S'
+  messageId = 0
+  xmlCommonPrefix =
+    '<?xml version="1.0" encoding="utf-8"?><Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns="http://www.w3.org/2003/05/soap-envelope">'
+  xmlCommonEnd = '</Envelope>'
+  anonymousAddress = 'http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous'
+  defaultTimeout = 'PT60S'
   resourceUriBase: string
-  constructor (resourceUriBase: string) {
+  constructor(resourceUriBase: string) {
     this.resourceUriBase = resourceUriBase
   }
 
@@ -90,8 +91,14 @@ export class WSManMessageCreator {
    * @param selector WSMAN Selector values for headers that require it
    * @returns string
    */
-  createHeader = (action: string, wsmanClass: CIM.Classes | AMT.Classes | IPS.Classes, selector: Selector | null = null, address: string = this.anonymousAddress, timeout: string = this.defaultTimeout): string => {
-    let header: string = '<Header>'
+  createHeader = (
+    action: string,
+    wsmanClass: CIM.Classes | AMT.Classes | IPS.Classes,
+    selector: Selector | null = null,
+    address: string = this.anonymousAddress,
+    timeout: string = this.defaultTimeout
+  ): string => {
+    let header = '<Header>'
     header += `<a:Action>${action}</a:Action><a:To>/wsman</a:To><w:ResourceURI>${this.resourceUriBase}${wsmanClass}</w:ResourceURI><a:MessageID>${(this.messageId++).toString()}</a:MessageID><a:ReplyTo><a:Address>${address}</a:Address></a:ReplyTo><w:OperationTimeout>${timeout}</w:OperationTimeout>`
     if (selector != null) {
       header += this.createSelector(selector)
@@ -106,13 +113,19 @@ export class WSManMessageCreator {
    * @returns string
    */
   createSelector = (selectorSet: any): string => {
-    if (selectorSet.name) return `<w:SelectorSet><w:Selector Name="${selectorSet.name}">${selectorSet.value}</w:Selector></w:SelectorSet>`
+    if (selectorSet.name)
+      return `<w:SelectorSet><w:Selector Name="${selectorSet.name}">${selectorSet.value}</w:Selector></w:SelectorSet>`
     let result = '<w:SelectorSet>'
     for (const propName in selectorSet) {
       result += '<w:Selector Name="' + propName + '">'
       if (selectorSet[propName].ReferenceParameters) {
         result += '<a:EndpointReference>'
-        result += '<a:Address>' + selectorSet[propName].Address + '</a:Address><a:ReferenceParameters><w:ResourceURI>' + selectorSet[propName].ReferenceParameters.ResourceURI + '</w:ResourceURI><w:SelectorSet>'
+        result +=
+          '<a:Address>' +
+          selectorSet[propName].Address +
+          '</a:Address><a:ReferenceParameters><w:ResourceURI>' +
+          selectorSet[propName].ReferenceParameters.ResourceURI +
+          '</w:ResourceURI><w:SelectorSet>'
         const selectorArray = selectorSet[propName].ReferenceParameters.SelectorSet.Selector
         if (Array.isArray(selectorArray)) {
           // TODO: Enable when selector is an array. No need for now.
@@ -176,15 +189,16 @@ export class WSManMessageCreator {
      * @param data Object being applied to AMT
      * @returns string
      */
-    CreateOrPut: (wsmanClass: AMT.Classes | IPS.Classes | CIM.Classes, data: any): string => this.createBody(wsmanClass, wsmanClass, [data]),
+    CreateOrPut: (wsmanClass: AMT.Classes | IPS.Classes | CIM.Classes, data: any): string =>
+      this.createBody(wsmanClass, wsmanClass, [data]),
     /**
      * Body used for RequestStateChange actions
      * @param input namespace of the class being modified
      * @param requestedState state being set
      * @returns string
      */
-    RequestStateChange: (input: string, requestedState: number): string => `<Body><h:RequestStateChange_INPUT xmlns:h="${input}"><h:RequestedState>${requestedState.toString()}</h:RequestedState></h:RequestStateChange_INPUT></Body>`
-
+    RequestStateChange: (input: string, requestedState: number): string =>
+      `<Body><h:RequestStateChange_INPUT xmlns:h="${input}"><h:RequestedState>${requestedState.toString()}</h:RequestedState></h:RequestStateChange_INPUT></Body>`
   }
 
   /**
@@ -199,13 +213,13 @@ export class WSManMessageCreator {
     if (!Array.isArray(data)) {
       data = [data]
     }
-    data?.forEach(element => {
+    data?.forEach((element) => {
       this.processBody(element)
     })
     let str = '<Body>'
     str += `<h:${method} xmlns:h="${this.resourceUriBase}${wsmanClass}">`
     if (data) {
-      data.forEach(element => {
+      data.forEach((element) => {
         str += this.OBJtoXML(element)
       })
     }
@@ -263,7 +277,7 @@ export class WSManMessageCreator {
    * @param data JavaScript object
    * @returns any
    */
-  processBody = (data: any, tag: string = 'h:'): any => {
+  processBody = (data: any, tag = 'h:'): any => {
     if (Array.isArray(data)) {
       return
     }
@@ -311,7 +325,7 @@ export class WSManMessageCreator {
 export class Base {
   wsmanMessageCreator: WSManMessageCreator
   className: CIM.Classes | AMT.Classes | IPS.Classes
-  constructor (wsmanMessageCreator: WSManMessageCreator) {
+  constructor(wsmanMessageCreator: WSManMessageCreator) {
     this.wsmanMessageCreator = wsmanMessageCreator
   }
 
@@ -369,7 +383,11 @@ export class Base {
     if (!customSelector && data?.InstanceID) {
       customSelector = { name: 'InstanceID', value: data.InstanceID }
     }
-    const header = this.wsmanMessageCreator.createHeader(BaseActions.PUT, this.className, (useHeaderSelector ? customSelector : null))
+    const header = this.wsmanMessageCreator.createHeader(
+      BaseActions.PUT,
+      this.className,
+      useHeaderSelector ? customSelector : null
+    )
     const body = this.wsmanMessageCreator.createCommonBody.CreateOrPut(this.className, data)
     return this.wsmanMessageCreator.createXml(header, body)
   }
@@ -394,7 +412,10 @@ export class Base {
    */
   protected protectedRequestStateChange = (actionName: string, requestedState: number): string => {
     const header = this.wsmanMessageCreator.createHeader(actionName, this.className)
-    const body = this.wsmanMessageCreator.createCommonBody.RequestStateChange(`${this.wsmanMessageCreator.resourceUriBase}${this.className}`, requestedState)
+    const body = this.wsmanMessageCreator.createCommonBody.RequestStateChange(
+      `${this.wsmanMessageCreator.resourceUriBase}${this.className}`,
+      requestedState
+    )
     return this.wsmanMessageCreator.createXml(header, body)
   }
 }
