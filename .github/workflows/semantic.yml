@@ -18,11 +18,11 @@ jobs:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@0d749a1a91d4770e983a7b8f83d4a3f0e7e0874e # v5.4.4
+      - uses: wagoid/commitlint-github-action@7f0a61df502599e1f1f50880aaa7ec1e2c0592f2 # v6.0.1
         with:
-          configFile: .github/commitlint.config.js
+          configFile: .github/commitlint.config.cjs
       - name: Install Dependencies
         run: npm install @commitlint/config-conventional@17.4.2
       - uses: JulienKode/pull-request-name-linter-action@8c05fb989d9f156ce61e33754f9802c9d3cffa58 # v0.5.0
         with:
-          configuration-path: ./.github/commitlint.config.js
+          configuration-path: ./.github/commitlint.config.cjs
