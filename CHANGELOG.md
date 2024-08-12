@@ -1,3 +1,5 @@
+## [5.6.9](https://github.com/open-amt-cloud-toolkit/wsman-messages/compare/v5.6.8...v5.6.9) (2024-08-12)
+
 ## [5.6.8](https://github.com/open-amt-cloud-toolkit/wsman-messages/compare/v5.6.7...v5.6.8) (2024-07-15)
 
 <a name="5.6.5"></a>
