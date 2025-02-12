@@ -18,14 +18,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/open-amt-cloud-toolkit/wsman-messages.git"
+    "url": "git+https://github.com/device-management-toolkit/wsman-messages.git"
   },
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/open-amt-cloud-toolkit/wsman-messages/issues"
+    "url": "https://github.com/device-management-toolkit/wsman-messages/issues"
   },
-  "homepage": "https://github.com/open-amt-cloud-toolkit/wsman-messages#readme",
+  "homepage": "https://github.com/device-management-toolkit/wsman-messages#readme",
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@types/node": "^22.0.0",
